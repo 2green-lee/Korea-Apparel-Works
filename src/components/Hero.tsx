@@ -397,7 +397,7 @@ export default function Hero({
                   <textarea
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
-                    placeholder="I want to manufacture technical knit T-shirts with a 3D hub in Seoul..."
+                    placeholder="We excel in crafting bespoke apparel and tops with premium-grade fabrics. Tell us what you want to make..."
                     className={`w-full bg-transparent resize-none border-0 outline-none focus:ring-0 text-sm md:text-base text-white placeholder-neutral-400/50 font-light leading-relaxed select-text ${messages.length > 1 ? "h-[54px]" : "flex-1 pb-4"}`}
                     disabled={isGenerating}
                     onKeyDown={(e) => {
