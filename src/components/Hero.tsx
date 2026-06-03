@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler, ChevronLeft, ChevronRight, Shirt, Award, Layers, Sparkles, Check, History } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import QuoteModal from "./QuoteModal";
 
 interface HeroProps {
   onPreOrderClick: () => void;
@@ -57,6 +58,13 @@ export default function Hero({
   const [chatInput, setChatInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const generationIdRef = useRef(0);
+
+  // Quote Intercept States
+  const [isQuoteFormSubmitted, setIsQuoteFormSubmitted] = useState<boolean>(() => {
+    return localStorage.getItem("kaw_quote_submitted") === "true";
+  });
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
   // Auto-scroll chat interactions
   useEffect(() => {
@@ -79,8 +87,24 @@ export default function Hero({
 
     const userMsg = chatInput.trim();
     setChatInput("");
+
+    // Check if first real user message
+    const isFirstConversationTurn = messages.length === 1;
+
+    generationIdRef.current += 1;
+    const currentId = generationIdRef.current;
+
     setMessages((prev) => [...prev, { role: "user", text: userMsg }]);
     setIsGenerating(true);
+
+    // If first turn and quota not submitted, popup the modal after a tiny delay
+    if (isFirstConversationTurn && !isQuoteFormSubmitted) {
+      setTimeout(() => {
+        if (currentId === generationIdRef.current) {
+          setIsQuoteModalOpen(true);
+        }
+      }, 1200);
+    }
 
     try {
       const response = await fetch("/api/chat", {
@@ -93,6 +117,8 @@ export default function Hero({
       });
 
       const data = await response.json();
+      if (currentId !== generationIdRef.current) return;
+
       if (data.error) {
         setMessages((prev) => [
           ...prev,
@@ -105,6 +131,7 @@ export default function Hero({
         setMessages((prev) => [...prev, { role: "model", text: data.text }]);
       }
     } catch (err) {
+      if (currentId !== generationIdRef.current) return;
       setMessages((prev) => [
         ...prev,
         {
@@ -113,14 +140,38 @@ export default function Hero({
         }
       ]);
     } finally {
-      setIsGenerating(false);
+      if (currentId === generationIdRef.current) {
+        setIsGenerating(false);
+      }
     }
+  };
+
+  const handleQuoteSubmit = (email: string, country: string) => {
+    localStorage.setItem("kaw_quote_email", email);
+    localStorage.setItem("kaw_quote_country", country);
+    localStorage.setItem("kaw_quote_submitted", "true");
+    setIsQuoteFormSubmitted(true);
+    setIsQuoteModalOpen(false);
   };
 
   const handleQuickCommand = async (promptText: string) => {
     if (isGenerating) return;
+
+    const isFirstConversationTurn = messages.length === 1;
+
+    generationIdRef.current += 1;
+    const currentId = generationIdRef.current;
+
     setMessages((prev) => [...prev, { role: "user", text: promptText }]);
     setIsGenerating(true);
+
+    if (isFirstConversationTurn && !isQuoteFormSubmitted) {
+      setTimeout(() => {
+        if (currentId === generationIdRef.current) {
+          setIsQuoteModalOpen(true);
+        }
+      }, 1200);
+    }
 
     try {
       const response = await fetch("/api/chat", {
@@ -133,6 +184,8 @@ export default function Hero({
       });
 
       const data = await response.json();
+      if (currentId !== generationIdRef.current) return;
+
       if (data.error) {
         setMessages((prev) => [
           ...prev,
@@ -145,6 +198,7 @@ export default function Hero({
         setMessages((prev) => [...prev, { role: "model", text: data.text }]);
       }
     } catch (err) {
+      if (currentId !== generationIdRef.current) return;
       setMessages((prev) => [
         ...prev,
         {
@@ -153,18 +207,44 @@ export default function Hero({
         }
       ]);
     } finally {
-      setIsGenerating(false);
+      if (currentId === generationIdRef.current) {
+        setIsGenerating(false);
+      }
     }
   };
 
   const handleAnalyzeImage = () => {
     if (isGenerating) return;
+
+    const isFirstConversationTurn = messages.length === 1;
+
+    generationIdRef.current += 1;
+    const currentId = generationIdRef.current;
+
     setMessages((prev) => [
       ...prev,
-      { role: "user", text: "[Upload Sketch] Analyzed custom apparel design." },
-      { role: "model", text: "I have analyzed your garment sketch! Our Seoul-based veteran tailors can build an accurate digital production pattern for this item using high-grade sustainable cotton-combed jersey. Our minimum order quantity starts at just 30 pieces. Would you like to request physical sample swatches?" }
+      { role: "user", text: "[Upload Sketch] Analyzed custom apparel design." }
     ]);
-  };
+    setIsGenerating(true);
+
+    if (isFirstConversationTurn && !isQuoteFormSubmitted) {
+      setTimeout(() => {
+        if (currentId === generationIdRef.current) {
+          setIsQuoteModalOpen(true);
+        }
+      }, 1200);
+    }
+
+    // Mock analysis response
+    setTimeout(() => {
+      if (currentId !== generationIdRef.current) return;
+      setMessages((prev) => [
+        ...prev,
+        { role: "model", text: "I have analyzed your garment sketch! Our Seoul-based veteran tailors can build an accurate digital production pattern for this item using high-grade sustainable cotton-combed jersey. Our minimum order quantity starts at just 30 pieces. Would you like to request physical sample swatches?" }
+      ]);
+      setIsGenerating(false);
+    }, 1000);
+   };
 
   return (
     <section className={`relative w-full flex flex-col justify-center items-center overflow-hidden z-10 px-4 md:px-8 transition-all duration-500 ${
@@ -347,10 +427,10 @@ export default function Hero({
                           onClick={onClearChat}
                           type="button"
                           className="inline-flex items-center space-x-1.5 bg-white/5 hover:bg-white/10 hover:text-white active:scale-[0.98] border border-white/10 rounded-full px-4 py-2 transition duration-300 text-neutral-400 text-xs font-medium cursor-pointer"
-                          title="Clear conversation"
+                          title="Back home"
                         >
                           <RefreshCw className="w-3.5 h-3.5" />
-                          <span>Clear</span>
+                          <span>Back home</span>
                         </button>
                       )}
 
@@ -617,10 +697,26 @@ export default function Hero({
       </div>
 
       {/* Acoustic bottom bar lines */}
-      <div className="relative z-10 w-full max-w-4xl mt-12 flex justify-between items-center text-neutral-400 font-mono text-[9px] uppercase tracking-[0.15em] select-none">
-        <span>EST. SEW TIME: 4-6 DAYS</span>
-        <span>{SLIDES[currentSlide].sub}</span>
-      </div>
+      <div className="relative z-10 w-full max-w-4xl mt-12 flex justify-between items-center text-neutral-400 font-mono text-[9px] uppercase tracking-[0.15em] select-none" />
+
+      {/* Quote request form intercept modal */}
+      <QuoteModal
+        isOpen={isQuoteModalOpen}
+        onClose={() => {
+          setIsQuoteModalOpen(false);
+          if (!isQuoteFormSubmitted) {
+            generationIdRef.current += 1;
+            setIsGenerating(false);
+            setMessages([
+              {
+                role: "model",
+                text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (30pcs) luxury apparel services."
+              }
+            ]);
+          }
+        }}
+        onSubmit={handleQuoteSubmit}
+      />
 
     </section>
   );
