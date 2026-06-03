@@ -9,6 +9,37 @@ export default function App() {
   const [isPreOrderOpen, setIsPreOrderOpen] = useState(false);
   const [customFinish, setCustomFinish] = useState<StreamColorFinish>("titanium-silver");
   const [customSize, setCustomSize] = useState<number>(9);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [messages, setMessages] = useState<{ role: "user" | "model"; text: string }[]>([
+    {
+      role: "model",
+      text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (30pcs) luxury apparel services."
+    }
+  ]);
+  const [savedChats, setSavedChats] = useState<{ role: "user" | "model"; text: string }[][]>([]);
+
+  const handleClearChat = () => {
+    if (messages.length > 1) {
+      setSavedChats(prev => {
+        const updated = [messages, ...prev];
+        return updated.slice(0, 5);
+      });
+    }
+    setMessages([
+      {
+        role: "model",
+        text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (30pcs) luxury apparel services."
+      }
+    ]);
+  };
+
+  const handleRestoreChat = (index: number) => {
+    const chatToRestore = savedChats[index];
+    if (chatToRestore) {
+      setMessages(chatToRestore);
+      setSavedChats(prev => prev.filter((_, i) => i !== index));
+    }
+  };
 
   const handleOpenPreOrder = (finish?: StreamColorFinish, size?: number) => {
     if (finish) setCustomFinish(finish);
@@ -17,16 +48,31 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#faf8f3] text-black antialiased selection:bg-amber-100 selection:text-black">
+    <div className="relative min-h-screen bg-neutral-950 text-white antialiased selection:bg-neutral-800 selection:text-white">
       
       {/* 2. Brand sticky Navigation Header */}
-      <Header onPreOrderClick={() => handleOpenPreOrder()} />
+      <Header 
+        onPreOrderClick={() => handleOpenPreOrder()} 
+        currentSlide={currentSlide} 
+        setCurrentSlide={setCurrentSlide} 
+        messages={messages}
+        onClearChat={handleClearChat}
+      />
 
       {/* 3. Landing Modules */}
       <main>
         
         {/* 4. Layered 3D Ring Hero Showcase */}
-        <Hero onPreOrderClick={() => handleOpenPreOrder()} />
+        <Hero 
+          onPreOrderClick={() => handleOpenPreOrder()} 
+          currentSlide={currentSlide} 
+          setCurrentSlide={setCurrentSlide} 
+          messages={messages}
+          setMessages={setMessages}
+          savedChats={savedChats}
+          onClearChat={handleClearChat}
+          onRestoreChat={handleRestoreChat}
+        />
 
       </main>
 

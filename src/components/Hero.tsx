@@ -1,19 +1,60 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler } from "lucide-react";
+import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler, ChevronLeft, ChevronRight, Shirt, Award, Layers, Sparkles, Check, History } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 interface HeroProps {
   onPreOrderClick: () => void;
+  currentSlide: number;
+  setCurrentSlide: React.Dispatch<React.SetStateAction<number>> | ((slide: number | ((prev: number) => number)) => void);
+  messages: { role: "user" | "model"; text: string }[];
+  setMessages: React.Dispatch<React.SetStateAction<{ role: "user" | "model"; text: string }[]>>;
+  savedChats: { role: "user" | "model"; text: string }[][];
+  onClearChat: () => void;
+  onRestoreChat: (index: number) => void;
 }
 
-export default function Hero({ onPreOrderClick }: HeroProps) {
+const SLIDES = [
+  {
+    image: "https://raw.githubusercontent.com/2green-lee/Korea-Apparel-Works/985e971f768279fbef9d02d7d6d295c01131f761/downtown-cityscape-night-seoul-south-korea.jpg",
+    headline: "Get a manufacturing quote.",
+    sub: "AI CONVERSATION PORTAL"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=1600",
+    headline: "30년 마스터 장인의 봉제정신, 회사 소개",
+    sub: "KOREA APPAREL WORKS • PHILOSOPHY"
+  },
+  {
+    image: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=1600",
+    headline: "완벽한 디테일과 한계 없는 라인업, 제품 소개",
+    sub: "SIGNATURE ATELIER PRODUCT COLLECTION"
+  }
+];
+
+const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
+  const firstUserMsg = chat.find(m => m.role === "user");
+  if (firstUserMsg) {
+    const text = firstUserMsg.text;
+    if (text.length > 10) {
+      return text.slice(0, 10).trim() + "...";
+    }
+    return text;
+  }
+  return "Saved Chat";
+};
+
+export default function Hero({ 
+  onPreOrderClick, 
+  currentSlide, 
+  setCurrentSlide, 
+  messages, 
+  setMessages,
+  savedChats,
+  onClearChat,
+  onRestoreChat
+}: HeroProps) {
   // Chat States
   const [chatInput, setChatInput] = useState("");
-  const [messages, setMessages] = useState<{ role: "user" | "model"; text: string }[]>([
-    {
-      role: "model",
-      text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (30pcs) luxury apparel services."
-    }
-  ]);
   const [isGenerating, setIsGenerating] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -23,6 +64,14 @@ export default function Hero({ onPreOrderClick }: HeroProps) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isGenerating]);
+
+  const handlePrevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? SLIDES.length - 1 : prev - 1));
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlide((prev) => (prev === SLIDES.length - 1 ? 0 : prev + 1));
+  };
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -118,269 +167,462 @@ export default function Hero({ onPreOrderClick }: HeroProps) {
   };
 
   return (
-    <section className="relative min-h-[92vh] w-full flex flex-col justify-center items-center overflow-hidden pt-28 pb-16 z-10 px-4 md:px-8">
+    <section className={`relative w-full flex flex-col justify-center items-center overflow-hidden z-10 px-4 md:px-8 transition-all duration-500 ${
+      currentSlide === 0 
+        ? (messages.length > 1 ? "min-h-[100vh] pt-24 pb-20" : "min-h-[128vh] pt-28 pb-[324px]") 
+        : "min-h-[100vh] py-20"
+    }`}>
       
-      {/* Solid warm dark neutral Muji-style background */}
-      <div className="absolute inset-0 z-0 bg-[#faf9f5]"></div>
+      {/* Background Solid Canvas with seamless transitions */}
+      <div className="absolute inset-0 z-0">
+        {SLIDES.map((slide, index) => {
+          return (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-all duration-1000 ease-in-out bg-[#0A0A0C] ${
+                index === currentSlide ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+              }`}
+            >
+              {/* Subtle architectural grid lines evoking sewing pattern drafting paper */}
+              <div className="absolute inset-0 opacity-[0.08] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+              
+              {/* Elegant fine margin lines representing professional atelier templates */}
+              <div className="absolute inset-x-12 top-0 bottom-0 border-x border-white/[0.06]" />
+            </div>
+          );
+        })}
+      </div>
+      
+      {/* Floating Left and Right side buttons for desktop & tablet */}
+      <button
+        onClick={handlePrevSlide}
+        className="fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-neutral-200 flex items-center justify-center transition-all duration-300 backdrop-blur-xs cursor-pointer group shadow-xs"
+        aria-label="Previous Slide"
+      >
+        <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+      </button>
+
+      <button
+        onClick={handleNextSlide}
+        className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-neutral-200 flex items-center justify-center transition-all duration-300 backdrop-blur-xs cursor-pointer group shadow-xs"
+        aria-label="Next Slide"
+      >
+        <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+      </button>
 
       {/* Main Responsive Layout Box */}
-      <div className="relative z-10 w-full max-w-[800px] flex flex-col items-center justify-center text-center px-4 select-none mt-[160px]">
+      <div className={`relative z-10 w-full flex flex-col items-center justify-center text-center px-4 select-none transition-all duration-500 ${
+        (currentSlide === 0 && messages.length > 1) ? "max-w-[1400px] my-auto" : "max-w-4xl mt-auto"
+      }`}>
         
-        {/* Crafted T-Shirt Drafting & Cutting Pattern Logo Icon */}
-        <div className="mb-[100px] -mt-[90px] flex items-center justify-center animate-fadeIn" style={{ animationDelay: "100ms" }}>
-          <div className="relative transition-transform duration-300 hover:scale-[1.03]">
-            <svg 
-              className="w-[150px] h-[150px] text-neutral-800" 
-              viewBox="0 0 100 100" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
+        {/* Dynamic visual transition wrapper providing robust in-place crossfade (dissolve) feel */}
+        <AnimatePresence mode="wait">
+          {currentSlide === 0 && (
+            <motion.div
+              key="slide-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="w-full flex flex-col items-center justify-center relative"
             >
-              {/* Vertical & Horizontal alignment/cutting guidelines */}
-              <line x1="50" y1="4" x2="50" y2="96" stroke="rgba(0,0,0,0.08)" strokeWidth="0.7" strokeDasharray="4 4" />
-              <line x1="4" y1="50" x2="96" y2="50" stroke="rgba(0,0,0,0.08)" strokeWidth="0.7" strokeDasharray="4 4" />
-              
-              {/* Bias corner cutting guidelines */}
-              <line x1="16" y1="16" x2="84" y2="84" stroke="rgba(0,0,0,0.04)" strokeWidth="0.5" strokeDasharray="6 6" />
-              <line x1="84" y1="16" x2="16" y2="84" stroke="rgba(0,0,0,0.04)" strokeWidth="0.5" strokeDasharray="6 6" />
+              {/* Navigation Dot Indicators on top of conversation panel */}
+              {messages.length === 1 && (
+                <div className="flex space-x-2.5 mb-5 select-none">
+                  {SLIDES.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentSlide(index)}
+                      className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                        index === currentSlide ? "w-6 bg-white" : "w-1.5 bg-white/20 hover:bg-white/40"
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
 
-              {/* T-Shirt Silhouette Outline with exquisite, thin craftsman line representation */}
-              <path 
-                d="M 36,25 C 42,28 58,28 64,25 L 78,30 L 82,42 L 72,46 L 70,44 L 70,75 L 30,75 L 30,44 L 28,46 L 18,42 L 22,30 Z" 
-                stroke="#18181b" 
-                strokeWidth="1.8" 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-              />
-
-              {/* Seamless double knit lines along hem and neck */}
-              {/* Hem Stitch */}
-              <path d="M 30,71 L 70,71" stroke="#52525b" strokeWidth="0.8" strokeDasharray="2 2" />
-              <path d="M 30,72.5 L 70,72.5" stroke="#52525b" strokeWidth="0.8" strokeDasharray="2 2" />
-              
-              {/* Neckline Stitch */}
-              <path d="M 37.5,27.5 C 43,30 57,30 62.5,27.5" stroke="#71717a" strokeWidth="0.8" strokeDasharray="2 1.5" />
-
-              {/* Sleeve Hem Stitch */}
-              <path d="M 74.5,33 L 79,40.5" stroke="#71717a" strokeWidth="0.8" strokeDasharray="2 2" />
-              <path d="M 25.5,33 L 21,40.5" stroke="#71717a" strokeWidth="0.8" strokeDasharray="2 2" />
-
-              {/* Red Measurement callout indicating pattern precision */}
-              <line x1="30" y1="56" x2="70" y2="56" stroke="#b91c1c" strokeWidth="0.8" strokeDasharray="2 1" />
-              <circle cx="30" cy="56" r="1.5" fill="#b91c1c" />
-              <circle cx="70" cy="56" r="1.5" fill="#b91c1c" />
-
-              {/* Tailor Scissors trimming the pattern sleeve */}
-              <g transform="translate(68, 12) scale(0.8)" stroke="#52525b" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-                {/* Sleek Minimalist Scissors representation */}
-                {/* Left ring handle */}
-                <circle cx="6" cy="8" r="2" />
-                {/* Right ring handle */}
-                <circle cx="6" cy="14" r="2" />
-                {/* Pivoting pin */}
-                <circle cx="10" cy="11" r="0.8" fill="#18181b" />
-                {/* Top cutting blade */}
-                <path d="M 8,9.5 L 20,13.5" />
-                {/* Bottom cutting blade */}
-                <path d="M 8,12.5 L 20,8.5" opacity="0.9" />
-              </g>
-
-              {/* Chalk Mark tracing indicators around neckline/shoulder */}
-              <path d="M 35,21 C 41,18 45,18 49,21" stroke="#3b82f6" strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Headline matching screenshot "How are you feeling?" style */}
-        <h1 className="font-sans text-3xl md:text-[38px] font-medium text-neutral-900 tracking-tight mb-8 animate-fadeIn">
-          How should we craft your apparel?
-        </h1>
-
-        {/* Dynamic Compact Conversation Panel - Matching screenshot design exactly */}
-        <div className="w-full bg-[#f4f3ef]/90 backdrop-blur-2xl rounded-[28px] border border-white/40 shadow-[0_24px_64px_rgba(0,0,0,0.22)] p-5 md:p-6 flex flex-col font-sans transition-all duration-300 overflow-hidden relative group/card select-text">
-          
-          {/* Active AI Chat History log drawer (only shows when user has started chatting) */}
-          {messages.length > 1 && (
-            <div className="border-b border-black/[0.06] pb-4 mb-4 select-text">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest font-semibold flex items-center space-x-1.5">
-                  <span className="w-1.5 h-1.5 bg-neutral-900 rounded-full animate-pulse"></span>
-                  <span>Seoul Line Directory</span>
-                </span>
-                <button
-                  onClick={() => setMessages([messages[0]])}
-                  className="p-1 text-neutral-400 hover:text-neutral-900 rounded transition duration-200"
-                  title="Clear conversation"
+              {/* Minimalist Tech-Atelier drafting T-shirt Icon - Only rendered on primary home slide */}
+              {messages.length === 1 && (
+                <div 
+                  id="tshirt-section" 
+                  className="absolute -top-[260px] left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none transition-all duration-700 select-none animate-fadeIn"
                 >
-                  <RefreshCw className="w-3 h-3" />
-                </button>
-              </div>
-
-              <div 
-                ref={scrollRef}
-                className="max-h-[160px] overflow-y-auto space-y-3.5 pr-1 text-xs text-left scrollbar-thin md:max-h-[220px]"
-              >
-                {messages.map((msg, index) => (
-                  <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-[85%] rounded-[18px] px-3.5 py-2.5 leading-relaxed font-light ${
-                      msg.role === "user"
-                        ? "bg-neutral-900 text-white rounded-tr-none"
-                        : "bg-white/90 text-neutral-800 shadow-3xs border border-white/50 rounded-tl-none whitespace-pre-wrap"
-                    }`}>
-                      {msg.text}
-                    </div>
+                  {/* T-Shirt Model (Right) */}
+                  <div className="w-[120px] h-[120px] flex items-center justify-center">
+                    <img 
+                      src="https://raw.githubusercontent.com/2green-lee/Korea-Apparel-Works/f76783eb4d5cfc7d3530a1fedd7db576efa0d0ff/free-icon-clothes-7640468.png" 
+                      alt="Atelier T-Shirt Model" 
+                      className="w-full h-full object-contain filter invert opacity-100 drop-shadow-[0_8px_16px_rgba(255,255,255,0.1)]"
+                      referrerPolicy="no-referrer"
+                    />
                   </div>
-                ))}
+                </div>
+              )}
 
-                {isGenerating && (
-                  <div className="flex justify-start animate-pulse">
-                    <div className="bg-white/60 text-neutral-400 max-w-[85%] rounded-[18px] px-3.5 py-2.5 shadow-3xs border border-white/50 rounded-tl-none flex items-center space-x-2">
-                      <span className="flex space-x-1">
-                        <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                        <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                        <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce"></span>
-                      </span>
-                      <span className="font-mono text-[9px] uppercase tracking-wider">Seoul Atelier Advising...</span>
+              {/* Headline matching screenshot "How should we craft..." style */}
+              {messages.length === 1 && (
+                <div className="mb-8 select-none">
+                  <h1 className="font-sans text-3xl md:text-[38px] font-medium text-white tracking-tight">
+                    {SLIDES[0].headline}
+                  </h1>
+                  <p className="mt-3 text-neutral-400 font-sans text-sm md:text-base max-w-[540px] mx-auto font-light leading-relaxed">
+                    Tell us what you'd like to make — fabric, quantity, style. We'll send a proposal within 24h.
+                  </p>
+                </div>
+              )}
+
+              {/* Dynamic Compact Panels */}
+              <div className={`w-full bg-neutral-900/80 backdrop-blur-2xl rounded-[28px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-6 flex flex-col font-sans transition-all duration-500 overflow-hidden relative group/card select-text ${
+                messages.length > 1 
+                  ? "w-full max-w-[1400px] h-[80vh] min-h-[600px] xl:h-[800px]" 
+                  : "w-full md:w-[700px] h-[160px]"
+              }`}>
+                {/* Active AI Chat History log drawer (only shows when user has started chatting) */}
+                {messages.length > 1 && (
+                  <div className="border-b border-white/5 pb-4 mb-4 select-text flex flex-col flex-1 min-h-0">
+                    <div 
+                      ref={scrollRef}
+                      className="flex-1 overflow-y-auto space-y-4 pr-1 text-[12px] text-left scrollbar-thin pb-2"
+                    >
+                      {messages.map((msg, index) => (
+                        <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                          <div className={`max-w-[85%] sm:max-w-[75%] rounded-[18px] px-4 py-3 leading-relaxed font-light ${
+                            msg.role === "user"
+                              ? "bg-white text-black rounded-tr-none font-medium"
+                              : "bg-white/10 text-neutral-200 shadow-3xs border border-white/5 rounded-tl-none whitespace-pre-wrap"
+                          }`}>
+                            {msg.text}
+                          </div>
+                        </div>
+                      ))}
+
+                      {isGenerating && (
+                        <div className="flex justify-start animate-pulse">
+                          <div className="bg-white/5 text-neutral-400 max-w-[85%] rounded-[18px] px-4 py-3 shadow-3xs border border-white/5 rounded-tl-none flex items-center space-x-2">
+                            <span className="flex space-x-1">
+                              <span className="w-1.5 h-1.5 bg-neutral-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                              <span className="w-1.5 h-1.5 bg-neutral-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                              <span className="w-1.5 h-1.5 bg-neutral-500 rounded-full animate-bounce"></span>
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
+
+                {/* Form wrapper */}
+                <form onSubmit={handleSendMessage} className={`w-full flex flex-col justify-between text-left ${messages.length > 1 ? "h-auto shrink-0 pt-2" : "flex-1 h-full"}`}>
+                  <textarea
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    placeholder="I want to manufacture technical knit T-shirts with a 3D hub in Seoul..."
+                    className={`w-full bg-transparent resize-none border-0 outline-none focus:ring-0 text-sm md:text-base text-white placeholder-neutral-400/50 font-light leading-relaxed select-text ${messages.length > 1 ? "h-[54px]" : "flex-1 pb-4"}`}
+                    disabled={isGenerating}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                  />
+
+                  {/* Inner Dashboard Controls footer panel matching reference screenshot exactly */}
+                  <div className="flex items-center justify-between pt-3 border-t border-white/5">
+                    <div className="flex items-center space-x-2.5">
+                      {/* Analyze Image button on bottom left */}
+                      <button
+                        type="button"
+                        onClick={handleAnalyzeImage}
+                        className="inline-flex items-center space-x-2 bg-white/5 hover:bg-white/10 active:scale-[0.98] border border-white/10 rounded-full px-4 py-2 transition duration-300 text-neutral-200 text-xs font-medium cursor-pointer"
+                      >
+                        <Camera className="w-3.5 h-3.5 text-neutral-400" />
+                        <span>Upload</span>
+                      </button>
+
+                      {/* Clear conversation button */}
+                      {messages.length > 1 && (
+                        <button
+                          onClick={onClearChat}
+                          type="button"
+                          className="inline-flex items-center space-x-1.5 bg-white/5 hover:bg-white/10 hover:text-white active:scale-[0.98] border border-white/10 rounded-full px-4 py-2 transition duration-300 text-neutral-400 text-xs font-medium cursor-pointer"
+                          title="Clear conversation"
+                        >
+                          <RefreshCw className="w-3.5 h-3.5" />
+                          <span>Clear</span>
+                        </button>
+                      )}
+
+                      {/* Restore conversation buttons */}
+                      {messages.length === 1 && savedChats && savedChats.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 items-center">
+                          {savedChats.map((chat, idx) => {
+                            const label = getChatLabel(chat);
+                            const fullText = chat.find(m => m.role === "user")?.text || "Untitled Chat";
+                            return (
+                              <button
+                                key={idx}
+                                onClick={() => onRestoreChat(idx)}
+                                type="button"
+                                className="inline-flex items-center space-x-1 bg-neutral-900/60 hover:bg-neutral-800 border border-white/10 hover:border-white/20 rounded-full px-3 py-1.5 transition duration-300 text-neutral-300 hover:text-white text-xs font-normal cursor-pointer select-none max-w-[150px] shadow-[0_0_12px_rgba(255,255,255,0.02)]"
+                                title={fullText}
+                              >
+                                <History className="w-3 h-3 text-neutral-500 shrink-0" />
+                                <span className="truncate">{label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Action utilities on bottom right */}
+
+                    <div className="flex items-center space-x-2">
+                      {/* Simulated Microphone voice clicker */}
+                      <button
+                        type="button"
+                        onClick={() => setChatInput("Describe the fabrics for custom streetwear production.")}
+                        className="p-2.5 rounded-full hover:bg-white/5 text-neutral-400 hover:text-white transition duration-300 cursor-pointer"
+                        title="Voice dictation prompt"
+                      >
+                        <Mic className="w-4 h-4" />
+                      </button>
+
+                      {/* Main Send arrow circular button */}
+                      <button
+                        type="submit"
+                        disabled={!chatInput.trim() || isGenerating}
+                        className={`p-2.5 rounded-full aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                          chatInput.trim() && !isGenerating
+                            ? "bg-white text-black hover:bg-neutral-200 hover:scale-105"
+                            : "bg-neutral-800 text-neutral-600 opacity-60 pointer-events-none"
+                        }`}
+                      >
+                        <ArrowUp className="w-4 h-4" strokeWidth={2.5} />
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
-            </div>
+            </motion.div>
           )}
 
-          {/* Form wrapper */}
-          <form onSubmit={handleSendMessage} className="w-full flex flex-col text-left">
-            <textarea
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              placeholder="I want to manufacture technical knit T-shirts with a 3D hub in Seoul..."
-              className="w-full min-h-[50px] md:min-h-[64px] bg-transparent resize-none border-0 outline-none focus:ring-0 text-sm md:text-base text-neutral-800 placeholder-neutral-500/80 font-light leading-relaxed select-text"
-              disabled={isGenerating}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSendMessage();
-                }
-              }}
-            />
-
-            {/* Inner Dashboard Controls footer panel matching reference screenshot exactly */}
-            <div className="flex items-center justify-between pt-4 mt-2 border-t border-black/[0.04]">
-              
-              {/* Analyze Image button on bottom left */}
-              <button
-                type="button"
-                onClick={handleAnalyzeImage}
-                className="inline-flex items-center space-x-2 bg-neutral-950/5 hover:bg-neutral-950/10 active:scale-[0.98] border border-neutral-950/[0.06] rounded-full px-4 py-2 transition duration-300 text-neutral-800 text-xs font-medium cursor-pointer"
-              >
-                <Camera className="w-3.5 h-3.5 text-neutral-700" />
-                <span>Analyze sketch</span>
-              </button>
-
-              {/* Action utilities on bottom right */}
-              <div className="flex items-center space-x-2">
-                
-                {/* Simulated Microphone voice clicker */}
-                <button
-                  type="button"
-                  onClick={() => setChatInput("Describe the fabrics for custom streetwear production.")}
-                  className="p-2.5 rounded-full hover:bg-neutral-950/5 text-neutral-600 hover:text-neutral-900 transition duration-300 cursor-pointer"
-                  title="Voice dictation prompt"
-                >
-                  <Mic className="w-4 h-4" />
-                </button>
-
-                {/* Main Send arrow circular button */}
-                <button
-                  type="submit"
-                  disabled={!chatInput.trim() || isGenerating}
-                  className={`p-2.5 rounded-full aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer ${
-                    chatInput.trim() && !isGenerating
-                      ? "bg-neutral-800 text-white hover:bg-neutral-900 hover:scale-105"
-                      : "bg-neutral-200 text-neutral-400 opacity-60 pointer-events-none"
-                  }`}
-                >
-                  <ArrowUp className="w-4 h-4" strokeWidth={2.5} />
-                </button>
-
+          {currentSlide === 1 && (
+            <motion.div
+              key="slide-1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="w-full flex flex-col items-center justify-center md:-translate-y-20 relative"
+            >
+              {/* Navigation Dot Indicators on top of conversation panel */}
+              <div className="flex space-x-2.5 mb-5">
+                {SLIDES.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                      index === currentSlide ? "w-6 bg-white" : "w-1.5 bg-white/20 hover:bg-white/40"
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
               </div>
 
-            </div>
-
-          </form>
-
-        </div>
-
-        {/* Bottom Translucent Overlapping Sage/Slate Pill buttons exactly matching the references */}
-        <div className="mt-8 flex flex-col items-center gap-3 w-full select-none">
-          
-          {/* Pill 1: "Connect with a clinician" style -> Click to communicate with Dongdaemun ateliers */}
-          <button 
-            onClick={() => handleQuickCommand("Let me connect with a master tailor in Dongdaemun.")}
-            className="w-full max-w-[340px] inline-flex items-center justify-between bg-emerald-950/65 hover:bg-emerald-950/80 text-white/95 backdrop-blur-md rounded-full px-4 py-3 border border-white/10 transition duration-300 text-xs tracking-wide cursor-pointer text-left hover:scale-[1.01]"
-          >
-            <div className="flex items-center space-x-3">
-              {/* Overlap active user avatar bubbles */}
-              <div className="flex -space-x-2">
-                <img 
-                  src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=40&h=40" 
-                  alt="Kim Seo-young"
-                  className="w-5 h-5 rounded-full object-cover border border-emerald-900"
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=40&h=40" 
-                  alt="Park Master"
-                  className="w-5 h-5 rounded-full object-cover border border-emerald-900"
-                  referrerPolicy="no-referrer"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=40&h=40" 
-                  alt="Chung Fabric Sourcing"
-                  className="w-5 h-5 rounded-full object-cover border border-emerald-900"
-                  referrerPolicy="no-referrer"
-                />
+              <div className="mb-8">
+                <h1 className="font-sans text-3xl md:text-[38px] font-medium text-white tracking-tight">
+                  {SLIDES[1].headline}
+                </h1>
               </div>
-              <span className="font-light">Connect with a seoul tailor</span>
-            </div>
-            <span className="text-[10px] font-mono opacity-60">ATELIER</span>
-          </button>
 
-          {/* Pill 2: "Explore common conditions" style -> Explore raw materials sourcing */}
-          <button 
-            onClick={() => handleQuickCommand("What premium organic bio-knit fabrics are available?")}
-            className="w-full max-w-[340px] inline-flex items-center justify-between bg-zinc-900/60 hover:bg-zinc-800/75 text-white/90 backdrop-blur-md rounded-full px-5 py-3 border border-white/10 transition duration-300 text-xs tracking-wide cursor-pointer text-left hover:scale-[1.01]"
-          >
-            <div className="flex items-center space-x-2.5">
-              <Search className="w-3.5 h-3.5 text-white/65" />
-              <span className="font-light">Explore premium tech-fabrics</span>
-            </div>
-            <span className="text-[10px] font-mono opacity-60">FABRIC MAP</span>
-          </button>
+              <div className="w-full flex flex-col font-sans text-left relative select-text">
+                {/* Split Grid for Company Info (No heavy card, beautifully laid out directly over clean white canvas) */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
+                  {/* Left Column (Brand Mission Statement & Details) */}
+                  <div className="lg:col-span-7 space-y-6">
+                    <div className="inline-flex items-center space-x-2 border-b border-white/10 pb-1.5">
+                      <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-widest font-bold">
+                        KOREA APPAREL WORKS • HERITAGE
+                      </span>
+                      <span className="text-[10px] font-mono text-neutral-500">ESTD 1994</span>
+                    </div>
+                    
+                    <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-white leading-tight">
+                      대한민국 최고 수준의 명품 의류가 탄생하는 고집스러운 공간, 아틀리에 에코시스템
+                    </h3>
 
-          {/* Pill 3: "Get prescriptions" look -> Sample swatch & order custom calipers sizing tool */}
-          <button 
-            onClick={onPreOrderClick}
-            className="w-full max-w-[340px] inline-flex items-center justify-between bg-[#4a504a]/60 hover:bg-[#4a504a]/75 text-white/90 backdrop-blur-md rounded-full px-5 py-3 border border-white/10 transition duration-300 text-xs tracking-wide cursor-pointer text-left hover:scale-[1.01]"
-          >
-            <div className="flex items-center space-x-2.5">
-              <span className="p-0.5 rounded-full bg-white/15">
-                <Ruler className="w-3.5 h-3.5 text-white/80" />
-              </span>
-              <span className="font-light">Get custom size physical caliper</span>
-            </div>
-            <span className="text-[10px] font-mono opacity-60">ORDER SAMPLE</span>
-          </button>
+                    <p className="text-neutral-300 font-light leading-relaxed text-sm md:text-base">
+                      Korea Apparel Works는 서울 동대문과 역사 깊은 창신동 봉제 단지를 혁신적인 마이크로 생산 스마트 체인으로 융합하는 프리미엄 어패럴 아틀리에입니다. 30년 넘게 세계적인 패션 감각과 원단의 호흡을 파고든 <strong className="font-semibold text-white">대한민국의 봉제 장인</strong>들이 모든 옷의 실루엣을 전담 설계합니다.
+                    </p>
 
-        </div>
+                    <p className="text-neutral-400 font-light leading-relaxed text-xs md:text-sm">
+                      저희는 프리미엄 어깨 체인 스티치 보강부터, 뒤틀림을 원상 복구하는 특수 컴팩트 피니싱 저지까지, 가공 표준에 있어서 절대 타협하지 않는 정교함을 자랑합니다. 구상 단계의 아이디어 스케치나 3D 그래픽 Blueprint 전용 가공 설계팀을 통해 가장 이상적인 완제품 피트로 이끕니다.
+                    </p>
+                  </div>
+
+                  {/* Right Column (Key highlights with clean minimalist cards) */}
+                  <div className="lg:col-span-5 space-y-4">
+                    <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex flex-col justify-between transition hover:border-white/10">
+                      <div className="flex items-center space-x-2 text-neutral-200 font-medium text-xs mb-1.5">
+                        <Award className="w-4 h-4 text-neutral-400" strokeWidth={1.8} />
+                        <span>30년 장인 정신 (Master Sewing)</span>
+                      </div>
+                      <p className="text-[11px] text-neutral-400 font-light leading-snug">
+                        실형제작사 및 서울 동대문 명가로 인정받아 온 장인들이 가봉 과정부터 직접 바느질하며 미세 각도를 수동으로 보정합니다.
+                      </p>
+                    </div>
+
+                    <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex flex-col justify-between transition hover:border-white/10">
+                      <div className="flex items-center space-x-2 text-neutral-200 font-medium text-xs mb-1.5">
+                        <Layers className="w-4 h-4 text-neutral-400" strokeWidth={1.8} />
+                        <span>친환경 하이 테크 소재 (Premium Tech)</span>
+                      </div>
+                      <p className="text-[11px] text-neutral-400 font-light leading-snug">
+                        GOTS 유기농 최고인증 면사 및 보풀을 방지하는 특수 엔자임 소프트 하이브리드 편직 기술을 바탕으로 직조 원단을 가공해 공급합니다.
+                      </p>
+                    </div>
+
+                    <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex flex-col justify-between transition hover:border-white/10">
+                      <div className="flex items-center space-x-2 text-neutral-200 font-medium text-xs mb-1.5">
+                        <Sparkles className="w-4 h-4 text-neutral-400" strokeWidth={1.8} />
+                        <span>로컬 마이크로 팩토리 (HQ Seoul)</span>
+                      </div>
+                      <p className="text-[11px] text-neutral-400 font-light leading-snug">
+                        기존 대형 공장이 외면하는 최소 30개 단위의 Low MOQ 스페셜 생산을 완벽히 수용하여, 디자이너 브랜드의 낭비 없는 스케일업을 돕습니다.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {currentSlide === 2 && (
+            <motion.div
+              key="slide-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="w-full flex flex-col items-center justify-center md:-translate-y-20 relative"
+            >
+              {/* Navigation Dot Indicators on top of conversation panel */}
+              <div className="flex space-x-2.5 mb-5">
+                {SLIDES.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                      index === currentSlide ? "w-6 bg-white" : "w-1.5 bg-white/20 hover:bg-white/40"
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+
+              <div className="mb-8">
+                <h1 className="font-sans text-3xl md:text-[38px] font-medium text-white tracking-tight">
+                  {SLIDES[2].headline}
+                </h1>
+              </div>
+
+              <div className="w-full flex flex-col font-sans text-left relative select-text">
+                {/* Elegant grid catalog layout showing distinct high-end items on white canvas */}
+                <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-2">
+                  <span className="text-[11px] font-mono text-neutral-300 uppercase tracking-widest font-bold flex items-center space-x-1.5">
+                    <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
+                    <span>Atelier Premium Line • 제품 소개</span>
+                  </span>
+                  <span className="text-[10px] font-mono text-neutral-500">MICRO SEWING BLUEPRINTS</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Product 1 */}
+                  <div className="bg-white/5 hover:bg-white/10 rounded-2xl p-5 border border-white/5 transition duration-300 flex flex-col justify-between shadow-2xs">
+                    <div>
+                      <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center mb-3 text-neutral-200">
+                        <Shirt className="w-5 h-5 text-neutral-300" strokeWidth={1.5} />
+                      </div>
+                      <h4 className="text-sm font-semibold text-white mb-1.5">시그니처 아틀리에 후디</h4>
+                      <p className="text-xs text-neutral-400 font-light leading-relaxed mb-4">
+                        480gsm 프리미엄 고밀도 코튼 루프백 프렌치테리를 사용하여 완벽하게 드롭되는 고유의 입체 실루엣과 보온성을 보장합니다.
+                      </p>
+                    </div>
+                    <div className="border-t border-white/5 pt-3.5 mt-auto">
+                      <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400">
+                        <span>MOQ: 30장</span>
+                        <span className="text-neutral-200 font-semibold">M - XXL</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Product 2 */}
+                  <div className="bg-white/5 hover:bg-white/10 rounded-2xl p-5 border border-white/5 transition duration-300 flex flex-col justify-between shadow-2xs">
+                    <div>
+                      <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center mb-3 text-neutral-200">
+                        <Shirt className="w-5 h-5 text-neutral-300" strokeWidth={1.2} />
+                      </div>
+                      <h4 className="text-sm font-semibold text-white mb-1.5">컴팩트 무결점 T-Shirt</h4>
+                      <p className="text-xs text-neutral-400 font-light leading-relaxed mb-4">
+                        280gsm 콤팩트 싱글 코튼 편직으로 세탁 변형률을 1% 미만으로 설계하고, 어깨 체인 스티치와 조밀한 이중 립 마감을 적용했습니다.
+                      </p>
+                    </div>
+                    <div className="border-t border-white/5 pt-3.5 mt-auto">
+                      <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400">
+                        <span>MOQ: 50장</span>
+                        <span className="text-neutral-200 font-semibold">S - XL</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Product 3 */}
+                  <div className="bg-white/5 hover:bg-white/10 rounded-2xl p-5 border border-white/5 transition duration-300 flex flex-col justify-between shadow-2xs">
+                    <div>
+                      <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center mb-3 text-neutral-200">
+                        <Layers className="w-5 h-5 text-neutral-300" strokeWidth={1.5} />
+                      </div>
+                      <h4 className="text-sm font-semibold text-white mb-1.5">테크니컬 시티쉘 재킷</h4>
+                      <p className="text-xs text-neutral-400 font-light leading-relaxed mb-4">
+                        방풍·방수가 적용된 메모리 리사이클 나일론 원사로, 도시적 입체 슬리브 구조와 고정밀 심 실링 스티치 처리가 돋보입니다.
+                      </p>
+                    </div>
+                    <div className="border-t border-white/5 pt-3.5 mt-auto">
+                      <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400">
+                        <span>MOQ: 30장</span>
+                        <span className="text-neutral-200 font-semibold">M - XL</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
+                  <span className="text-[10.5px] text-neutral-400 font-light font-mono text-center sm:text-left">
+                    * 전 제품 맞춤 패브릭 선정, 컬러 다잉 가공 및 디렉션 컨설팅 지원 가능
+                  </span>
+                  <button
+                    onClick={onPreOrderClick}
+                    className="bg-white hover:bg-neutral-100 active:scale-95 text-neutral-950 text-xs uppercase tracking-wider px-5 py-2.5 rounded-full font-medium cursor-pointer transition duration-200 w-full sm:w-auto text-center animate-pulse"
+                  >
+                    샘플 조율 신청하기
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
       </div>
 
       {/* Acoustic bottom bar lines */}
-      <div className="relative z-10 w-full max-w-[800px] mt-12 flex justify-between items-center text-neutral-900 font-mono text-[9px] uppercase tracking-[0.15em] select-none">
+      <div className="relative z-10 w-full max-w-4xl mt-12 flex justify-between items-center text-neutral-400 font-mono text-[9px] uppercase tracking-[0.15em] select-none">
         <span>EST. SEW TIME: 4-6 DAYS</span>
-        <span>SEOUL ATELIER DIRECT</span>
+        <span>{SLIDES[currentSlide].sub}</span>
       </div>
 
     </section>
   );
 }
+
