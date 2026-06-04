@@ -337,7 +337,7 @@ export default function Hero({
             >
               {/* Navigation Dot Indicators on top of conversation panel */}
               {messages.length === 1 && (
-                <div className="dots-responsive flex space-x-2.5 mb-5 select-none">
+                <div className="flex space-x-2.5 mb-5 select-none">
                   {SLIDES.map((_, index) => (
                     <button
                       key={index}
@@ -355,7 +355,7 @@ export default function Hero({
               {messages.length === 1 && (
                 <div 
                   id="tshirt-section" 
-                  className="tshirt-responsive flex items-center justify-center pointer-events-none transition-all duration-700 select-none animate-fadeIn"
+                  className="absolute -top-[260px] left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none transition-all duration-700 select-none animate-fadeIn"
                 >
                   {/* T-Shirt Model (Right) */}
                   <div className="w-[120px] h-[120px] flex items-center justify-center">
