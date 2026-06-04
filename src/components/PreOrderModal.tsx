@@ -34,27 +34,47 @@ export default function PreOrderModal({ isOpen, onClose, defaultFinish, defaultS
     if (!fullName.trim() || !email.includes("@")) return;
 
     setLoading(true);
+
+    const newTicket: PreOrderData = {
+      id: `KAW-2027-P${Math.floor(Math.random() * 90000) + 10000}`,
+      email,
+      fullName,
+      finish,
+      size,
+      country: "South Korea / Seoul Global",
+      shippingOption,
+      createdAt: new Date().toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      })
+    };
+
+    // Save locally
+    const preorders = JSON.parse(localStorage.getItem("kaw_preorders") || "[]");
+    preorders.push(newTicket);
+    localStorage.setItem("kaw_preorders", JSON.stringify(preorders));
+
+    // Post to persistent database backend
+    fetch("/api/submissions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: newTicket.id,
+        type: "preorder",
+        email: newTicket.email,
+        fullName: newTicket.fullName,
+        finish: newTicket.finish,
+        size: newTicket.size,
+        country: newTicket.country,
+        shippingOption: newTicket.shippingOption,
+        createdAt: new Date().toISOString()
+      })
+    }).catch(err => {
+      console.error("Failed to transmit preorder to backend database:", err);
+    });
+
     setTimeout(() => {
-      const newTicket: PreOrderData = {
-        id: `KAW-2027-P${Math.floor(Math.random() * 90000) + 10000}`,
-        email,
-        fullName,
-        finish,
-        size,
-        country: "South Korea / Seoul Global",
-        shippingOption,
-        createdAt: new Date().toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric"
-        })
-      };
-
-      // Save locally
-      const preorders = JSON.parse(localStorage.getItem("kaw_preorders") || "[]");
-      preorders.push(newTicket);
-      localStorage.setItem("kaw_preorders", JSON.stringify(preorders));
-
       setTicket(newTicket);
       setLoading(false);
     }, 1400);

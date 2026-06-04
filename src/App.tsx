@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 import PreOrderModal from "./components/PreOrderModal";
+import AdminDashboard from "./components/AdminDashboard";
 import { StreamColorFinish } from "./types";
 
 export default function App() {
+  const [currentView, setCurrentView] = useState<"client" | "admin">(() => {
+    if (typeof window !== "undefined" && window.location.pathname === "/admin") {
+      return "admin";
+    }
+    return "client";
+  });
   const [isPreOrderOpen, setIsPreOrderOpen] = useState(false);
   const [customFinish, setCustomFinish] = useState<StreamColorFinish>("titanium-silver");
   const [customSize, setCustomSize] = useState<number>(9);
@@ -17,6 +24,29 @@ export default function App() {
     }
   ]);
   const [savedChats, setSavedChats] = useState<{ role: "user" | "model"; text: string }[][]>([]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (window.location.pathname === "/admin") {
+        setCurrentView("admin");
+      } else {
+        setCurrentView("client");
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  const handleSetView = (view: "client" | "admin") => {
+    setCurrentView(view);
+    const targetPath = view === "admin" ? "/admin" : "/";
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState(null, "", targetPath);
+    }
+  };
 
   const handleClearChat = () => {
     if (messages.length > 1) {
@@ -50,34 +80,41 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-neutral-950 text-white antialiased selection:bg-neutral-800 selection:text-white">
       
-      {/* 2. Brand sticky Navigation Header */}
-      <Header 
-        onPreOrderClick={() => handleOpenPreOrder()} 
-        currentSlide={currentSlide} 
-        setCurrentSlide={setCurrentSlide} 
-        messages={messages}
-        onClearChat={handleClearChat}
-      />
+      {currentView === "admin" ? (
+        <AdminDashboard onExit={() => handleSetView("client")} />
+      ) : (
+        <>
+          {/* 2. Brand sticky Navigation Header */}
+          <Header 
+            onPreOrderClick={() => handleOpenPreOrder()} 
+            currentSlide={currentSlide} 
+            setCurrentSlide={setCurrentSlide} 
+            messages={messages}
+            onClearChat={handleClearChat}
+            onAdminClick={() => handleSetView("admin")}
+          />
 
-      {/* 3. Landing Modules */}
-      <main>
-        
-        {/* 4. Layered 3D Ring Hero Showcase */}
-        <Hero 
-          onPreOrderClick={() => handleOpenPreOrder()} 
-          currentSlide={currentSlide} 
-          setCurrentSlide={setCurrentSlide} 
-          messages={messages}
-          setMessages={setMessages}
-          savedChats={savedChats}
-          onClearChat={handleClearChat}
-          onRestoreChat={handleRestoreChat}
-        />
+          {/* 3. Landing Modules */}
+          <main>
+            
+            {/* 4. Layered 3D Ring Hero Showcase */}
+            <Hero 
+              onPreOrderClick={() => handleOpenPreOrder()} 
+              currentSlide={currentSlide} 
+              setCurrentSlide={setCurrentSlide} 
+              messages={messages}
+              setMessages={setMessages}
+              savedChats={savedChats}
+              onClearChat={handleClearChat}
+              onRestoreChat={handleRestoreChat}
+            />
 
-      </main>
+          </main>
 
-      {/* 5. Standalone Premium legal bottom */}
-      <Footer />
+          {/* 5. Standalone Premium legal bottom */}
+          <Footer onAdminClick={() => handleSetView("admin")} />
+        </>
+      )}
 
       {/* 6. Dynamic Priority queue reservation ticket dialog */}
       <PreOrderModal

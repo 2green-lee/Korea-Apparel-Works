@@ -7,9 +7,10 @@ interface HeaderProps {
   setCurrentSlide: (slide: number) => void;
   messages: { role: "user" | "model"; text: string }[];
   onClearChat: () => void;
+  onAdminClick?: () => void;
 }
 
-export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide, messages, onClearChat }: HeaderProps) {
+export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide, messages, onClearChat, onAdminClick }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -83,7 +84,7 @@ export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide,
         </div>
 
         {/* Right Side: Options replaced with a single Contact us link */}
-        <div className="flex items-center text-xs font-normal">
+        <div className="flex items-center space-x-6 text-xs font-normal">
           <button
             onClick={() => {
               const footerEl = document.getElementById("footer");
@@ -130,7 +131,7 @@ export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide,
             Product
           </button>
           <hr className="border-neutral-200/50" />
-          <div className="flex justify-between text-xs text-neutral-500 pt-2">
+          <div className="flex justify-end items-center text-xs text-neutral-500 pt-2">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);

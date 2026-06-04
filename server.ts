@@ -3,6 +3,8 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import "dotenv/config";
+import fs from "fs/promises";
+import { existsSync } from "fs";
 
 // Lazy initialize Gemini client to prevent crash if not configured
 let aiClient: GoogleGenAI | null = null;
@@ -24,11 +26,252 @@ function getGeminiClient(): GoogleGenAI {
   return aiClient;
 }
 
+const SUBMISSIONS_FILE = path.join(process.cwd(), "submissions.json");
+const ADMINS_FILE = path.join(process.cwd(), "admins.json");
+
+interface SubmissionItem {
+  id: string;
+  type: "quote" | "preorder";
+  email: string;
+  fullName?: string;
+  finish?: string;
+  size?: number;
+  country: string;
+  shippingOption?: string;
+  createdAt: string;
+}
+
+interface AdminAccount {
+  email: string;
+  password?: string;
+  name: string;
+  role: "master" | "admin";
+  createdAt: string;
+}
+
+const MASTER_ADMIN: AdminAccount = {
+  email: "lgi12@naver.com",
+  password: "!rmsrjfl12",
+  name: "Master Admin",
+  role: "master",
+  createdAt: new Date().toISOString(),
+};
+
+async function readSubmissions(): Promise<SubmissionItem[]> {
+  try {
+    if (!existsSync(SUBMISSIONS_FILE)) {
+      return [];
+    }
+    const data = await fs.readFile(SUBMISSIONS_FILE, "utf-8");
+    return JSON.parse(data || "[]");
+  } catch (error) {
+    console.error("Error reading submissions:", error);
+    return [];
+  }
+}
+
+async function writeSubmissions(submissions: SubmissionItem[]) {
+  try {
+    await fs.writeFile(SUBMISSIONS_FILE, JSON.stringify(submissions, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Error writing submissions:", error);
+  }
+}
+
+async function readAdmins(): Promise<AdminAccount[]> {
+  try {
+    if (!existsSync(ADMINS_FILE)) {
+      await fs.writeFile(ADMINS_FILE, JSON.stringify([MASTER_ADMIN], null, 2), "utf-8");
+      return [MASTER_ADMIN];
+    }
+    const data = await fs.readFile(ADMINS_FILE, "utf-8");
+    const parsed: AdminAccount[] = JSON.parse(data || "[]");
+    // Always ensure the master account exists in the list
+    if (!parsed.some(acc => acc.email === MASTER_ADMIN.email)) {
+      parsed.unshift(MASTER_ADMIN);
+      await fs.writeFile(ADMINS_FILE, JSON.stringify(parsed, null, 2), "utf-8");
+    }
+    return parsed;
+  } catch (error) {
+    console.error("Error reading admins:", error);
+    return [MASTER_ADMIN];
+  }
+}
+
+async function writeAdmins(admins: AdminAccount[]) {
+  try {
+    await fs.writeFile(ADMINS_FILE, JSON.stringify(admins, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Error writing admins:", error);
+  }
+}
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
   app.use(express.json());
+
+  // API to retrieve all persistent submissions (Quotes & Pre-Orders) for the Admin Dashboard
+  app.get("/api/submissions", async (req, res) => {
+    try {
+      const list = await readSubmissions();
+      res.json(list);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // API to authenticate administrative accounts
+  app.post("/api/admins/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required" });
+      }
+
+      const list = await readAdmins();
+      const match = list.find(
+        (acc) => acc.email.toLowerCase() === email.toLowerCase() && acc.password === password
+      );
+
+      if (match) {
+        res.json({
+          success: true,
+          admin: {
+            email: match.email,
+            name: match.name,
+            role: match.role,
+          },
+        });
+      } else {
+        res.status(401).json({ error: "Invalid administrative credentials." });
+      }
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // API to retrieve list of other admin accounts (excluding sensitive passwords)
+  app.get("/api/admins", async (req, res) => {
+    try {
+      const list = await readAdmins();
+      const sanitized = list.map((acc) => ({
+        email: acc.email,
+        name: acc.name,
+        role: acc.role,
+        createdAt: acc.createdAt,
+      }));
+      res.json(sanitized);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // API to register a new administrator account (By the Master admin)
+  app.post("/api/admins/create", async (req, res) => {
+    try {
+      const { email, password, name, role } = req.body;
+      if (!email || !password || !name) {
+        return res.status(400).json({ error: "Missing required admin account fields" });
+      }
+
+      const list = await readAdmins();
+      if (list.some((acc) => acc.email.toLowerCase() === email.toLowerCase())) {
+        return res.status(400).json({ error: "An administrator account with this email already exists" });
+      }
+
+      const newAdmin: AdminAccount = {
+        email: email.trim(),
+        password,
+        name: name.trim(),
+        role: role === "master" ? "master" : "admin",
+        createdAt: new Date().toISOString(),
+      };
+
+      list.push(newAdmin);
+      await writeAdmins(list);
+      res.status(201).json({ success: true, admin: { email: newAdmin.email, name: newAdmin.name, role: newAdmin.role } });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // API to delete a secondary administrator account
+  app.post("/api/admins/delete", async (req, res) => {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        return res.status(400).json({ error: "Email is required" });
+      }
+
+      if (email.toLowerCase() === "lgi12@naver.com") {
+        return res.status(403).json({ error: "The primary master administrator account cannot be deleted." });
+      }
+
+      const list = await readAdmins();
+      const filtered = list.filter((acc) => acc.email.toLowerCase() !== email.toLowerCase());
+      await writeAdmins(filtered);
+      res.json({ success: true });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // API to append a new submission (either a quote request or a pre-order reservation)
+  app.post("/api/submissions", async (req, res) => {
+    try {
+      const item = req.body;
+      if (!item.email || !item.type) {
+        return res.status(400).json({ error: "Missing required fields: email and type" });
+      }
+
+      const list = await readSubmissions();
+      const newItem: SubmissionItem = {
+        id: item.id || `SUB-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        type: item.type,
+        email: item.email,
+        fullName: item.fullName,
+        finish: item.finish,
+        size: item.size,
+        country: item.country || "Unknown",
+        shippingOption: item.shippingOption,
+        createdAt: item.createdAt || new Date().toISOString(),
+      };
+
+      list.unshift(newItem); // store newest submissions first
+      await writeSubmissions(list);
+      res.status(201).json(newItem);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // API to delete a specific submission
+  app.post("/api/submissions/delete", async (req, res) => {
+    try {
+      const { id } = req.body;
+      if (!id) {
+        return res.status(400).json({ error: "Submission ID is required" });
+      }
+      const list = await readSubmissions();
+      const filtered = list.filter((i) => i.id !== id);
+      await writeSubmissions(filtered);
+      res.json({ success: true });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // API to clear all submissions in database
+  app.post("/api/submissions/clear", async (req, res) => {
+    try {
+      await writeSubmissions([]);
+      res.json({ success: true });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
 
   // API Route for AI Chat regarding Korean Apparel Manufacturing
   app.post("/api/chat", async (req, res) => {

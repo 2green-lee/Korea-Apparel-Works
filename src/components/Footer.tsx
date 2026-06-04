@@ -1,6 +1,10 @@
 import React from "react";
 
-export default function Footer() {
+interface FooterProps {
+  onAdminClick?: () => void;
+}
+
+export default function Footer({ onAdminClick }: FooterProps) {
   return (
     <footer id="footer" className="bg-black text-neutral-450 pt-16 pb-12 overflow-hidden border-t border-white/5 relative font-sans">
       <div className="max-w-6xl mx-auto px-6 md:px-10 relative z-10 flex flex-col justify-between items-stretch gap-12 select-text">
