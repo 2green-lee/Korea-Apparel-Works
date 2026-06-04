@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler, ChevronLeft, ChevronRight, Shirt, Award, Layers, Sparkles, Check, History, MessageSquare, FileText, Truck, User } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import QuoteModal from "./QuoteModal";
+import tshirtIcon from "./free-icon-clothes-7640468.png";
 
 interface HeroProps {
   onPreOrderClick: () => void;
@@ -279,7 +280,7 @@ export default function Hero({
    };
 
   return (
-    <section className={`relative w-full flex flex-col justify-center items-center overflow-hidden z-10 px-4 md:px-8 transition-all duration-500 min-h-[100vh] py-20`}>
+    <section className={`relative w-full flex flex-col justify-center items-center overflow-x-hidden overflow-y-visible z-10 px-4 md:px-8 transition-all duration-500 min-h-[100vh] py-20`}>
       
       {/* Background Solid Canvas with seamless transitions */}
       <div className="absolute inset-0 z-0">
@@ -355,12 +356,12 @@ export default function Hero({
               {messages.length === 1 && (
                 <div 
                   id="tshirt-section" 
-                  className="mb-4 flex items-center justify-center pointer-events-none transition-all duration-700 select-none animate-fadeIn"
+                  className="mb-6 flex items-center justify-center pointer-events-none transition-all duration-700 select-none animate-fadeIn"
                 >
                   {/* T-Shirt Model (Right) */}
-                  <div className="w-[100px] h-[100px] md:w-[120px] md:h-[120px] flex items-center justify-center">
+                  <div className="w-[120px] h-[120px] flex items-center justify-center">
                     <img 
-                      src="/api/github-image?url=https://raw.githubusercontent.com/2green-lee/Korea-Apparel-Works/f76783eb4d5cfc7d3530a1fedd7db576efa0d0ff/free-icon-clothes-7640468.png" 
+                      src={tshirtIcon} 
                       alt="Atelier T-Shirt Model" 
                       className="w-full h-full object-contain filter invert opacity-100 drop-shadow-[0_8px_16px_rgba(255,255,255,0.1)]"
                       referrerPolicy="no-referrer"
