@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { X, Mail, Globe, Check, ChevronLeft, ArrowRight, ShieldCheck } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { X, Mail, Globe, Check, ChevronLeft, ArrowRight, ShieldCheck, Search, ChevronDown } from "lucide-react";
+import { COUNTRIES, CountryOption } from "../data/countries";
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -14,6 +15,65 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
   const [checked, setChecked] = useState(false);
   const [showPrivacyDetail, setShowPrivacyDetail] = useState(false);
 
+  // Combobox states
+  const [isOpenCombobox, setIsOpenCombobox] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const comboboxRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const skipOnFocusRef = useRef(false);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (comboboxRef.current && !comboboxRef.current.contains(event.target as Node)) {
+        setIsOpenCombobox(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const selectCountry = (c: CountryOption) => {
+    const combined = `${c.code} - ${c.name}`;
+    setCountry(combined);
+    setSearchQuery(combined);
+    setIsOpenCombobox(false);
+  };
+
+  const handleFocus = () => {
+    if (skipOnFocusRef.current) {
+      skipOnFocusRef.current = false;
+      return;
+    }
+    setIsOpenCombobox(true);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    setCountry(val);
+    setIsOpenCombobox(true);
+  };
+
+  const filteredCountries = COUNTRIES.filter(c => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+    if (query.includes(" - ")) {
+      const parts = query.split(" - ");
+      const maybeCode = parts[0].trim();
+      const maybeName = parts.slice(1).join(" - ").trim();
+      return (
+        c.code.toLowerCase().includes(maybeCode) ||
+        c.name.toLowerCase().includes(maybeName)
+      );
+    }
+    return (
+      c.name.toLowerCase().includes(query) ||
+      c.code.toLowerCase().includes(query)
+    );
+  });
+
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,7 +85,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-none pretendard-font animate-fadeIn">
       {/* Outer Card */}
-      <div className="relative w-full max-w-lg bg-neutral-950 text-white rounded-3xl border border-white/15 shadow-[0_24px_64px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-300 pretendard-font">
+      <div className="relative w-full max-w-lg bg-neutral-950 text-white rounded-3xl border border-white/15 shadow-[0_24px_64px_rgba(0,0,0,0.8)] overflow-visible transition-all duration-300 pretendard-font">
         
         {/* Header with Close option */}
         <button
@@ -69,26 +129,57 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
                   </div>
                 </div>
 
-                {/* Country input field */}
-                <div className="space-y-1.5 font-sans text-center animate-fadeIn">
+                {/* Country input field (Searchable Combobox) */}
+                <div ref={comboboxRef} className="space-y-1.5 font-sans text-center animate-fadeIn relative">
                   <label className="text-[10px] tracking-wider font-semibold text-neutral-400 uppercase block font-sans text-center">
                     Country
                   </label>
                   <div className="relative">
                     <input
+                      ref={inputRef}
                       type="text"
                       required
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                      placeholder="e.g., United States"
-                      className="w-full bg-neutral-900 border border-white/10 hover:border-white/20 rounded-xl py-3 px-4 text-xs text-center text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400/40 focus:ring-1 focus:ring-amber-400/20 transition-all font-sans"
+                      value={searchQuery}
+                      onChange={handleInputChange}
+                      onFocus={handleFocus}
+                      placeholder="Search country..."
+                      className="w-full bg-neutral-900 border border-white/10 hover:border-white/20 rounded-xl py-3 pl-4 pr-10 text-xs text-center text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400/40 focus:ring-1 focus:ring-amber-400/20 transition-all font-sans"
                     />
+                    <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1 text-neutral-500">
+                      <Search className="w-3.5 h-3.5" />
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </div>
                   </div>
+
+              {/* Dropdown list */}
+                  {isOpenCombobox && (
+                    <div className="absolute z-50 left-0 right-0 mt-1 max-h-[350px] overflow-y-auto bg-neutral-950 opacity-100 border border-white/15 rounded-xl shadow-2xl divide-y divide-white/5 scrollbar-thin text-left">
+                      <div className="divide-y divide-white/5">
+                        {filteredCountries.length > 0 ? (
+                          filteredCountries.map((c) => (
+                            <button
+                              key={c.code}
+                              type="button"
+                              onClick={() => selectCountry(c)}
+                              className="w-full px-4 py-2.5 text-xs text-left text-neutral-300 hover:text-white hover:bg-white/5 transition-colors font-sans focus:outline-none flex items-center justify-between"
+                            >
+                              <span>{c.name}</span>
+                              <span className="text-[10px] text-neutral-500 font-mono tracking-wider">{c.code}</span>
+                            </button>
+                          ))
+                        ) : (
+                          <div className="px-4 py-3.5 text-xs text-neutral-500 text-center font-sans">
+                            No matching country found
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Privacy Custom Checkbox Option */}
-              <div className="bg-neutral-900/40 p-4 rounded-xl border border-white/5 space-y-2 select-none">
+              <div className="bg-neutral-900 p-4 rounded-xl border border-white/5 space-y-2 select-none">
                 <label className="flex items-start gap-3 cursor-pointer group">
                   <div className="relative flex items-center mt-0.5">
                     <input
@@ -161,7 +252,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
               </div>
 
               {/* Detailed Document Content Scroll Container */}
-              <div className="bg-neutral-950/85 p-4 rounded-xl border border-white/5 text-[11px] text-neutral-300 font-light leading-relaxed max-h-[300px] overflow-y-auto space-y-4 scrollbar-thin">
+              <div className="bg-neutral-950 p-4 rounded-xl border border-white/5 text-[11px] text-neutral-300 font-light leading-relaxed max-h-[300px] overflow-y-auto space-y-4 scrollbar-thin">
                 <p className="font-semibold text-neutral-100 italic">
                   Last updated: June 3, 2026
                 </p>

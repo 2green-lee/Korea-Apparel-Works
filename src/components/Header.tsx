@@ -68,14 +68,12 @@ export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide,
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
           <button
             onClick={() => {
-              if (messages.length > 1) {
-                onClearChat();
-              } else {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }
+              setCurrentSlide(0);
+              onClearChat();
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className="flex flex-col items-center group cursor-pointer focus:outline-hidden"
-            title={messages.length > 1 ? "Clear conversation" : ""}
+            title="Reset to home and clear conversation"
           >
             <span className="font-sans font-normal text-[15px] tracking-[0.20em] transition-colors duration-500 select-none text-neutral-900 group-hover:opacity-80">
               Korea Apparel Works
