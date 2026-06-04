@@ -333,7 +333,7 @@ export default function Hero({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
-              className="w-full flex flex-col items-center justify-center relative"
+              className="w-full flex flex-col items-center justify-center relative -translate-y-5"
             >
               {/* Navigation Dot Indicators on top of conversation panel */}
               {messages.length === 1 && (
@@ -355,12 +355,12 @@ export default function Hero({
               {messages.length === 1 && (
                 <div 
                   id="tshirt-section" 
-                  className="absolute -top-[260px] left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none transition-all duration-700 select-none animate-fadeIn"
+                  className="mb-4 flex items-center justify-center pointer-events-none transition-all duration-700 select-none animate-fadeIn"
                 >
                   {/* T-Shirt Model (Right) */}
-                  <div className="w-[120px] h-[120px] flex items-center justify-center">
+                  <div className="w-[100px] h-[100px] md:w-[120px] md:h-[120px] flex items-center justify-center">
                     <img 
-                      src="https://raw.githubusercontent.com/2green-lee/Korea-Apparel-Works/f76783eb4d5cfc7d3530a1fedd7db576efa0d0ff/free-icon-clothes-7640468.png" 
+                      src="/api/github-image?url=https://raw.githubusercontent.com/2green-lee/Korea-Apparel-Works/f76783eb4d5cfc7d3530a1fedd7db576efa0d0ff/free-icon-clothes-7640468.png" 
                       alt="Atelier T-Shirt Model" 
                       className="w-full h-full object-contain filter invert opacity-100 drop-shadow-[0_8px_16px_rgba(255,255,255,0.1)]"
                       referrerPolicy="no-referrer"

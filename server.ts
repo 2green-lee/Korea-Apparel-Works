@@ -273,6 +273,31 @@ async function startServer() {
     }
   });
 
+  // Safe Proxy API for loading external image formats securely in iFrame preview environments
+  app.get("/api/github-image", async (req, res) => {
+    try {
+      const urlParam = req.query.url as string;
+      if (!urlParam || !urlParam.startsWith("https://raw.githubusercontent.com/")) {
+        return res.status(400).send("Invalid or unsupported image source.");
+      }
+      const response = await fetch(urlParam);
+      if (!response.ok) {
+        return res.status(response.status).send("Failed to retrieve image asset.");
+      }
+      const buffer = Buffer.from(await response.arrayBuffer());
+      if (urlParam.endsWith(".png")) {
+        res.setHeader("Content-Type", "image/png");
+      } else {
+        res.setHeader("Content-Type", "image/jpeg");
+      }
+      res.setHeader("Cache-Control", "public, max-age=86400");
+      res.send(buffer);
+    } catch (e: any) {
+      console.error("Proxy failure:", e);
+      res.status(500).send("Proxy error.");
+    }
+  });
+
   // API Route for AI Chat regarding Korean Apparel Manufacturing
   app.post("/api/chat", async (req, res) => {
     try {
