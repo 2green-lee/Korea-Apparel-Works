@@ -816,31 +816,31 @@ export default function Hero({
                 </div>
 
                 {/* AI Tech Section */}
-                <div className="w-full py-12 px-6 md:px-10 bg-neutral-50 border border-neutral-200/80 rounded-2xl mt-12">
+                <div className="w-full py-12 px-6 md:px-10 bg-[#e8f7f0] border border-[#b2e4cb] rounded-2xl mt-12 shadow-[0_8px_30px_rgba(5,150,105,0.04)]">
                   <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-10 items-start mb-10">
                     <div>
-                      <h2 className="text-xl md:text-2xl font-semibold text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>
-                      <p className="text-sm md:text-base text-neutral-600 leading-relaxed font-light">We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.</p>
+                      <h2 className="text-xl md:text-2xl font-bold text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>
+                      <p className="text-sm md:text-base text-neutral-800 leading-relaxed font-light">We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                       {/* cards */}
-                      <div className="p-6 border border-neutral-200 bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-neutral-100/80 flex items-center justify-center text-neutral-800 mb-4">
-                          <MessageSquare className="w-5 h-5 text-neutral-700" strokeWidth={1.5} />
+                      <div className="p-6 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
+                           <MessageSquare className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
                         </div>
                         <h3 className="text-base font-bold text-neutral-950 mb-2">AI inquiry</h3>
                         <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Describe what you need in natural language. Our assistant extracts specs automatically.</p>
                       </div>
-                      <div className="p-6 border border-neutral-200 bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-neutral-100/80 flex items-center justify-center text-neutral-800 mb-4">
-                          <FileText className="w-5 h-5 text-neutral-700" strokeWidth={1.5} />
+                      <div className="p-6 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
+                           <FileText className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
                         </div>
                         <h3 className="text-base font-bold text-neutral-950 mb-2">Smart quoting</h3>
                         <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Receive a detailed proposal within 24 hours based on your exact requirements.</p>
                       </div>
-                      <div className="p-5 border border-neutral-200 bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-neutral-100/80 flex items-center justify-center text-neutral-800 mb-4">
-                          <Truck className="w-5 h-5 text-neutral-700" strokeWidth={1.5} />
+                      <div className="p-5 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
+                           <Truck className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
                         </div>
                         <h3 className="text-base font-bold text-neutral-950 mb-2">Production tracking</h3>
                         <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Real-time updates from sample approval through to shipment confirmation.</p>
@@ -848,36 +848,36 @@ export default function Hero({
                     </div>
                   </div>
 
-                  <div className="flex flex-col md:flex-row items-stretch border border-neutral-200 bg-white rounded-2xl overflow-hidden shadow-sm">
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-neutral-100 flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-neutral-400 tracking-widest mb-2">01</div>
+                  <div className="flex flex-col md:flex-row items-stretch border border-[#b2e4cb] bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">01</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Inquiry</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Chat with AI</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-emerald-50 text-emerald-700 border border-emerald-100 px-2.5 py-0.5 rounded-full">AI</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
                     </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-neutral-100 flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-neutral-400 tracking-widest mb-2">02</div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">02</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Proposal</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Within 24h</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-emerald-50 text-emerald-700 border border-emerald-100 px-2.5 py-0.5 rounded-full">AI</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
                     </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-neutral-100 flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-neutral-400 tracking-widest mb-2">03</div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">03</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Sample</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">14 day turnaround</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-100 text-neutral-700 border border-neutral-200 px-2.5 py-0.5 rounded-full">Handcraft</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
                     </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-neutral-100 flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-neutral-400 tracking-widest mb-2">04</div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">04</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Production</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Full QC inspection</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-100 text-neutral-700 border border-neutral-200 px-2.5 py-0.5 rounded-full">Handcraft</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
                     </div>
                     <div className="flex-1 w-full md:w-auto p-6 text-center flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-neutral-400 tracking-widest mb-2">05</div>
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">05</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Shipment</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Tracked delivery</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-emerald-50 text-emerald-700 border border-emerald-100 px-2.5 py-0.5 rounded-full">AI</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
                     </div>
                   </div>
                 </div>
