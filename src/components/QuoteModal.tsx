@@ -37,7 +37,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
   const selectCountry = (c: CountryOption) => {
     const combined = `${c.code} - ${c.name}`;
     setCountry(combined);
-    setSearchQuery(combined);
+    setSearchQuery(c.name);
     setIsOpenCombobox(false);
   };
 
@@ -52,7 +52,13 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setSearchQuery(val);
-    setCountry(val);
+    
+    const match = COUNTRIES.find(c => c.name.toLowerCase() === val.toLowerCase().trim());
+    if (match) {
+      setCountry(`${match.code} - ${match.name}`);
+    } else {
+      setCountry(val);
+    }
     setIsOpenCombobox(true);
   };
 
@@ -161,10 +167,9 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
                               key={c.code}
                               type="button"
                               onClick={() => selectCountry(c)}
-                              className="w-full px-4 py-2.5 text-xs text-left text-neutral-300 hover:text-white hover:bg-white/5 transition-colors font-sans focus:outline-none flex items-center justify-between"
+                              className="w-full px-4 py-2.5 text-xs text-left text-neutral-300 hover:text-white hover:bg-white/5 transition-colors font-sans focus:outline-none"
                             >
                               <span>{c.name}</span>
-                              <span className="text-[10px] text-neutral-500 font-mono tracking-wider">{c.code}</span>
                             </button>
                           ))
                         ) : (

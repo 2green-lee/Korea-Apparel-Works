@@ -50,6 +50,248 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
     return text;
   }
   return "Saved Chat";
+};const PREMIUM_FABRICS = [
+  // Performance
+  {
+    id: "mesh",
+    category: "Performance",
+    name: "고기능성 스포티 메쉬",
+    engName: "Active Micro Mesh",
+    weight: "160 gsm",
+    composition: "92% Recycled Polyester, 8% Spandex",
+    season: "Summer / Intense Workouts",
+    thickness: 20,
+    softness: 80,
+    elasticity: 90,
+    durability: 95,
+    description: "공기 순환 극대화 구멍 구조를 적용하여 땀 배출이 압도적으로 빠르고 상쾌한 메쉬 원단입니다. 운동성 뿐만 아니라 고온 다습한 기후의 데일리 캐주얼 스포츠웨어에 완벽히 대응합니다.",
+    colors: 12,
+    tags: ["흡한속건 QUICK DRY", "친환경 GRS 인증", "뛰어난 통기성"],
+    uses: ["러닝 웨어", "스포티 슬리브리스", "액티브웨어"]
+  },
+  {
+    id: "jersey",
+    category: "Performance",
+    name: "쿨텐션 에어로 싱글 저지",
+    engName: "Cool-Tension Aero Single Jersey",
+    weight: "210 gsm",
+    composition: "74% Cotton, 20% Polyester, 6% Polyurethane",
+    season: "Spring / Summer / Autumn",
+    thickness: 35,
+    softness: 88,
+    elasticity: 85,
+    durability: 92,
+    description: "쾌적한 표면 유지력과 탄탄한 복원력을 갖춘 기능성 싱글 저지입니다. 신축 방향으로 틀어짐이 없고, 무릎이나 목 부위에 늘어남 흔적을 최소화하는 하이클래스 액티브 웨어 하프 티셔츠에 이상적입니다.",
+    colors: 18,
+    tags: ["에어로쿨 흡습가공", "사방 스트레치", "워셔블 복원"],
+    uses: ["퍼포먼스 티셔츠", "에슬레저 탑", "고기능 이너티"]
+  },
+  {
+    id: "flat-back-rib",
+    category: "Performance",
+    name: "컴프레션 플랫 백 립",
+    engName: "Compression Flat Back Rib",
+    weight: "320 gsm",
+    composition: "95% Cotton, 5% Polyurethane Elastomer",
+    season: "All Seasons",
+    thickness: 55,
+    softness: 82,
+    elasticity: 95,
+    durability: 98,
+    description: "밀도 높은 골지 조직의 뒷면이 평평하게 직조되어 극대화된 착용 안정감과 우수한 신축성을 선사하는 고기능 립 소재입니다. 잦은 신체 마찰에도 보풀이 잘 일어나지 않아 프리미엄 애슬레저 크루넥 및 넥 시보리에 최적입니다.",
+    colors: 14,
+    tags: ["우수한 탄성 복조", "보풀 방지 ANTI-PILLING", "시보리 매칭 최적"],
+    uses: ["넥시보리 마감", "스포츠 크루넥", "시그니처 트래킹탑"]
+  },
+  
+  // Classic
+  {
+    id: "pique",
+    category: "Classic",
+    name: "프리미엄 더블 헤리티지 피케",
+    engName: "Premium Double Heritage Piqué",
+    weight: "240 gsm",
+    composition: "100% Combed Cotton",
+    season: "Spring / Summer",
+    thickness: 45,
+    softness: 75,
+    elasticity: 50,
+    durability: 90,
+    description: "벌집 모양의 정교한 엠보 직조감을 가진 헤리티지 피케 원단입니다. 몸에 쉽게 들러붙지 않아 우수한 쾌적감을 유지해주며, 명품 폴로 셔츠나 테니스 캐주얼웨어 제작 시 단연 먼저 추천되는 기품 있는 정석 클래식입니다.",
+    colors: 16,
+    tags: ["벌집 엠보 텍스처", "통풍 통기 특화", "격조 높은 마감"],
+    uses: ["골프 폴로셔츠", "클래식 테니스탑", "브랜드 칼라티"]
+  },
+  {
+    id: "interlock",
+    category: "Classic",
+    name: "이중 양면 인터록 실켓",
+    engName: "Double-Interlock Silket Single",
+    weight: "260 gsm",
+    composition: "100% Super-Combed Long Cotton",
+    season: "All Seasons",
+    thickness: 50,
+    softness: 92,
+    elasticity: 68,
+    durability: 88,
+    description: "앞뒷면 구분이 없이 양면 모두 극상의 매끄러운 터치감과 조직 균일도를 선사하는 양면 인터록 원단입니다. 원사 보풀 제거 실켓 후가공을 거쳐 표면의 은은한 명품 실크 느낌 광택감이 흐르며, 사계절용 스웨트 및 프리미엄 캐주얼용입니다.",
+    colors: 20,
+    tags: ["두께 균일 양면직", "실키 바이오가공 완료", "형태 유지 안정"],
+    uses: ["명품 맨투맨", "프리미엄 후드티", "데일리 포멀 캐주얼"]
+  },
+
+  // Premium / Design
+  {
+    id: "jacquard",
+    category: "Premium / Design",
+    name: "입체 직조 시그니처 자카드",
+    engName: "3D Textured Signature Jacquard",
+    weight: "340 gsm",
+    composition: "80% Coarse Cotton, 20% Fancy Filament",
+    season: "Autumn / Winter / Spring",
+    thickness: 75,
+    softness: 78,
+    elasticity: 55,
+    durability: 95,
+    description: "인쇄나 프린팅 방식이 아닌, 직기 자체의 실놀림을 통해 문양을 입체적으로 짜 올린 하이엔드 자카드 원단입니다. 원단 자체에 고유의 깊이 있는 실루엣과 볼륨감이 살아나 옷 한 벌만으로 럭셔리 컬렉션 무드를 자아냅니다.",
+    colors: 10,
+    tags: ["입체 문양 제직", "하이쿠투르 패턴", "도톰한 볼륨감"],
+    uses: ["컬렉션 후드", "디자이너 브랜드 원포인트", "고급 맨투맨"]
+  },
+  {
+    id: "stripe",
+    category: "Premium / Design",
+    name: "얀 다이드 클래식 스트라이프",
+    engName: "Yarn-Dyed French Breton Stripe",
+    weight: "220 gsm",
+    composition: "100% Cotton-Filament Multi",
+    season: "Spring / Summer / Autumn",
+    thickness: 40,
+    softness: 86,
+    elasticity: 62,
+    durability: 89,
+    description: "제직 전 미리 원사를 컬러별 정밀 염색(선염)하여 스트라이프 간 간격과 배색 선명도를 완벽히 구현해낸 니트입니다. 세탁 후에도 배색 라인이 이염되거나 흐려지지 않아 영원히 변치 않는 모던 프렌치 감성을 전합니다.",
+    colors: 12,
+    tags: ["이염 방지 선염사", "프렌치 마린 룩", "깔끔한 간격 배합"],
+    uses: ["마린 스트라이프 티", "데일리 보트넥 티셔츠", "헤리티지 캐주얼"]
+  }
+];
+
+const getFabricPatternSvg = (id: string, nameEng: string) => {
+  switch (id) {
+    case "mesh":
+      return (
+        <svg className="w-full h-full" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="mesh_pat" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+              <circle cx="4" cy="4" r="1.2" fill="#10b981" fillOpacity="0.4" />
+              <rect x="0" y="0" width="8" height="8" fill="none" stroke="#e5e5e5" strokeWidth="0.5" strokeOpacity="0.5" />
+            </pattern>
+          </defs>
+          <rect width="200" height="80" fill="url(#mesh_pat)" />
+          <text x="100" y="46" textAnchor="middle" fontSize="11" fontWeight="700" fill="#047857" fontFamily="monospace" letterSpacing="0.15em">
+            {nameEng.toUpperCase()}
+          </text>
+        </svg>
+      );
+    case "jersey":
+      return (
+        <svg className="w-full h-full" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="jersey_pat" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="3" x2="6" y2="3" stroke="#cbd5e1" strokeWidth="0.5" />
+              <line x1="3" y1="0" x2="3" y2="6" stroke="#94a3b8" strokeWidth="0.3" strokeOpacity="0.5" />
+            </pattern>
+          </defs>
+          <rect width="200" height="80" fill="url(#jersey_pat)" />
+          <text x="100" y="46" textAnchor="middle" fontSize="11" fontWeight="700" fill="#334155" fontFamily="monospace" letterSpacing="0.15em">
+            {nameEng.toUpperCase()}
+          </text>
+        </svg>
+      );
+    case "flat-back-rib":
+      return (
+        <svg className="w-full h-full" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="rib_pat" x="0" y="0" width="12" height="6" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="6" height="6" fill="#f8fafc" />
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#94a3b8" strokeWidth="0.8" />
+              <line x1="6" y1="0" x2="6" y2="6" stroke="#cbd5e1" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="200" height="80" fill="url(#rib_pat)" />
+          <text x="100" y="46" textAnchor="middle" fontSize="11" fontWeight="700" fill="#1e293b" fontFamily="monospace" letterSpacing="0.12em">
+            {nameEng.toUpperCase()}
+          </text>
+        </svg>
+      );
+    case "pique":
+      return (
+        <svg className="w-full h-full" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="pique_pat" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="5" height="5" fill="none" stroke="#cbd5e1" strokeWidth="0.5" />
+              <rect x="5" y="5" width="5" height="5" fill="none" stroke="#cbd5e1" strokeWidth="0.5" />
+              <circle cx="2.5" cy="2.5" r="1.2" fill="#64748b" />
+              <circle cx="7.5" cy="7.5" r="1.2" fill="#64748b" />
+            </pattern>
+          </defs>
+          <rect width="200" height="80" fill="url(#pique_pat)" />
+          <text x="100" y="46" textAnchor="middle" fontSize="11" fontWeight="700" fill="#334155" fontFamily="monospace" letterSpacing="0.15em">
+            {nameEng.toUpperCase()}
+          </text>
+        </svg>
+      );
+    case "interlock":
+      return (
+        <svg className="w-full h-full" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="interlock_pat" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="5" x2="10" y2="5" stroke="#94a3b8" strokeWidth="0.5" />
+              <line x1="5" y1="0" x2="5" y2="10" stroke="#cbd5e1" strokeWidth="0.5" />
+              <circle cx="5" cy="5" r="1" fill="#475569" />
+            </pattern>
+          </defs>
+          <rect width="200" height="80" fill="url(#interlock_pat)" />
+          <text x="100" y="46" textAnchor="middle" fontSize="11" fontWeight="700" fill="#1e293b" fontFamily="monospace" letterSpacing="0.15em">
+            {nameEng.toUpperCase()}
+          </text>
+        </svg>
+      );
+    case "jacquard":
+      return (
+        <svg className="w-full h-full" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="jacquard_pat" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+              <path d="M0 8 Q 4 12, 8 8 T 16 8" fill="none" stroke="#64748b" strokeWidth="0.5" />
+              <path d="M0 16 Q 4 12, 8 16 T 16 16" fill="none" stroke="#94a3b8" strokeWidth="0.4" />
+            </pattern>
+          </defs>
+          <rect width="200" height="80" fill="url(#jacquard_pat)" />
+          <text x="100" y="46" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0f172a" fontFamily="monospace" letterSpacing="0.15em">
+            {nameEng.toUpperCase()}
+          </text>
+        </svg>
+      );
+    case "stripe":
+      return (
+        <svg className="w-full h-full" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="stripe_pat" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="20" height="10" fill="#0f172a" fillOpacity="0.85" />
+              <rect x="0" y="10" width="20" height="10" fill="#ffffff" />
+            </pattern>
+          </defs>
+          <rect width="200" height="80" fill="url(#stripe_pat)" />
+          <rect x="35" y="28" width="130" height="24" rx="4" fill="#ffffff" fillOpacity="0.95" />
+          <text x="100" y="44" textAnchor="middle" fontSize="10" fontWeight="700" fill="#0f172a" fontFamily="monospace" letterSpacing="0.15em">
+            {nameEng.toUpperCase()}
+          </text>
+        </svg>
+      );
+    default:
+      return null;
+  }
 };
 
 export default function Hero({ 
@@ -64,6 +306,8 @@ export default function Hero({
 }: HeroProps) {
   // Master Sewing replacement Carousel State
   const [activeImageIdx, setActiveImageIdx] = useState(0);
+  const [activeFabricCategory, setActiveFabricCategory] = useState("all");
+  const [selectedFabricId, setSelectedFabricId] = useState("mesh");
 
   // Chat States
   const [chatInput, setChatInput] = useState("");
@@ -767,8 +1011,24 @@ export default function Hero({
                       <p className="text-sm text-neutral-600 font-light leading-relaxed mb-4">
                         Uses 480gsm premium high-density cotton loopback French terry to guarantee a perfect drape, unique 3D silhouette, and excellent warmth.
                       </p>
+                      
+                      {/* Integrated Fabric Detail Box */}
+                      <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-100/80 mb-5 text-[11px] space-y-1">
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400">원단 종류</span>
+                          <span className="text-neutral-800 font-semibold">Heavy French Terry</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400">중량/밀도</span>
+                          <span className="text-neutral-800 font-mono font-semibold">480 gsm</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400">주원사</span>
+                          <span className="text-neutral-800 font-semibold">100% Combed Cotton</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="border-t border-neutral-100 pt-4.5 mt-auto">
+                    <div className="border-t border-neutral-100 pt-4 mt-auto">
                       <div className="flex items-center justify-between text-xs md:text-sm font-mono text-neutral-500">
                         <span>MOQ: 30장</span>
                         <span className="text-neutral-950 font-semibold">M - XXL</span>
@@ -786,8 +1046,24 @@ export default function Hero({
                       <p className="text-sm text-neutral-600 font-light leading-relaxed mb-4">
                         Designed with 280gsm compact single cotton knit for wash shrinkage under 1%, featuring shoulder chain stitching and a dense double rib finish.
                       </p>
+
+                      {/* Integrated Fabric Detail Box */}
+                      <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-100/80 mb-5 text-[11px] space-y-1">
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400">원단 종류</span>
+                          <span className="text-neutral-800 font-semibold">Compact Silket Single</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400">중량/밀도</span>
+                          <span className="text-neutral-800 font-mono font-semibold">280 gsm</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400">주원사</span>
+                          <span className="text-neutral-800 font-semibold">100% Supima Cotton</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="border-t border-neutral-100 pt-4.5 mt-auto">
+                    <div className="border-t border-neutral-100 pt-4 mt-auto">
                       <div className="flex items-center justify-between text-xs md:text-sm font-mono text-neutral-500">
                         <span>MOQ: 50장</span>
                         <span className="text-neutral-950 font-semibold">S - XL</span>
@@ -805,14 +1081,173 @@ export default function Hero({
                       <p className="text-sm text-neutral-600 font-light leading-relaxed mb-4">
                         Constructed from wind and water-resistant memory recycled nylon yarn, standing out with an urban 3D sleeve structure and high-precision seam sealing stitches.
                       </p>
+
+                      {/* Integrated Fabric Detail Box */}
+                      <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-100/80 mb-5 text-[11px] space-y-1">
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400">원단 종류</span>
+                          <span className="text-neutral-800 font-semibold">Memory Recycled Nylon</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400">중량/밀도</span>
+                          <span className="text-neutral-800 font-mono font-semibold">145 gsm</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-neutral-400">가공 처리</span>
+                          <span className="text-neutral-800 font-semibold">DWR Water-Repellent</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="border-t border-neutral-100 pt-4.5 mt-auto">
+                    <div className="border-t border-neutral-100 pt-4 mt-auto">
                       <div className="flex items-center justify-between text-xs md:text-sm font-mono text-neutral-500">
                         <span>MOQ: 30장</span>
                         <span className="text-neutral-950 font-semibold">M - XL</span>
                       </div>
                     </div>
                   </div>
+                </div>
+
+                {/* 시그니처 프리미엄 마스터 원단 도감 (Interactive Fabrics Catalog Section) */}
+                <div className="w-full mt-12 bg-white border border-neutral-200 rounded-3xl p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.03)] relative overflow-hidden" id="fabrics-catalog">
+                  <div className="mb-8">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-mono font-bold uppercase tracking-wider mb-2">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                      Materials
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-bold font-sans text-neutral-950 tracking-tight">
+                      Choose your fabric
+                    </h3>
+                    <p className="text-xs md:text-sm text-neutral-500 font-light mt-1.5 max-w-2xl leading-relaxed">
+                      우리는 세 가지 빌딩 블록(Performance, Classic, Premium / Design) 유형의 검증된 고규격 원단 라인업을 제공합니다. 아래 카테고리를 활용해 원하는 물성과 스타일의 원단을 비교해 보세요.
+                    </p>
+                  </div>
+
+                  {/* Filter pills */}
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {[
+                      { id: "all", label: "All fabrics" },
+                      { id: "Performance", label: "Performance" },
+                      { id: "Classic", label: "Classic" },
+                      { id: "Premium / Design", label: "Premium / Design" }
+                    ].map((btn) => (
+                      <button
+                        key={btn.id}
+                        type="button"
+                        onClick={() => {
+                          setActiveFabricCategory(btn.id);
+                        }}
+                        className={`px-4.5 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-all duration-200 ${
+                          activeFabricCategory === btn.id
+                            ? "bg-neutral-950 text-white border border-neutral-950 shadow-sm"
+                            : "bg-white text-neutral-600 border border-neutral-200 hover:border-neutral-300 hover:text-neutral-900"
+                        }`}
+                      >
+                        {btn.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Fabrics Grid */}
+                  {(() => {
+                    const filtered = activeFabricCategory === "all"
+                      ? PREMIUM_FABRICS
+                      : PREMIUM_FABRICS.filter((f) => f.category === activeFabricCategory);
+
+                    return (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fabricGrid">
+                        {filtered.map((f) => (
+                          <div
+                            key={f.id}
+                            className="bg-white border border-neutral-200/80 rounded-2xl overflow-hidden hover:border-emerald-500 hover:shadow-[0_12px_30px_rgba(5,150,105,0.06)] transition-all duration-300 flex flex-col group justify-between"
+                          >
+                            {/* Swatch Header containing SVG pattern */}
+                            <div className="h-24 bg-neutral-50 flex items-center justify-center border-b border-neutral-100 relative overflow-hidden">
+                              {getFabricPatternSvg(f.id, f.engName)}
+                            </div>
+
+                            {/* Card Body */}
+                            <div className="p-5 flex-1 flex flex-col justify-between">
+                              <div className="space-y-4">
+                                {/* Header Info */}
+                                <div>
+                                  <div className="flex justify-between items-center text-[10px] font-mono mb-1.5">
+                                    <span className="font-bold text-emerald-700 bg-emerald-50/70 px-2 py-0.5 rounded">
+                                      {f.category}
+                                    </span>
+                                    <span className="font-semibold text-neutral-400">
+                                      {f.weight}
+                                    </span>
+                                  </div>
+                                  <h4 className="text-base font-bold text-neutral-900 tracking-tight font-sans">
+                                    {f.name}
+                                  </h4>
+                                  <div className="text-[10px] text-neutral-400 mt-1 font-sans leading-normal">
+                                    {f.composition}
+                                  </div>
+                                </div>
+
+                                {/* Short elegant description */}
+                                <p className="text-xs text-neutral-500 font-light leading-relaxed">
+                                  {f.description}
+                                </p>
+
+                                {/* Feature Tags */}
+                                <div className="flex flex-wrap gap-1">
+                                  {f.tags.map((tag, idx) => {
+                                    // Cycle soft elegant colors
+                                    const colorClasses = 
+                                      idx === 0 ? "bg-blue-50 text-blue-800 border-blue-100/50" :
+                                      idx === 1 ? "bg-emerald-50 text-emerald-800 border-emerald-100/50" :
+                                      "bg-neutral-50 text-neutral-600 border-neutral-200/50";
+                                    return (
+                                      <span
+                                        key={idx}
+                                        className={`text-[9px] font-semibold px-2 py-0.5 rounded-full border ${colorClasses}`}
+                                      >
+                                        {tag}
+                                      </span>
+                                    );
+                                  })}
+                                </div>
+
+                                {/* Intended Use Case badges */}
+                                <div className="flex flex-wrap gap-1 border-t border-neutral-100 pt-3">
+                                  {f.uses.map((use, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="text-[9px] text-neutral-400 bg-neutral-50 border border-neutral-100 px-2 py-0.5 rounded"
+                                    >
+                                      {use}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Action Button */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  // Switch back to Chat (Slide Index 0) and set inquiry text
+                                  setCurrentSlide(0);
+                                  setChatInput(`"${f.name} (${f.engName})" 원단에 대하여 제작 견적과 발주 진행 요령에 대해 문의하고 싶습니다.`);
+                                  setTimeout(() => {
+                                    const textarea = document.querySelector("textarea");
+                                    if (textarea) {
+                                      textarea.focus();
+                                    }
+                                  }, 150);
+                                }}
+                                className="w-full mt-5 bg-white hover:bg-neutral-950 text-neutral-600 hover:text-white border border-neutral-200 hover:border-neutral-950 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer group"
+                              >
+                                <span>Inquire about {f.engName.split(' ').pop()}</span>
+                                <span className="text-neutral-400 group-hover:text-neutral-200 transition-colors">↗</span>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* AI Tech Section */}
