@@ -60,14 +60,9 @@ export default function CookieBanner() {
             <div className="space-y-4">
               {/* Header Area */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-[#b8321e]/15 text-[#e14833] rounded-md">
-                    <Shield className="w-4 h-4" />
-                  </div>
-                  <h4 className="text-base font-semibold text-white tracking-tight">
-                    We value your privacy
-                  </h4>
-                </div>
+                <h4 className="text-base font-semibold text-white tracking-tight">
+                  We value your privacy
+                </h4>
                 <button
                   onClick={handleDecline}
                   className="text-neutral-500 hover:text-white transition-colors p-1 rounded-md cursor-pointer"
@@ -145,14 +140,9 @@ export default function CookieBanner() {
               
               {/* Header */}
               <div className="p-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-[#121212]/50">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-[#b8321e]/10 border border-[#b8321e]/20 rounded-lg text-[#e14833]">
-                    <Shield className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-white">Customise Cookie Preferences</h3>
-                    <p className="text-[11px] text-neutral-400 font-mono">쿠키 및 개인정보 설정 맞춤 조정</p>
-                  </div>
+                <div>
+                  <h3 className="text-base font-semibold text-white">Customise Cookie Preferences</h3>
+                  <p className="text-[11px] text-neutral-400 font-mono">쿠키 및 개인정보 설정 맞춤 조정</p>
                 </div>
                 <button
                   onClick={() => setIsCustomiseOpen(false)}
@@ -167,15 +157,21 @@ export default function CookieBanner() {
               <div className="p-6 overflow-y-auto space-y-6 text-xs text-neutral-300 font-light leading-relaxed select-text [scrollbar-width:thin] [scrollbar-color:#333_transparent]">
                 
                 {/* Intro block */}
-                <div className="space-y-2 pb-4 border-b border-white/5">
+                <div className="space-y-3 pb-4 border-b border-white/5">
                   <p className="text-[13px] text-neutral-200">
                     We use cookies to help you navigate efficiently and perform certain functions.
                   </p>
                   <p className="text-neutral-400">
                     The cookies that are categorised as &quot;Necessary&quot; are stored on your browser as they are essential for enabling the basic functionalities of the site.
                   </p>
-                  <p className="text-neutral-500 text-[11px] font-normal">
-                    우리는 귀하가 웹사이트를 보다 효율적으로 탐색하고 특정 기능을 수행할 수 있도록 쿠키를 사용합니다. &quot;필수&quot;로 분류된 쿠키는 사이트의 핵심 기본 기능을 활성화하는 데 필수적이므로 브라우저에 저장됩니다.
+                  <p className="text-neutral-400/90 font-light">
+                    We also use third-party cookies that help us analyse how you use this website, store your preferences, and provide the content and advertisements that are relevant to you. These cookies will only be stored in your browser with your prior consent.
+                  </p>
+                  <p className="text-neutral-400/90 font-light">
+                    You can choose to enable or disable some or all of these cookies but disabling some of them may affect your browsing experience.
+                  </p>
+                  <p className="text-neutral-500 text-[11px] font-normal border-t border-white/5 pt-2.5">
+                    우리는 귀하가 웹사이트를 보다 효율적으로 탐색하고 특정 기능을 수행할 수 있도록 쿠키를 사용합니다. &quot;필수&quot;로 분류된 쿠키는 사이트의 핵심 기본 기능을 활성화하는 데 필수적이므로 브라우저에 저장됩니다. 또한 우리는 귀하가 웹사이트를 사용하는 방식을 분석하고 선호 사항을 저장하며 적절한 정보/광고를 제공하기 위해 제3자 쿠키를 사용하며, 전적으로 귀하의 전적인 동의하에 저장됩니다. 특정 쿠키의 비활성화는 브라우징 환경에 다소 영향을 미칠 수 있습니다.
                   </p>
                 </div>
 
