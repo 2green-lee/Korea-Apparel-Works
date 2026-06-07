@@ -42,7 +42,7 @@ export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide,
       <div className="w-full h-full px-6 md:px-12 flex items-center justify-between">
         
         {/* Left Side: Desktop navigation menu */}
-        <div className="hidden md:flex items-center space-x-12 text-xs font-normal tracking-wide">
+        <div className="hidden md:flex items-center space-x-12 text-[13px] font-normal tracking-wide">
           <button onClick={() => setCurrentSlide(0)} className={getLinkClass(0)}>
             Home
           </button>
@@ -82,7 +82,7 @@ export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide,
         </div>
 
         {/* Right Side: Options replaced with a single Contact us link */}
-        <div className="flex items-center space-x-6 text-xs font-normal">
+        <div className="flex items-center space-x-6 text-[13px] font-normal">
           <button
             onClick={() => {
               const footerEl = document.getElementById("footer");

@@ -18,7 +18,7 @@ interface HeroProps {
 const SLIDES = [
   {
     image: "https://raw.githubusercontent.com/2green-lee/Korea-Apparel-Works/985e971f768279fbef9d02d7d6d295c01131f761/downtown-cityscape-night-seoul-south-korea.jpg",
-    headline: "Get a manufacturing quote.",
+    headline: "Smart apparel manufacturing from Korea",
     sub: "AI CONVERSATION PORTAL"
   },
   {
@@ -50,13 +50,15 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
     return text;
   }
   return "Saved Chat";
-};const PREMIUM_FABRICS = [
+};
+
+const PREMIUM_FABRICS = [
   // Performance
   {
     id: "mesh",
     category: "Performance",
-    name: "고기능성 스포티 메쉬",
-    engName: "Active Micro Mesh",
+    name: "MESH",
+    engName: "MESH",
     weight: "160 gsm",
     composition: "92% Recycled Polyester, 8% Spandex",
     season: "Summer / Intense Workouts",
@@ -64,16 +66,16 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
     softness: 80,
     elasticity: 90,
     durability: 95,
-    description: "공기 순환 극대화 구멍 구조를 적용하여 땀 배출이 압도적으로 빠르고 상쾌한 메쉬 원단입니다. 운동성 뿐만 아니라 고온 다습한 기후의 데일리 캐주얼 스포츠웨어에 완벽히 대응합니다.",
+    description: "An outstandingly fast sweat-wicking and refreshing mesh fabric featuring a hole structure that maximizes air circulation. It perfectly serves high-performance sports and daily casual outerwear in hot, humid climates.",
     colors: 12,
-    tags: ["흡한속건 QUICK DRY", "친환경 GRS 인증", "뛰어난 통기성"],
-    uses: ["러닝 웨어", "스포티 슬리브리스", "액티브웨어"]
+    tags: ["QUICK DRY", "GRS CERTIFIED", "BREATHABLE"],
+    uses: ["Running Apparel", "Sporty Sleeveless", "Activewear"]
   },
   {
     id: "jersey",
     category: "Performance",
-    name: "쿨텐션 에어로 싱글 저지",
-    engName: "Cool-Tension Aero Single Jersey",
+    name: "JERSEY",
+    engName: "JERSEY",
     weight: "210 gsm",
     composition: "74% Cotton, 20% Polyester, 6% Polyurethane",
     season: "Spring / Summer / Autumn",
@@ -81,16 +83,16 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
     softness: 88,
     elasticity: 85,
     durability: 92,
-    description: "쾌적한 표면 유지력과 탄탄한 복원력을 갖춘 기능성 싱글 저지입니다. 신축 방향으로 틀어짐이 없고, 무릎이나 목 부위에 늘어남 흔적을 최소화하는 하이클래스 액티브 웨어 하프 티셔츠에 이상적입니다.",
+    description: "A functional single jersey with excellent surface retention and firm bounce-back. Free from distortion along the stretch axis, it is ideal for high-class activewear and t-shirts to minimize sagging on necklines or elbows.",
     colors: 18,
-    tags: ["에어로쿨 흡습가공", "사방 스트레치", "워셔블 복원"],
-    uses: ["퍼포먼스 티셔츠", "에슬레저 탑", "고기능 이너티"]
+    tags: ["MOISTURE-WICKING", "4-WAY STRETCH", "WASH RESISTANT"],
+    uses: ["Performance T-Shirts", "Athleisure Tops", "Functional Base Layers"]
   },
   {
     id: "flat-back-rib",
     category: "Performance",
-    name: "컴프레션 플랫 백 립",
-    engName: "Compression Flat Back Rib",
+    name: "FLAT BACK RIB",
+    engName: "FLAT BACK RIB",
     weight: "320 gsm",
     composition: "95% Cotton, 5% Polyurethane Elastomer",
     season: "All Seasons",
@@ -98,18 +100,18 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
     softness: 82,
     elasticity: 95,
     durability: 98,
-    description: "밀도 높은 골지 조직의 뒷면이 평평하게 직조되어 극대화된 착용 안정감과 우수한 신축성을 선사하는 고기능 립 소재입니다. 잦은 신체 마찰에도 보풀이 잘 일어나지 않아 프리미엄 애슬레저 크루넥 및 넥 시보리에 최적입니다.",
+    description: "A high-performance rib fabric with a dense ribbed structure that is flat-woven on the back for maximum security and excellent stretch. High pilling resistance makes it optimal for premium sportswear necks and cuffs.",
     colors: 14,
-    tags: ["우수한 탄성 복조", "보풀 방지 ANTI-PILLING", "시보리 매칭 최적"],
-    uses: ["넥시보리 마감", "스포츠 크루넥", "시그니처 트래킹탑"]
+    tags: ["HIGH ELASTICITY", "ANTI-PILLING", "OPTIMAL COLLARS"],
+    uses: ["Neck & Cuff Ribbing", "Sports Crewnecks", "Signature Tracking Tops"]
   },
   
   // Classic
   {
     id: "pique",
     category: "Classic",
-    name: "프리미엄 더블 헤리티지 피케",
-    engName: "Premium Double Heritage Piqué",
+    name: "PIQUE",
+    engName: "PIQUE",
     weight: "240 gsm",
     composition: "100% Combed Cotton",
     season: "Spring / Summer",
@@ -117,16 +119,16 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
     softness: 75,
     elasticity: 50,
     durability: 90,
-    description: "벌집 모양의 정교한 엠보 직조감을 가진 헤리티지 피케 원단입니다. 몸에 쉽게 들러붙지 않아 우수한 쾌적감을 유지해주며, 명품 폴로 셔츠나 테니스 캐주얼웨어 제작 시 단연 먼저 추천되는 기품 있는 정석 클래식입니다.",
+    description: "A heritage pique fabric with a sophisticated honeycomb texture. It stays clear of the skin to maintain dryness, standing as the primary choice for luxury polo shirts and casual tennis wear.",
     colors: 16,
-    tags: ["벌집 엠보 텍스처", "통풍 통기 특화", "격조 높은 마감"],
-    uses: ["골프 폴로셔츠", "클래식 테니스탑", "브랜드 칼라티"]
+    tags: ["HONEYCOMB TEXTURE", "MAX VENTILATION", "CLASSIC FINISH"],
+    uses: ["Golf Polo Shirts", "Classic Tennis Tops", "Branded Collared Shirts"]
   },
   {
     id: "interlock",
     category: "Classic",
-    name: "이중 양면 인터록 실켓",
-    engName: "Double-Interlock Silket Single",
+    name: "INTERLOCK",
+    engName: "INTERLOCK",
     weight: "260 gsm",
     composition: "100% Super-Combed Long Cotton",
     season: "All Seasons",
@@ -134,18 +136,18 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
     softness: 92,
     elasticity: 68,
     durability: 88,
-    description: "앞뒷면 구분이 없이 양면 모두 극상의 매끄러운 터치감과 조직 균일도를 선사하는 양면 인터록 원단입니다. 원사 보풀 제거 실켓 후가공을 거쳐 표면의 은은한 명품 실크 느낌 광택감이 흐르며, 사계절용 스웨트 및 프리미엄 캐주얼용입니다.",
+    description: "A double-sided interlock fabric offering an ultra-smooth touch and uniform weave with no distinction between front and back. Biowashed and silket-finished, it delivers a subtle silk-like luster perfect for premium loungewear and sweatshirts.",
     colors: 20,
-    tags: ["두께 균일 양면직", "실키 바이오가공 완료", "형태 유지 안정"],
-    uses: ["명품 맨투맨", "프리미엄 후드티", "데일리 포멀 캐주얼"]
+    tags: ["DOUBLE-SIDED", "SILKY BIO-WASH", "SHAPE RETENTION"],
+    uses: ["Luxury Sweatshirts", "Premium Hoodies", "Formal Casual Wear"]
   },
-
+ 
   // Premium / Design
   {
     id: "jacquard",
     category: "Premium / Design",
-    name: "입체 직조 시그니처 자카드",
-    engName: "3D Textured Signature Jacquard",
+    name: "JACQUARD",
+    engName: "JACQUARD",
     weight: "340 gsm",
     composition: "80% Coarse Cotton, 20% Fancy Filament",
     season: "Autumn / Winter / Spring",
@@ -153,16 +155,16 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
     softness: 78,
     elasticity: 55,
     durability: 95,
-    description: "인쇄나 프린팅 방식이 아닌, 직기 자체의 실놀림을 통해 문양을 입체적으로 짜 올린 하이엔드 자카드 원단입니다. 원단 자체에 고유의 깊이 있는 실루엣과 볼륨감이 살아나 옷 한 벌만으로 럭셔리 컬렉션 무드를 자아냅니다.",
+    description: "A high-end jacquard fabric where patterns are physically woven into the structure rather than printed. The fabric itself carries deep silhouettes and volume, bringing a luxury collection mood with a single garment.",
     colors: 10,
-    tags: ["입체 문양 제직", "하이쿠투르 패턴", "도톰한 볼륨감"],
-    uses: ["컬렉션 후드", "디자이너 브랜드 원포인트", "고급 맨투맨"]
+    tags: ["3D JACQUARD WEAVE", "HAUTE COUTURE PATTERN", "PREMIUM VOLUME"],
+    uses: ["Collection Hoodies", "Designer Brand Statements", "Luxury Sweatshirts"]
   },
   {
     id: "stripe",
     category: "Premium / Design",
-    name: "얀 다이드 클래식 스트라이프",
-    engName: "Yarn-Dyed French Breton Stripe",
+    name: "STRIPE",
+    engName: "STRIPE",
     weight: "220 gsm",
     composition: "100% Cotton-Filament Multi",
     season: "Spring / Summer / Autumn",
@@ -170,10 +172,27 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
     softness: 86,
     elasticity: 62,
     durability: 89,
-    description: "제직 전 미리 원사를 컬러별 정밀 염색(선염)하여 스트라이프 간 간격과 배색 선명도를 완벽히 구현해낸 니트입니다. 세탁 후에도 배색 라인이 이염되거나 흐려지지 않아 영원히 변치 않는 모던 프렌치 감성을 전합니다.",
+    description: "A modern knit with stripes and colors precision-dyed before weaving for perfect line spacing and color fastness. Resistant to bleeding or fading after washes, it retains its timeless French marine aesthetic.",
     colors: 12,
-    tags: ["이염 방지 선염사", "프렌치 마린 룩", "깔끔한 간격 배합"],
-    uses: ["마린 스트라이프 티", "데일리 보트넥 티셔츠", "헤리티지 캐주얼"]
+    tags: ["BLEEDING-FREE YARN", "FRENCH MARINE STYLE", "PRECISE STRIPES"],
+    uses: ["Marine Striped Tees", "Daily Boatneck shirts", "Heritage Casuals"]
+  },
+  {
+    id: "others",
+    category: "Premium / Design",
+    name: "기타 (OTHERS)",
+    engName: "OTHERS",
+    weight: "Custom gsm",
+    composition: "Various Specs",
+    season: "All Seasons",
+    thickness: 50,
+    softness: 85,
+    elasticity: 70,
+    durability: 90,
+    description: "Various other specialty fabrics and customized weaves built to your direct design requirements and styling instructions.",
+    colors: 50,
+    tags: ["CUSTOM SPECIFICATION", "BESPOKE OPTIONS", "VARIOUS TEXTURES"],
+    uses: ["Bespoke Orders", "Creative Collections", "Custom Developments"]
   }
 ];
 
@@ -285,6 +304,21 @@ const getFabricPatternSvg = (id: string, nameEng: string) => {
           <rect width="200" height="80" fill="url(#stripe_pat)" />
           <rect x="35" y="28" width="130" height="24" rx="4" fill="#ffffff" fillOpacity="0.95" />
           <text x="100" y="44" textAnchor="middle" fontSize="10" fontWeight="700" fill="#0f172a" fontFamily="monospace" letterSpacing="0.15em">
+            {nameEng.toUpperCase()}
+          </text>
+        </svg>
+      );
+    case "others":
+      return (
+        <svg className="w-full h-full" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="others_pat" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+              <circle cx="8" cy="8" r="1.5" fill="#475569" fillOpacity="0.3" />
+              <rect x="0" y="0" width="16" height="16" fill="none" stroke="#e2e8f0" strokeWidth="0.5" strokeOpacity="0.5" />
+            </pattern>
+          </defs>
+          <rect width="200" height="80" fill="url(#others_pat)" />
+          <text x="100" y="46" textAnchor="middle" fontSize="11" fontWeight="700" fill="#475569" fontFamily="monospace" letterSpacing="0.15em">
             {nameEng.toUpperCase()}
           </text>
         </svg>
@@ -544,8 +578,16 @@ export default function Hero({
             currentSlide === 0 ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
-          {/* Subtle architectural grid lines evoking sewing pattern drafting paper */}
-          <div className="absolute inset-0 opacity-[0.08] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+          {/* Soft ambient center center glow overlay */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.025)_0%,transparent_75%)] pointer-events-none" />
+          
+          {/* Premium fine grain tactile texture representing high-end fabric weaving */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.035] mix-blend-normal" xmlns="http://www.w3.org/2000/svg">
+            <filter id="noiseFilter">
+              <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+          </svg>
         </div>
 
         {/* Day mode background (Slide 1 and 2) */}
@@ -637,8 +679,10 @@ export default function Hero({
                   <h1 className="font-sans text-3xl md:text-[38px] font-medium text-white tracking-tight">
                     {SLIDES[0].headline}
                   </h1>
-                  <p className="mt-3 text-neutral-400 font-sans text-sm md:text-base max-w-[540px] mx-auto font-light leading-relaxed">
-                    Tell us what you'd like to make — fabric, quantity, style. We'll send a proposal within 24h.
+                  <p className="mt-3 text-neutral-400 font-sans text-sm md:text-base max-w-[540px] mx-auto font-light leading-relaxed italic">
+                    Tell us what you'd like to make — fabric, quantity, style.
+                    <br />
+                    We'll send a proposal within 24h.
                   </p>
                 </div>
               )}
@@ -654,7 +698,7 @@ export default function Hero({
                   <div className="border-b border-white/5 pb-4 mb-4 select-text flex flex-col flex-1 min-h-0">
                     <div 
                       ref={scrollRef}
-                      className="flex-1 overflow-y-auto space-y-4 pr-1 text-[12px] text-left scrollbar-thin pb-2"
+                      className="flex-1 overflow-y-auto space-y-4 pr-1 text-[14px] text-left scrollbar-thin pb-2"
                     >
                       {messages.map((msg, index) => (
                         <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -808,9 +852,6 @@ export default function Hero({
                 {/* Hero Section */}
                 <div className="pt-16 pb-12 px-8 md:px-12 border-b border-neutral-100/55 w-full bg-transparent flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
                   <div className="flex-1 w-full lg:pr-4">
-                    <div className="text-xs md:text-sm font-mono font-semibold tracking-[0.1em] text-neutral-400 mb-3 uppercase">
-                      KOREA APPAREL WORKS • HERITAGE | ESTD 1994
-                    </div>
                     <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-950 leading-[1.2] tracking-tight mb-6">
                       The uncompromising space where Korea's finest luxury garments are born,<br className="hidden lg:block lg:mb-2" />
                       The Workshop
@@ -994,7 +1035,7 @@ export default function Hero({
 
               <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent border border-transparent rounded-none p-4 md:p-0 overflow-hidden">
                 {/* Embedded Big Title for slide 3 inside the content card */}
-                <div className="mb-8 pb-6 border-b border-neutral-100">
+                <div id="collection-section" className="mb-8 pb-6 border-b border-neutral-100">
                   <h1 className="font-sans text-3xl md:text-4xl font-semibold text-neutral-950 tracking-tight leading-tight">
                     {SLIDES[2].headline}
                   </h1>
@@ -1251,7 +1292,7 @@ export default function Hero({
                 </div>
 
                 {/* AI Tech Section */}
-                <div className="w-full py-12 px-6 md:px-10 bg-[#e8f7f0] border border-[#b2e4cb] rounded-2xl mt-12 shadow-[0_8px_30px_rgba(5,150,105,0.04)]">
+                <div id="ai-tech-section" className="w-full py-12 px-6 md:px-10 bg-[#e8f7f0] border border-[#b2e4cb] rounded-2xl mt-12 shadow-[0_8px_30px_rgba(5,150,105,0.04)]">
                   <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-10 items-start mb-10">
                     <div>
                       <h2 className="text-xl md:text-2xl font-bold text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>

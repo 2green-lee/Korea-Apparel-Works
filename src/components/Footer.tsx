@@ -2,9 +2,26 @@ import React from "react";
 
 interface FooterProps {
   onAdminClick?: () => void;
+  setCurrentSlide?: (slide: number) => void;
 }
 
-export default function Footer({ onAdminClick }: FooterProps) {
+export default function Footer({ onAdminClick, setCurrentSlide }: FooterProps) {
+  const navigateToSection = (slideIndex: number, targetId?: string) => {
+    if (setCurrentSlide) {
+      setCurrentSlide(slideIndex);
+      if (targetId) {
+        setTimeout(() => {
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 250);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  };
+
   return (
     <footer id="footer" className="bg-black text-neutral-450 pt-16 pb-12 overflow-hidden border-t border-white/5 relative font-sans">
       <div className="max-w-6xl mx-auto px-6 md:px-10 relative z-10 flex flex-col justify-between items-stretch gap-12 select-text">
@@ -40,30 +57,100 @@ export default function Footer({ onAdminClick }: FooterProps) {
           {/* Links grid (7 cols) */}
           <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 font-mono text-[11px] text-neutral-400">
             <div>
-              <span className="block text-white uppercase tracking-wider font-bold mb-3 select-none">PRODUCTION</span>
+              <span className="block text-white uppercase tracking-wider font-bold mb-3 select-none">HOME</span>
               <ul className="space-y-2 font-light">
-                <li><span className="hover:text-white cursor-pointer select-none">Boutique Ateliers</span></li>
-                <li><span className="hover:text-white cursor-pointer select-none">Low-MOQ Sewers</span></li>
-                <li><span className="hover:text-white cursor-pointer select-none">Pattern Grading</span></li>
-                <li><span className="hover:text-white cursor-pointer select-none">Activewear Fabric</span></li>
+                <li>
+                  <button 
+                    onClick={() => navigateToSection(0)} 
+                    className="hover:text-white cursor-pointer select-none text-left"
+                  >
+                    AI Dialogue Portal
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => navigateToSection(0)} 
+                    className="hover:text-white cursor-pointer select-none text-left"
+                  >
+                    Active Coordinator
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => navigateToSection(0)} 
+                    className="hover:text-white cursor-pointer select-none text-left"
+                  >
+                    Workspace Start
+                  </button>
+                </li>
               </ul>
             </div>
             <div>
-              <span className="block text-white uppercase tracking-wider font-bold mb-3 select-none">TECHNOLOGY</span>
+              <span className="block text-white uppercase tracking-wider font-bold mb-3 select-none">MANUFACTURING</span>
               <ul className="space-y-2 font-light">
-                <li><span className="hover:text-white cursor-pointer select-none">Connected Knitwear</span></li>
-                <li><span className="hover:text-white cursor-pointer select-none">AI Audio Capture</span></li>
-                <li><span className="hover:text-white cursor-pointer select-none">Garment Blueprints</span></li>
-                <li><span className="hover:text-white cursor-pointer select-none">Seoul Hub Portal</span></li>
+                <li>
+                  <button 
+                    onClick={() => navigateToSection(1)} 
+                    className="hover:text-white cursor-pointer select-none text-left"
+                  >
+                    Atelier Workshop
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => navigateToSection(1)} 
+                    className="hover:text-white cursor-pointer select-none text-left"
+                  >
+                    Tailor Assembly
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => navigateToSection(1)} 
+                    className="hover:text-white cursor-pointer select-none text-left"
+                  >
+                    Quality Standards
+                  </button>
+                </li>
               </ul>
             </div>
             <div>
-              <span className="block text-white uppercase tracking-wider font-bold mb-3 select-none">CONTACT</span>
-              <ul className="space-y-2 font-light">
-                <li><span className="hover:text-white cursor-pointer select-none">Seoul Office</span></li>
-                <li><span className="hover:text-white cursor-pointer select-none">Partner With Us</span></li>
-                <li><span className="hover:text-white cursor-pointer select-none">Production SLA</span></li>
-                <li><span className="hover:text-white cursor-pointer select-none">Fulfillments</span></li>
+              <span className="block text-white uppercase tracking-wider font-bold mb-3 select-none">PRODUCT</span>
+              <ul className="space-y-2 font-light font-sans">
+                <li>
+                  <button 
+                    onClick={() => navigateToSection(2, "collection-section")} 
+                    className="hover:text-white cursor-pointer select-none text-left font-sans"
+                  >
+                    Collection
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => navigateToSection(2, "fabrics-catalog")} 
+                    className="hover:text-white cursor-pointer select-none text-left font-sans"
+                  >
+                    Fabric
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => navigateToSection(2, "ai-tech-section")} 
+                    className="hover:text-white cursor-pointer select-none text-left font-sans"
+                  >
+                    AI system
+                  </button>
+                </li>
+                {onAdminClick && (
+                  <li className="pt-2 border-t border-white/5 mt-2">
+                    <button 
+                      onClick={onAdminClick} 
+                      className="hover:text-white cursor-pointer select-none text-left tracking-wider text-[#8a7256] font-bold font-sans"
+                    >
+                      ADMIN CONSOLE
+                    </button>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
