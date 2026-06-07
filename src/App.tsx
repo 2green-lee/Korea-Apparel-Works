@@ -4,6 +4,7 @@ import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 import PreOrderModal from "./components/PreOrderModal";
 import AdminDashboard from "./components/AdminDashboard";
+import CookieBanner from "./components/CookieBanner";
 import { StreamColorFinish } from "./types";
 
 export default function App() {
@@ -123,6 +124,9 @@ export default function App() {
         defaultFinish={customFinish}
         defaultSize={customSize}
       />
+
+      {/* 7. Premium Cookie Consent banner */}
+      <CookieBanner />
 
     </div>
   );
