@@ -167,7 +167,16 @@ export default function Footer({ onAdminClick, setCurrentSlide }: FooterProps) {
             <span>•</span>
             <span className="hover:text-neutral-400 cursor-pointer">TERMS OF SERVICE</span>
             <span>•</span>
-            <span className="hover:text-neutral-400 cursor-pointer">CUSTOMS DATA</span>
+            <span 
+              onClick={() => {
+                localStorage.removeItem("apparel-cookie-consent");
+                window.location.reload();
+              }} 
+              className="hover:text-amber-500 text-amber-500/80 cursor-pointer font-bold"
+              title="Click to reset consent status and test cookie banner"
+            >
+              COOKIE RESET (쿠키 재동의)
+            </span>
           </div>
         </div>
 

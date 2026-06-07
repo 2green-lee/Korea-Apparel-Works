@@ -5,6 +5,9 @@ import { Shield, X, HelpCircle, FileText } from "lucide-react";
 export default function CookieBanner() {
   const [isVisible, setIsVisible] = useState(false);
   const [isPolicyOpen, setIsPolicyOpen] = useState(false);
+  const [isCustomiseOpen, setIsCustomiseOpen] = useState(false);
+  const [perfConsent, setPerfConsent] = useState(true);
+  const [marketingConsent, setMarketingConsent] = useState(true);
 
   useEffect(() => {
     const consent = localStorage.getItem("apparel-cookie-consent");
@@ -18,12 +21,24 @@ export default function CookieBanner() {
   }, []);
 
   const handleAccept = () => {
-    localStorage.setItem("apparel-cookie-consent", "granted");
+    const consentConfig = {
+      necessary: true,
+      performance: true,
+      marketing: true,
+      timestamp: Date.now()
+    };
+    localStorage.setItem("apparel-cookie-consent", JSON.stringify(consentConfig));
     setIsVisible(false);
   };
 
   const handleDecline = () => {
-    localStorage.setItem("apparel-cookie-consent", "denied");
+    const consentConfig = {
+      necessary: true,
+      performance: false,
+      marketing: false,
+      timestamp: Date.now()
+    };
+    localStorage.setItem("apparel-cookie-consent", JSON.stringify(consentConfig));
     setIsVisible(false);
   };
 
@@ -55,7 +70,7 @@ export default function CookieBanner() {
                 </div>
                 <button
                   onClick={handleDecline}
-                  className="text-neutral-500 hover:text-white transition-colors p-1 rounded-md"
+                  className="text-neutral-500 hover:text-white transition-colors p-1 rounded-md cursor-pointer"
                   aria-label="Close"
                 >
                   <X className="w-4 h-4" />
@@ -87,7 +102,7 @@ export default function CookieBanner() {
               {/* Responsive Actions mimicking the reference layout (Customise / Accept All) */}
               <div className="grid grid-cols-2 gap-3 pt-1">
                 <button
-                  onClick={() => setIsPolicyOpen(true)}
+                  onClick={() => setIsCustomiseOpen(true)}
                   className="w-full py-2.5 px-4 bg-transparent border border-[#b8321e] hover:bg-[#b8321e]/10 text-[#e14833] hover:text-[#f26552] text-xs font-semibold uppercase tracking-wider rounded-md transition-all duration-200 cursor-pointer text-center"
                 >
                   Customise
@@ -101,6 +116,183 @@ export default function CookieBanner() {
               </div>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Customise Cookie Preferences Modal */}
+      <AnimatePresence>
+        {isCustomiseOpen && (
+          <div className="fixed inset-0 z-55 flex items-center justify-center p-4">
+            {/* Backdrop Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsCustomiseOpen(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 30 }}
+              transition={{ type: "spring", duration: 0.5, bounce: 0.1 }}
+              className="w-full max-w-2xl bg-[#161616] border border-white/10 rounded-2xl shadow-[0_32px_80px_rgba(0,0,0,0.8)] overflow-hidden relative z-10 flex flex-col max-h-[85vh] font-sans"
+            >
+              {/* Top ambient highlight */}
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#b8321e]/50 to-transparent" />
+              
+              {/* Header */}
+              <div className="p-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-[#121212]/50">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-[#b8321e]/10 border border-[#b8321e]/20 rounded-lg text-[#e14833]">
+                    <Shield className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-white">Customise Cookie Preferences</h3>
+                    <p className="text-[11px] text-neutral-400 font-mono">쿠키 및 개인정보 설정 맞춤 조정</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsCustomiseOpen(false)}
+                  className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                  aria-label="Close modal"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Body Content with custom slick scrollbar */}
+              <div className="p-6 overflow-y-auto space-y-6 text-xs text-neutral-300 font-light leading-relaxed select-text [scrollbar-width:thin] [scrollbar-color:#333_transparent]">
+                
+                {/* Intro block */}
+                <div className="space-y-2 pb-4 border-b border-white/5">
+                  <p className="text-[13px] text-neutral-200">
+                    We use cookies to help you navigate efficiently and perform certain functions.
+                  </p>
+                  <p className="text-neutral-400">
+                    The cookies that are categorised as &quot;Necessary&quot; are stored on your browser as they are essential for enabling the basic functionalities of the site.
+                  </p>
+                  <p className="text-neutral-500 text-[11px] font-normal">
+                    우리는 귀하가 웹사이트를 보다 효율적으로 탐색하고 특정 기능을 수행할 수 있도록 쿠키를 사용합니다. &quot;필수&quot;로 분류된 쿠키는 사이트의 핵심 기본 기능을 활성화하는 데 필수적이므로 브라우저에 저장됩니다.
+                  </p>
+                </div>
+
+                {/* Cookie Preference Rows */}
+                <div className="space-y-4">
+                  
+                  {/* Category 1: Necessary Cookies */}
+                  <div className="flex items-start justify-between gap-6 p-4 bg-white/[0.01] border border-white/5 rounded-xl">
+                    <div className="space-y-1.5 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h5 className="text-[13px] font-semibold text-white">Necessary Cookies</h5>
+                        <span className="text-[10px] bg-white/10 text-neutral-300 font-mono px-1.5 py-0.5 rounded uppercase font-medium">Required</span>
+                      </div>
+                      <p className="text-neutral-400 text-[11px] font-normal">
+                        Necessary cookies are required to enable the basic features of this site, such as providing secure log-in or adjusting your consent preferences. These cookies do not store any personally identifiable data.
+                      </p>
+                      <p className="text-neutral-500 text-[10px] font-normal">
+                        필수 쿠키는 안전한 로그인 제공 및 기본 인터페이스 활성화 등 본 사이트의 기본 기능을 유지하는 데 필요하며, 식별 가능한 개인 데이터를 저장하지 않습니다.
+                      </p>
+                    </div>
+                    {/* Locked Active Toggle */}
+                    <div className="shrink-0 pt-1">
+                      <div className="w-10 h-6 flex items-center rounded-full p-[2px] bg-white/20 opacity-50 cursor-not-allowed">
+                        <div className="bg-white w-4 h-4 rounded-full translate-x-4 shadow" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Category 2: Performance & Analytics */}
+                  <div className="flex items-start justify-between gap-6 p-4 bg-white/[0.01] border border-white/5 rounded-xl">
+                    <div className="space-y-1.5 flex-1">
+                      <h5 className="text-[13px] font-semibold text-white">Performance & Analytics</h5>
+                      <p className="text-neutral-400 text-[11px] font-normal">
+                        Analytical and performance cookies help us understand how visitors interact with the website and measure key performance metrics, such as visitor numbers, bounce rate, traffic sources, and other indicators. This information allows us to improve the user experience. Your data remains anonymous.
+                      </p>
+                      <p className="text-neutral-500 text-[10px] font-normal">
+                        분석 및 성능 쿠키는 방문자가 웹사이트와 상호작용하는 방식을 이해하고 방문자 수, 이탈률, 트래픽 유입 경로 등을 측정하는 데 도움을 줍니다. 수집 정보는 완전 익명 처리되어 서비스 개선에만 사용됩니다.
+                      </p>
+                    </div>
+                    {/* Toggle Switch */}
+                    <div className="shrink-0 pt-1">
+                      <button
+                        onClick={() => setPerfConsent(!perfConsent)}
+                        className={`w-10 h-6 flex items-center rounded-full p-[2px] transition-colors duration-200 cursor-pointer ${
+                          perfConsent ? "bg-[#b8321e]" : "bg-neutral-700"
+                        }`}
+                        aria-label="Toggle performance cookies"
+                      >
+                        <div
+                          className={`bg-white w-4 h-4 rounded-full shadow duration-200 transform ${
+                            perfConsent ? "translate-x-4" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Category 3: Marketing & Tracking */}
+                  <div className="flex items-start justify-between gap-6 p-4 bg-white/[0.01] border border-white/5 rounded-xl">
+                    <div className="space-y-1.5 flex-1 select-text">
+                      <h5 className="text-[13px] font-semibold text-white">Marketing & Tracking</h5>
+                      <p className="text-neutral-400 text-[11px] font-normal">
+                        Advertisement cookies are used to provide visitors with customised advertisements based on the pages you visited previously and to analyse the effectiveness of the ad campaigns.
+                      </p>
+                      <p className="text-neutral-500 text-[10px] font-normal">
+                        마케팅 및 트래킹 쿠키는 이전 방문 기록을 분석하여 더욱 관련도 높은 맞춤형 설계 피드백과 가상 코디네이션 정보를 제공하고 커뮤니티 캠페인 효과를 모니터링하기 위해 사용됩니다.
+                      </p>
+                    </div>
+                    {/* Toggle Switch */}
+                    <div className="shrink-0 pt-1">
+                      <button
+                        onClick={() => setMarketingConsent(!marketingConsent)}
+                        className={`w-10 h-6 flex items-center rounded-full p-[2px] transition-colors duration-200 cursor-pointer ${
+                          marketingConsent ? "bg-[#b8321e]" : "bg-neutral-700"
+                        }`}
+                        aria-label="Toggle marketing cookies"
+                      >
+                        <div
+                          className={`bg-white w-4 h-4 rounded-full shadow duration-200 transform ${
+                            marketingConsent ? "translate-x-4" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* Preferences Footer with Save Preferences / Accept All */}
+              <div className="p-4 border-t border-white/5 bg-[#121212]/50 flex justify-end gap-3 shrink-0">
+                <button
+                  onClick={() => {
+                    const consentConfig = {
+                      necessary: true,
+                      performance: perfConsent,
+                      marketing: marketingConsent,
+                      timestamp: Date.now()
+                    };
+                    localStorage.setItem("apparel-cookie-consent", JSON.stringify(consentConfig));
+                    setIsCustomiseOpen(false);
+                    setIsVisible(false);
+                  }}
+                  className="px-5 py-2.5 bg-transparent border border-neutral-600 hover:border-white hover:bg-white/5 text-neutral-300 hover:text-white text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer"
+                >
+                  Save Preferences
+                </button>
+                <button
+                  onClick={handleAccept}
+                  className="px-5 py-2.5 bg-[#b8321e] hover:bg-[#a12817] text-white text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer shadow-lg shadow-[#b8321e]/10"
+                >
+                  Accept All
+                </button>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
