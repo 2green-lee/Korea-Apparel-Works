@@ -10,14 +10,26 @@ export default function CookieBanner() {
   const [marketingConsent, setMarketingConsent] = useState(true);
 
   useEffect(() => {
+    const handleOpenPolicy = () => setIsPolicyOpen(true);
+    const handleOpenCustomise = () => setIsCustomiseOpen(true);
+
+    window.addEventListener("open-cookie-policy", handleOpenPolicy);
+    window.addEventListener("open-cookie-customise", handleOpenCustomise);
+
     const consent = localStorage.getItem("apparel-cookie-consent");
+    let timer: NodeJS.Timeout;
     if (!consent) {
       // Gentle appearance on interface loader
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setIsVisible(true);
       }, 1500);
-      return () => clearTimeout(timer);
     }
+
+    return () => {
+      window.removeEventListener("open-cookie-policy", handleOpenPolicy);
+      window.removeEventListener("open-cookie-customise", handleOpenCustomise);
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   const handleAccept = () => {
@@ -340,11 +352,11 @@ export default function CookieBanner() {
               <div className="p-6 overflow-y-auto space-y-6 text-xs text-neutral-300 font-light leading-relaxed select-text [scrollbar-width:thin] [scrollbar-color:#333_transparent]">
                 
                 {/* Introduction English & Korean */}
-                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl space-y-3">
+                <div className="space-y-3">
                   <p className="text-[13px] text-white font-normal">
                     This document explains how Korea Apparel Works protects visitor privacy and manages the deployment of browser cookies.
                   </p>
-                  <p className="text-neutral-400 border-t border-white/5 pt-2.5">
+                  <p className="text-neutral-400">
                     본 문서는 Korea Apparel Works가 방문자의 개인정보를 보호하고 브라우저 쿠키 파일을 활용하는 방식을 안내합니다.
                   </p>
                 </div>
@@ -369,22 +381,22 @@ export default function CookieBanner() {
                   </p>
                   
                   <div className="pl-5 space-y-3">
-                    <div className="p-3 bg-white/[0.01] border border-white/5 rounded-lg">
-                      <strong className="text-white block mb-0.5">Strictly Necessary Cookies:</strong>
+                    <div className="py-1">
+                      <strong className="text-white block mb-1">• Strictly Necessary Cookies:</strong>
                       <span className="text-neutral-400">
                         These are essential for our website to function properly. They allow you to navigate the site, use our AI chatbot, and securely maintain your consultation session without losing your chat history during a visit.
                       </span>
                     </div>
 
-                    <div className="p-3 bg-white/[0.01] border border-white/5 rounded-lg">
-                      <strong className="text-white block mb-0.5">Analytical/Performance Cookies:</strong>
+                    <div className="py-1">
+                      <strong className="text-white block mb-1">• Analytical/Performance Cookies:</strong>
                       <span className="text-neutral-400">
                         These allow us to recognize and count the number of visitors and see how visitors move around our website. This helps us improve the way our website works, such as ensuring users find what they are looking for easily.
                       </span>
                     </div>
 
-                    <div className="p-3 bg-white/[0.01] border border-white/5 rounded-lg">
-                      <strong className="text-white block mb-0.5">Location/Preference Cookies:</strong>
+                    <div className="py-1">
+                      <strong className="text-white block mb-1">• Location/Preference Cookies:</strong>
                       <span className="text-neutral-400">
                         These help us remember your country or region to provide accurate shipping feasibility and estimated delivery timelines for your apparel production.
                       </span>
@@ -421,7 +433,7 @@ export default function CookieBanner() {
                     If you have any questions about our use of cookies, please contact us at:
                   </p>
                   <div className="pl-5">
-                    <span className="inline-block bg-white/5 px-3 py-1.5 rounded-md font-mono text-white text-[11px] border border-white/5 selection:bg-neutral-800">
+                    <span className="text-[#e14833] font-semibold font-mono text-[13px] selection:bg-neutral-800">
                       Email: lgi12@naver.com
                     </span>
                   </div>
@@ -429,15 +441,7 @@ export default function CookieBanner() {
 
               </div>
 
-              {/* Footer */}
-              <div className="p-4 border-t border-white/5 bg-[#121212]/50 flex justify-end shrink-0">
-                <button
-                  onClick={() => setIsPolicyOpen(false)}
-                  className="px-5 py-2 bg-white hover:bg-neutral-200 text-black text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors cursor-pointer"
-                >
-                  Acknowledge & Close (확인 및 닫기)
-                </button>
-              </div>
+
             </motion.div>
           </div>
         )}

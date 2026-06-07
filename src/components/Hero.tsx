@@ -633,6 +633,7 @@ export default function Hero({
           {currentSlide === 0 && (
             <motion.div
               key="slide-0"
+              id="ai-dialogue-portal-container"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

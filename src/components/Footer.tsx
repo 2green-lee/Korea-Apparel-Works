@@ -23,7 +23,7 @@ export default function Footer({ onAdminClick, setCurrentSlide }: FooterProps) {
   };
 
   return (
-    <footer id="footer" className="bg-black text-neutral-450 pt-16 pb-12 overflow-hidden border-t border-white/5 relative font-sans">
+    <footer id="footer" className="bg-black text-neutral-450 pt-16 pb-12 overflow-hidden relative font-sans">
       <div className="max-w-6xl mx-auto px-6 md:px-10 relative z-10 flex flex-col justify-between items-stretch gap-12 select-text">
         
         {/* Upper Column Stack */}
@@ -61,26 +61,20 @@ export default function Footer({ onAdminClick, setCurrentSlide }: FooterProps) {
               <ul className="space-y-2 font-light">
                 <li>
                   <button 
-                    onClick={() => navigateToSection(0)} 
-                    className="hover:text-white cursor-pointer select-none text-left"
+                    onClick={() => navigateToSection(0, "ai-dialogue-portal-container")} 
+                    className="hover:text-white cursor-pointer select-none text-left font-sans"
                   >
-                    AI Dialogue Portal
+                    Chat
                   </button>
                 </li>
                 <li>
                   <button 
-                    onClick={() => navigateToSection(0)} 
-                    className="hover:text-white cursor-pointer select-none text-left"
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent('open-cookie-policy'));
+                    }} 
+                    className="hover:text-white cursor-pointer select-none text-left font-sans"
                   >
-                    Active Coordinator
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    onClick={() => navigateToSection(0)} 
-                    className="hover:text-white cursor-pointer select-none text-left"
-                  >
-                    Workspace Start
+                    Cookie Policy
                   </button>
                 </li>
               </ul>
