@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
 
 interface HeaderProps {
   onPreOrderClick: () => void;
@@ -8,9 +8,13 @@ interface HeaderProps {
   messages: { role: "user" | "model"; text: string }[];
   onClearChat: () => void;
   onAdminClick?: () => void;
+  user: any;
+  onOpenLogin: () => void;
+  onOpenAccount: () => void;
+  onLogout: () => void;
 }
 
-export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide, messages, onClearChat, onAdminClick }: HeaderProps) {
+export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide, messages, onClearChat, onAdminClick, user, onOpenLogin, onOpenAccount, onLogout }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -82,7 +86,7 @@ export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide,
         </div>
 
         {/* Right Side: Options replaced with a single Contact us link */}
-        <div className="flex items-center space-x-6 text-[13px] font-normal">
+        <div className="flex items-center space-x-4 text-[13px] font-normal">
           <button
             onClick={() => {
               const footerEl = document.getElementById("footer");
@@ -90,10 +94,37 @@ export default function Header({ onPreOrderClick, currentSlide, setCurrentSlide,
                 footerEl.scrollIntoView({ behavior: "smooth" });
               }
             }}
-            className={`${textClass} cursor-pointer focus:outline-hidden normal-case tracking-wider`}
+            className={`${textClass} cursor-pointer focus:outline-hidden normal-case tracking-wider hidden md:block`}
           >
             Contact us
           </button>
+
+          {user ? (
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={onOpenAccount}
+                className="flex items-center space-x-1.5 bg-neutral-100 hover:bg-neutral-200 active:scale-95 rounded-full px-3.5 py-1.5 transition duration-200 cursor-pointer text-xs font-medium text-neutral-800"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>My Account</span>
+              </button>
+              <button
+                onClick={onLogout}
+                className="flex items-center justify-center hover:bg-neutral-100 active:scale-95 rounded-full p-2 transition duration-200 cursor-pointer text-neutral-500 hover:text-neutral-800"
+                title="Sign Out"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={onOpenLogin}
+              className="flex items-center space-x-1.5 bg-neutral-900 hover:bg-neutral-800 active:scale-95 rounded-full px-4 py-2 transition duration-200 cursor-pointer text-xs font-medium text-white"
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>Sign In</span>
+            </button>
+          )}
         </div>
 
       </div>

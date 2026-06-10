@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler, ChevronLeft, ChevronRight, Shirt, Award, Layers, Sparkles, Check, History, MessageSquare, FileText, Truck, User } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import QuoteModal from "./QuoteModal";
 import tshirtIcon from "./free-icon-clothes-7640468.png";
+import { supabase } from "../lib/supabase";
 
 interface HeroProps {
   onPreOrderClick: () => void;
   currentSlide: number;
   setCurrentSlide: React.Dispatch<React.SetStateAction<number>> | ((slide: number | ((prev: number) => number)) => void);
-  messages: { role: "user" | "model"; text: string }[];
-  setMessages: React.Dispatch<React.SetStateAction<{ role: "user" | "model"; text: string }[]>>;
+  messages: { role: "user" | "model"; text: string; imageUrl?: string }[];
+  setMessages: React.Dispatch<React.SetStateAction<{ role: "user" | "model"; text: string; imageUrl?: string }[]>>;
   savedChats: { role: "user" | "model"; text: string }[][];
   onClearChat: () => void;
   onRestoreChat: (index: number) => void;
+  user: any;
+  onOpenLogin: () => void;
+  onLogout: () => void;
+  onOpenAccount: () => void;
 }
 
 const SLIDES = [
@@ -53,7 +57,6 @@ const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
 };
 
 const PREMIUM_FABRICS = [
-  // Performance
   {
     id: "mesh",
     category: "Performance",
@@ -105,8 +108,6 @@ const PREMIUM_FABRICS = [
     tags: ["HIGH ELASTICITY", "ANTI-PILLING", "OPTIMAL COLLARS"],
     uses: ["Neck & Cuff Ribbing", "Sports Crewnecks", "Signature Tracking Tops"]
   },
-  
-  // Classic
   {
     id: "pique",
     category: "Classic",
@@ -141,8 +142,6 @@ const PREMIUM_FABRICS = [
     tags: ["DOUBLE-SIDED", "SILKY BIO-WASH", "SHAPE RETENTION"],
     uses: ["Luxury Sweatshirts", "Premium Hoodies", "Formal Casual Wear"]
   },
- 
-  // Premium / Design
   {
     id: "jacquard",
     category: "Premium / Design",
@@ -336,44 +335,37 @@ export default function Hero({
   setMessages,
   savedChats,
   onClearChat,
-  onRestoreChat
+  onRestoreChat,
+  user,
+  onOpenLogin,
+  onLogout,
+  onOpenAccount
 }: HeroProps) {
-  // Master Sewing replacement Carousel State
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [activeFabricCategory, setActiveFabricCategory] = useState("all");
-  const [selectedFabricId, setSelectedFabricId] = useState("mesh");
 
-  // Chat States
   const [chatInput, setChatInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const generationIdRef = useRef(0);
+  const sessionIdRef = useRef(crypto.randomUUID());
 
-  // Quote Intercept States
-  const [isQuoteFormSubmitted, setIsQuoteFormSubmitted] = useState<boolean>(() => {
-    return localStorage.getItem("kaw_quote_submitted") === "true";
-  });
-  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-
-  // Auto-scroll chat interactions
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isGenerating]);
 
-  // Adjust textarea height dynamically based on user input content lines
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = "auto";
       const newHeight = textarea.scrollHeight;
       if (messages.length > 1) {
-        // Enforce a sensible max height during active conversation to keep prompt layout balanced
         textarea.style.height = `${Math.min(Math.max(newHeight, 38), 180)}px`;
       } else {
-        // Landing state allows more generous single-session space
         textarea.style.height = `${Math.min(Math.max(newHeight, 52), 300)}px`;
       }
     }
@@ -394,7 +386,6 @@ export default function Hero({
     const userMsg = chatInput.trim();
     setChatInput("");
 
-    // Check if first real user message
     const isFirstConversationTurn = messages.length === 1;
 
     generationIdRef.current += 1;
@@ -403,11 +394,10 @@ export default function Hero({
     setMessages((prev) => [...prev, { role: "user", text: userMsg }]);
     setIsGenerating(true);
 
-    // If first turn and quota not submitted, popup the modal after a tiny delay
-    if (isFirstConversationTurn && !isQuoteFormSubmitted) {
+    if (isFirstConversationTurn && !user) {
       setTimeout(() => {
         if (currentId === generationIdRef.current) {
-          setIsQuoteModalOpen(true);
+          onOpenLogin();
         }
       }, 1200);
     }
@@ -417,8 +407,11 @@ export default function Hero({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          sessionId: sessionIdRef.current,
+          userId: user?.id,
+          userEmail: user?.email,
           message: userMsg,
-          history: messages.slice(1) // skip fallback greeting
+          history: messages.slice(1)
         })
       });
 
@@ -452,29 +445,6 @@ export default function Hero({
     }
   };
 
-  const handleQuoteSubmit = async (email: string, country: string) => {
-    localStorage.setItem("kaw_quote_email", email);
-    localStorage.setItem("kaw_quote_country", country);
-    localStorage.setItem("kaw_quote_submitted", "true");
-    setIsQuoteFormSubmitted(true);
-    setIsQuoteModalOpen(false);
-
-    try {
-      await fetch("/api/submissions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "quote",
-          email: email,
-          country: country,
-          createdAt: new Date().toISOString()
-        })
-      });
-    } catch (e) {
-      console.error("Failed to send quote request to persistent server:", e);
-    }
-  };
-
   const handleQuickCommand = async (promptText: string) => {
     if (isGenerating) return;
 
@@ -486,10 +456,10 @@ export default function Hero({
     setMessages((prev) => [...prev, { role: "user", text: promptText }]);
     setIsGenerating(true);
 
-    if (isFirstConversationTurn && !isQuoteFormSubmitted) {
+    if (isFirstConversationTurn && !user) {
       setTimeout(() => {
         if (currentId === generationIdRef.current) {
-          setIsQuoteModalOpen(true);
+          onOpenLogin();
         }
       }, 1200);
     }
@@ -499,6 +469,8 @@ export default function Hero({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          sessionId: sessionIdRef.current,
+          userId: user?.id,
           message: promptText,
           history: messages.slice(1)
         })
@@ -534,54 +506,115 @@ export default function Hero({
     }
   };
 
-  const handleAnalyzeImage = () => {
-    if (isGenerating) return;
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || isGenerating) return;
+
+    e.target.value = '';
 
     const isFirstConversationTurn = messages.length === 1;
-
     generationIdRef.current += 1;
     const currentId = generationIdRef.current;
 
     setMessages((prev) => [
       ...prev,
-      { role: "user", text: "[Upload Sketch] Analyzed custom apparel design." }
+      { role: "user", text: `Uploading: ${file.name}`, imageUrl: URL.createObjectURL(file) }
     ]);
     setIsGenerating(true);
 
-    if (isFirstConversationTurn && !isQuoteFormSubmitted) {
+    if (isFirstConversationTurn && !user) {
       setTimeout(() => {
         if (currentId === generationIdRef.current) {
-          setIsQuoteModalOpen(true);
+          onOpenLogin();
         }
       }, 1200);
     }
 
-    // Mock analysis response
-    setTimeout(() => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const folderName = user ? user.id : sessionIdRef.current;
+      const isDocument = file.type === 'application/pdf';
+      const subFolder = isDocument ? 'tech-packs' : 'sample-images';
+      const filePath = `${folderName}/${subFolder}/${fileName}`;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folderName", `${folderName}/${subFolder}`);
+      formData.append("fileName", fileName);
+
+      const uploadResponse = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json();
+        throw new Error(errorData.error || "Failed to upload file");
+      }
+
+      const publicUrlData = await uploadResponse.json();
+
+      const imageUrl = publicUrlData.publicUrl;
+
+      setMessages((prev) => {
+        const newMsgs = [...prev];
+        newMsgs[newMsgs.length - 1] = { role: "user", text: file.name, imageUrl: imageUrl };
+        return newMsgs;
+      });
+
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: sessionIdRef.current,
+          userId: user?.id,
+          message: `[Image Attached: ${imageUrl}] Please analyze this image for apparel manufacturing.`,
+          imageUrl: imageUrl,
+          history: messages.slice(1)
+        })
+      });
+
+      const data = await response.json();
+      if (currentId !== generationIdRef.current) return;
+
+      if (data.error) {
+        setMessages((prev) => [...prev, { role: "model", text: `Error: ${data.error}` }]);
+      } else {
+        setMessages((prev) => [...prev, { role: "model", text: data.text }]);
+      }
+    } catch (err: any) {
       if (currentId !== generationIdRef.current) return;
       setMessages((prev) => [
         ...prev,
-        { role: "model", text: "I have analyzed your garment sketch! Our Seoul-based veteran tailors can build an accurate digital production pattern for this item using high-grade sustainable cotton-combed jersey. Our minimum order quantity starts at just 30 pieces. Would you like to request physical sample swatches?" }
+        { role: "model", text: `Image processing failed: ${err.message || 'Unknown error'}` }
       ]);
-      setIsGenerating(false);
-    }, 1000);
-   };
+    } finally {
+      if (currentId === generationIdRef.current) setIsGenerating(false);
+    }
+  };
+
+  const handleAnalyzeImage = () => {
+    if (!user) {
+      onOpenLogin();
+      return;
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   return (
     <section className={`relative w-full flex flex-col justify-center items-center overflow-x-hidden overflow-y-visible z-10 px-4 md:px-8 transition-all duration-500 min-h-[100vh] py-20`}>
       
-      {/* Background Solid Canvas with seamless transitions */}
       <div className="absolute inset-0 z-0 h-full w-full">
-        {/* Night mode background (Slide 0) */}
         <div 
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out bg-[#0A0A0C] ${
             currentSlide === 0 ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
-          {/* Soft ambient center center glow overlay */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.025)_0%,transparent_75%)] pointer-events-none" />
           
-          {/* Premium fine grain tactile texture representing high-end fabric weaving */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.035] mix-blend-normal" xmlns="http://www.w3.org/2000/svg">
             <filter id="noiseFilter">
               <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
@@ -590,7 +623,6 @@ export default function Hero({
           </svg>
         </div>
 
-        {/* Day mode background (Slide 1 and 2) */}
         <div 
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out bg-white ${
             currentSlide > 0 ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -598,7 +630,6 @@ export default function Hero({
         />
       </div>
       
-      {/* Floating Left and Right side buttons for desktop & tablet */}
       <button
         onClick={handlePrevSlide}
         className={`fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full active:scale-95 border flex items-center justify-center transition-all duration-300 backdrop-blur-xs cursor-pointer group shadow-sm ${
@@ -623,12 +654,10 @@ export default function Hero({
         <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
       </button>
 
-      {/* Main Responsive Layout Box */}
       <div className={`relative z-10 w-full flex flex-col items-center justify-center text-center px-4 select-none transition-all duration-500 ${
         (currentSlide === 0 && messages.length > 1) ? "max-w-[1400px] my-auto" : "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-16"
       }`}>
         
-        {/* Dynamic visual transition wrapper providing robust in-place crossfade (dissolve) feel */}
         <AnimatePresence mode="wait">
           {currentSlide === 0 && (
             <motion.div
@@ -640,7 +669,6 @@ export default function Hero({
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="w-full flex flex-col items-center justify-center relative"
             >
-              {/* Navigation Dot Indicators on top of conversation panel */}
               {messages.length === 1 && (
                 <div className="flex space-x-2.5 mb-5 select-none">
                   {SLIDES.map((_, index) => (
@@ -656,13 +684,11 @@ export default function Hero({
                 </div>
               )}
 
-              {/* Minimalist Tech-Atelier drafting T-shirt Icon - Only rendered on primary home slide */}
               {messages.length === 1 && (
                 <div 
                   id="tshirt-section" 
                   className="mb-6 flex items-center justify-center pointer-events-none transition-all duration-700 select-none animate-fadeIn"
                 >
-                  {/* T-Shirt Model (Right) */}
                   <div className="w-[120px] h-[120px] flex items-center justify-center">
                     <img 
                       src={tshirtIcon} 
@@ -674,7 +700,6 @@ export default function Hero({
                 </div>
               )}
 
-              {/* Headline matching screenshot "How should we craft..." style */}
               {messages.length === 1 && (
                 <div className="mb-8 select-none">
                   <h1 className="font-sans text-3xl md:text-[38px] font-medium text-white tracking-tight">
@@ -688,13 +713,11 @@ export default function Hero({
                 </div>
               )}
 
-              {/* Dynamic Compact Panels */}
               <div className={`w-full bg-neutral-900/80 backdrop-blur-2xl rounded-[28px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-6 flex flex-col font-sans transition-all duration-500 overflow-hidden relative group/card select-text ${
                 messages.length > 1 
                   ? "w-full max-w-[1400px] h-[80vh] min-h-[600px] xl:h-[800px]" 
                   : "w-full md:w-[700px] min-h-[160px] h-auto"
               }`}>
-                {/* Active AI Chat History log drawer (only shows when user has started chatting) */}
                 {messages.length > 1 && (
                   <div className="border-b border-white/5 pb-4 mb-4 select-text flex flex-col flex-1 min-h-0">
                     <div 
@@ -708,7 +731,26 @@ export default function Hero({
                               ? "bg-white text-black rounded-tr-none font-medium"
                               : "bg-white/10 text-neutral-200 shadow-3xs border border-white/5 rounded-tl-none whitespace-pre-wrap"
                           }`}>
-                            {msg.text}
+                            {msg.imageUrl && (
+                              <div className="mb-2">
+                                {msg.imageUrl.endsWith('.pdf') ? (
+                                  <div className="flex items-center space-x-2 bg-white/10 rounded-xl p-3">
+                                    <FileText className="w-5 h-5 text-neutral-400 shrink-0" />
+                                    <span className="text-xs truncate">{msg.text}</span>
+                                  </div>
+                                ) : (
+                                  <img 
+                                    src={msg.imageUrl} 
+                                    alt="Uploaded" 
+                                    className="rounded-xl max-h-[200px] w-auto object-cover border border-white/10"
+                                  />
+                                )}
+                              </div>
+                            )}
+                            {!msg.imageUrl && msg.text}
+                            {msg.imageUrl && !msg.imageUrl.endsWith('.pdf') && (
+                              <span className="text-[11px] opacity-60">{msg.text}</span>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -728,12 +770,17 @@ export default function Hero({
                   </div>
                 )}
 
-                {/* Form wrapper */}
                 <form onSubmit={handleSendMessage} className={`w-full flex flex-col justify-between text-left ${messages.length > 1 ? "h-auto shrink-0 pt-2" : "flex-1 h-full"}`}>
                   <textarea
                     ref={textareaRef}
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
+                    onFocus={() => {
+                      if (!user && messages.length === 1) {
+                        if (textareaRef.current) textareaRef.current.blur();
+                        onOpenLogin();
+                      }
+                    }}
                     placeholder="We excel in crafting bespoke apparel and tops with premium-grade fabrics. Tell us what you want to make..."
                     className="w-full bg-transparent resize-none overflow-hidden border-0 outline-none focus:ring-0 text-sm md:text-base text-white placeholder-neutral-400/50 font-light leading-relaxed select-text min-h-[38px] pb-2"
                     disabled={isGenerating}
@@ -745,10 +792,15 @@ export default function Hero({
                     }}
                   />
 
-                  {/* Inner Dashboard Controls footer panel matching reference screenshot exactly */}
                   <div className="flex items-center justify-between pt-3 border-t border-white/5">
                     <div className="flex items-center space-x-2.5">
-                      {/* Analyze Image button on bottom left */}
+                      <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        onChange={handleImageSelect} 
+                        accept="image/png, image/jpeg, image/webp, application/pdf" 
+                        className="hidden" 
+                      />
                       <button
                         type="button"
                         onClick={handleAnalyzeImage}
@@ -758,7 +810,6 @@ export default function Hero({
                         <span>Upload</span>
                       </button>
 
-                      {/* Clear conversation button */}
                       {messages.length > 1 && (
                         <button
                           onClick={onClearChat}
@@ -771,7 +822,6 @@ export default function Hero({
                         </button>
                       )}
 
-                      {/* Restore conversation buttons */}
                       {messages.length === 1 && savedChats && savedChats.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 items-center">
                           {savedChats.map((chat, idx) => {
@@ -794,10 +844,7 @@ export default function Hero({
                       )}
                     </div>
 
-                    {/* Action utilities on bottom right */}
-
                     <div className="flex items-center space-x-2">
-                      {/* Simulated Microphone voice clicker */}
                       <button
                         type="button"
                         onClick={() => setChatInput("Describe the fabrics for custom streetwear production.")}
@@ -807,7 +854,6 @@ export default function Hero({
                         <Mic className="w-4 h-4" />
                       </button>
 
-                      {/* Main Send arrow circular button */}
                       <button
                         type="submit"
                         disabled={!chatInput.trim() || isGenerating}
@@ -835,7 +881,6 @@ export default function Hero({
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="w-full flex flex-col items-center justify-center relative"
             >
-              {/* Navigation Dot Indicators on top of conversation panel */}
               <div className="flex space-x-2.5 mb-5 md:-mt-8">
                 {SLIDES.map((_, index) => (
                   <button
@@ -850,7 +895,6 @@ export default function Hero({
               </div>
 
               <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent border border-transparent rounded-none overflow-hidden">
-                {/* Hero Section */}
                 <div className="pt-16 pb-12 px-8 md:px-12 border-b border-neutral-100/55 w-full bg-transparent flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
                   <div className="flex-1 w-full lg:pr-4">
                     <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-950 leading-[1.2] tracking-tight mb-6">
@@ -874,7 +918,6 @@ export default function Hero({
                   </div>
                 </div>
 
-                {/* Stats Row */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-6 md:p-8 w-full border-b border-neutral-100/55 bg-transparent">
                   <div className="p-6 md:p-8 rounded-2xl bg-white border border-neutral-200/60 flex flex-col justify-center transition-all duration-300 hover:border-neutral-300 hover:bg-neutral-50/50 hover:-translate-y-0.5 group shadow-xs">
                     <div className="text-xs font-mono font-semibold text-neutral-400 uppercase tracking-widest mb-2">Heritage</div>
@@ -898,9 +941,7 @@ export default function Hero({
                   </div>
                 </div>
 
-                {/* Split Grid */}
                 <div className="w-full py-16 px-8 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start border-b border-neutral-100 bg-transparent">
-                  {/* Story */}
                   <div>
                     <h2 className="text-xl md:text-2xl font-bold text-neutral-950 mb-6 font-sans">From one factory floor to a global platform</h2>
                     <div className="space-y-4 text-sm md:text-base text-neutral-600 leading-relaxed font-light">
@@ -909,10 +950,8 @@ export default function Hero({
                       <p>Watching this, I saw an opportunity — not to replace what my father had built, but to open it up. Korea Apparel Works is the bridge between that 30 years of manufacturing heritage and the brands worldwide who are looking for exactly what we make.</p>
                     </div>
                   </div>
-                  {/* Right Column */}
                   <div className="flex flex-col gap-10">
                     <div className="w-full aspect-[16/9] md:aspect-[3/2] rounded-2xl overflow-hidden border border-neutral-200/80 relative group bg-neutral-100">
-                      {/* Carousel image list with crossfade transition */}
                       <div className="absolute inset-0 w-full h-full">
                         {CAROUSEL_IMAGES.map((imgUrl, idx) => (
                           <div
@@ -932,7 +971,6 @@ export default function Hero({
                         ))}
                       </div>
 
-                      {/* Slider Navigation Arrows - Hidden by default, visible on hover */}
                       <div className="absolute inset-x-3 top-1/2 -translate-y-1/2 z-20 flex justify-between pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <button
                           type="button"
@@ -958,7 +996,6 @@ export default function Hero({
                         </button>
                       </div>
 
-                      {/* Bottom dot indicators overlay */}
                       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex space-x-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         {CAROUSEL_IMAGES.map((_, idx) => (
                           <button
@@ -1005,8 +1042,6 @@ export default function Hero({
                     </div>
                   </div>
                 </div>
-
-                {/* Removed AI Tech Section to move to Slide 2 */}
               </div>
             </motion.div>
           )}
@@ -1020,7 +1055,6 @@ export default function Hero({
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="w-full flex flex-col items-center justify-center relative"
             >
-              {/* Navigation Dot Indicators on top of conversation panel */}
               <div className="flex space-x-2.5 mb-5 md:-mt-8">
                 {SLIDES.map((_, index) => (
                   <button
@@ -1035,7 +1069,6 @@ export default function Hero({
               </div>
 
               <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent border border-transparent rounded-none p-4 md:p-0 overflow-hidden">
-                {/* Embedded Big Title for slide 3 inside the content card */}
                 <div id="collection-section" className="mb-8 pb-6 border-b border-neutral-100">
                   <h1 className="font-sans text-3xl md:text-4xl font-semibold text-neutral-950 tracking-tight leading-tight">
                     {SLIDES[2].headline}
@@ -1043,7 +1076,6 @@ export default function Hero({
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Product 1 */}
                   <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-6 md:p-8 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
                     <div>
                       <div className="w-11 h-11 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center mb-5 transition-colors group-hover:bg-neutral-950 group-hover:text-white">
@@ -1054,7 +1086,6 @@ export default function Hero({
                         Uses 480gsm premium high-density cotton loopback French terry to guarantee a perfect drape, unique 3D silhouette, and excellent warmth.
                       </p>
                       
-                      {/* Integrated Fabric Detail Box */}
                       <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-100/80 mb-5 text-[11px] space-y-1">
                         <div className="flex justify-between">
                           <span className="text-neutral-400">원단 종류</span>
@@ -1078,7 +1109,6 @@ export default function Hero({
                     </div>
                   </div>
 
-                  {/* Product 2 */}
                   <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-6 md:p-8 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
                     <div>
                       <div className="w-11 h-11 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center mb-5 transition-colors group-hover:bg-neutral-950 group-hover:text-white">
@@ -1089,7 +1119,6 @@ export default function Hero({
                         Designed with 280gsm compact single cotton knit for wash shrinkage under 1%, featuring shoulder chain stitching and a dense double rib finish.
                       </p>
 
-                      {/* Integrated Fabric Detail Box */}
                       <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-100/80 mb-5 text-[11px] space-y-1">
                         <div className="flex justify-between">
                           <span className="text-neutral-400">원단 종류</span>
@@ -1113,7 +1142,6 @@ export default function Hero({
                     </div>
                   </div>
 
-                  {/* Product 3 */}
                   <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-6 md:p-8 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
                     <div>
                       <div className="w-11 h-11 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center mb-5 transition-colors group-hover:bg-neutral-950 group-hover:text-white">
@@ -1124,7 +1152,6 @@ export default function Hero({
                         Constructed from wind and water-resistant memory recycled nylon yarn, standing out with an urban 3D sleeve structure and high-precision seam sealing stitches.
                       </p>
 
-                      {/* Integrated Fabric Detail Box */}
                       <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-100/80 mb-5 text-[11px] space-y-1">
                         <div className="flex justify-between">
                           <span className="text-neutral-400">원단 종류</span>
@@ -1149,7 +1176,6 @@ export default function Hero({
                   </div>
                 </div>
 
-                {/* 시그니처 프리미엄 마스터 원단 도감 (Interactive Fabrics Catalog Section) */}
                 <div className="w-full mt-12 bg-white border border-neutral-200 rounded-3xl p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.03)] relative overflow-hidden" id="fabrics-catalog">
                   <div className="mb-8">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-mono font-bold uppercase tracking-wider mb-2">
@@ -1164,7 +1190,6 @@ export default function Hero({
                     </p>
                   </div>
 
-                  {/* Filter pills */}
                   <div className="flex flex-wrap gap-2 mb-8">
                     {[
                       { id: "all", label: "All fabrics" },
@@ -1189,7 +1214,6 @@ export default function Hero({
                     ))}
                   </div>
 
-                  {/* Fabrics Grid */}
                   {(() => {
                     const filtered = activeFabricCategory === "all"
                       ? PREMIUM_FABRICS
@@ -1202,15 +1226,12 @@ export default function Hero({
                             key={f.id}
                             className="bg-white border border-neutral-200/80 rounded-2xl overflow-hidden hover:border-emerald-500 hover:shadow-[0_12px_30px_rgba(5,150,105,0.06)] transition-all duration-300 flex flex-col group justify-between"
                           >
-                            {/* Swatch Header containing SVG pattern */}
                             <div className="h-24 bg-neutral-50 flex items-center justify-center border-b border-neutral-100 relative overflow-hidden">
                               {getFabricPatternSvg(f.id, f.engName)}
                             </div>
 
-                            {/* Card Body */}
                             <div className="p-5 flex-1 flex flex-col justify-between">
                               <div className="space-y-4">
-                                {/* Header Info */}
                                 <div>
                                   <div className="flex justify-between items-center text-[10px] font-mono mb-1.5">
                                     <span className="font-bold text-emerald-700 bg-emerald-50/70 px-2 py-0.5 rounded">
@@ -1228,15 +1249,12 @@ export default function Hero({
                                   </div>
                                 </div>
 
-                                {/* Short elegant description */}
                                 <p className="text-xs text-neutral-500 font-light leading-relaxed">
                                   {f.description}
                                 </p>
 
-                                {/* Feature Tags */}
                                 <div className="flex flex-wrap gap-1">
                                   {f.tags.map((tag, idx) => {
-                                    // Cycle soft elegant colors
                                     const colorClasses = 
                                       idx === 0 ? "bg-blue-50 text-blue-800 border-blue-100/50" :
                                       idx === 1 ? "bg-emerald-50 text-emerald-800 border-emerald-100/50" :
@@ -1252,7 +1270,6 @@ export default function Hero({
                                   })}
                                 </div>
 
-                                {/* Intended Use Case badges */}
                                 <div className="flex flex-wrap gap-1 border-t border-neutral-100 pt-3">
                                   {f.uses.map((use, idx) => (
                                     <span
@@ -1265,11 +1282,9 @@ export default function Hero({
                                 </div>
                               </div>
 
-                              {/* Action Button */}
                               <button
                                 type="button"
                                 onClick={() => {
-                                  // Switch back to Chat (Slide Index 0) and set inquiry text
                                   setCurrentSlide(0);
                                   setChatInput(`"${f.name} (${f.engName})" 원단에 대하여 제작 견적과 발주 진행 요령에 대해 문의하고 싶습니다.`);
                                   setTimeout(() => {
@@ -1292,7 +1307,6 @@ export default function Hero({
                   })()}
                 </div>
 
-                {/* AI Tech Section */}
                 <div id="ai-tech-section" className="w-full py-12 px-6 md:px-10 bg-[#e8f7f0] border border-[#b2e4cb] rounded-2xl mt-12 shadow-[0_8px_30px_rgba(5,150,105,0.04)]">
                   <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-10 items-start mb-10">
                     <div>
@@ -1300,7 +1314,6 @@ export default function Hero({
                       <p className="text-sm md:text-base text-neutral-800 leading-relaxed font-light">We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                      {/* cards */}
                       <div className="p-6 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
                         <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
                            <MessageSquare className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
@@ -1374,31 +1387,8 @@ export default function Hero({
             </motion.div>
           )}
         </AnimatePresence>
-
       </div>
-
-      {/* Acoustic bottom bar lines */}
       <div className="relative z-10 w-full max-w-4xl mt-12 flex justify-between items-center text-neutral-400 font-mono text-[9px] uppercase tracking-[0.15em] select-none" />
-
-      {/* Quote request form intercept modal */}
-      <QuoteModal
-        isOpen={isQuoteModalOpen}
-        onClose={() => {
-          setIsQuoteModalOpen(false);
-          if (!isQuoteFormSubmitted) {
-            generationIdRef.current += 1;
-            setIsGenerating(false);
-            setMessages([
-              {
-                role: "model",
-                text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (30pcs) luxury apparel services."
-              }
-            ]);
-          }
-        }}
-        onSubmit={handleQuoteSubmit}
-      />
-
     </section>
   );
 }

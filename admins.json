@@ -1,0 +1,16 @@
+[
+  {
+    "email": "lgi12@naver.com",
+    "password": "!rmsrjfl12",
+    "name": "Master Admin",
+    "role": "master",
+    "createdAt": "2026-06-09T07:10:00.000Z"
+  },
+  {
+    "email": "sj0822js@gmail.com",
+    "password": "Guqdpa1002@",
+    "name": "Seojun",
+    "role": "admin",
+    "createdAt": "2026-06-09T08:59:46.616Z"
+  }
+]
