@@ -1,0 +1,37 @@
+[
+  {
+    "id": "SUB-1781161919318-427",
+    "type": "quote",
+    "email": "test1231@gmail.com",
+    "country": "KR - Korea, Republic of",
+    "createdAt": "2026-06-11T07:11:59.306Z"
+  },
+  {
+    "id": "SUB-1780995258067-551",
+    "type": "quote",
+    "email": "sj0822js@gmail.com",
+    "country": "KR - Korea, Republic of",
+    "createdAt": "2026-06-09T08:54:18.049Z"
+  },
+  {
+    "id": "SUB-1780994758592-337",
+    "type": "quote",
+    "email": "sj0822js@gmail.com",
+    "country": "KR - Korea, Republic of",
+    "createdAt": "2026-06-09T08:45:58.586Z"
+  },
+  {
+    "id": "SUB-1780989288755-71",
+    "type": "quote",
+    "email": "sj0822js@gmail.com",
+    "country": "KP - Korea, Democratic People's Republic of",
+    "createdAt": "2026-06-09T07:14:48.749Z"
+  },
+  {
+    "id": "SUB-1780988666609-572",
+    "type": "quote",
+    "email": "sj0822js@gmail.com",
+    "country": "KP - Korea, Democratic People's Republic of",
+    "createdAt": "2026-06-09T07:04:26.602Z"
+  }
+]
