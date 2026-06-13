@@ -643,6 +643,8 @@ export default function Hero({
   return (
     <section className={`relative w-full flex flex-col justify-center items-center overflow-x-hidden overflow-y-visible z-10 px-4 md:px-8 transition-all duration-500 min-h-[100vh] py-20`}>
       
+
+
       <button
         onClick={handlePrevSlide}
         className="fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 flex items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
@@ -674,29 +676,32 @@ export default function Hero({
               animate="center"
               exit="exit"
               transition={slideTransition}
-              className="w-full flex flex-col items-center justify-center relative translate-y-[100px]"
+              className="w-full flex flex-col items-center justify-center relative"
             >
               {messages.length === 1 && (
-                <div className="flex space-x-2.5 mb-5 select-none">
-                  {SLIDES.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentSlide(index)}
-                      className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                        index === currentSlide ? "w-6 bg-neutral-950" : "w-1.5 bg-neutral-950/20 hover:bg-neutral-950/40"
-                      }`}
-                      aria-label={`Go to slide ${index + 1}`}
-                    />
-                  ))}
-                </div>
+                <>
+                  <img src="/logo1.png" alt="Korea Apparel Works Logo" className="w-[clamp(50px,calc(35px+2.5vw),60px)] mb-[50px] select-none pointer-events-none transition-all duration-300" />
+                  <div className="flex space-x-2.5 mb-5 select-none">
+                    {SLIDES.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentSlide(index)}
+                        className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                          index === currentSlide ? "w-6 bg-neutral-950" : "w-1.5 bg-neutral-950/20 hover:bg-neutral-950/40"
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </>
               )}
 
               {messages.length === 1 && (
-                <div className="mb-10 select-none flex flex-col items-center">
-                  <h1 className="font-dm-sans text-[23px] md:text-[41px] font-normal tracking-tight text-neutral-900 leading-tight text-center">
-                    Smart Apparel Manufacturing From Korea
+                <div className="mb-10 select-none flex flex-col items-center w-full px-2">
+                  <h1 className="font-dm-sans text-[clamp(23px,calc(-4px+4.5vw),41px)] font-[550] tracking-tight text-neutral-900 leading-tight text-center whitespace-nowrap transition-all duration-300">
+                    Smart Apparel Manufacturing from Korea
                   </h1>
-                  <p className="pretendard-font mt-4 text-neutral-600 text-[14px] md:text-[16px] max-w-lg mx-auto font-normal text-center">
+                  <p className="pretendard-font mt-4 text-neutral-600 text-[clamp(14px,calc(11px+0.5vw),16px)] max-w-lg mx-auto font-normal text-center transition-all duration-300">
                     Inquire about quotes from samples to mass production.
                     <br />
                     Available starting from just 1 piece.
@@ -706,8 +711,8 @@ export default function Hero({
 
               <div className={`w-full bg-white/85 backdrop-blur-2xl rounded-[28px] border border-neutral-200/80 shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-6 flex flex-col font-sans transition-all duration-500 overflow-hidden relative group/card select-text ${
                 messages.length > 1 
-                  ? "w-full md:w-[700px] h-[600px]" 
-                  : "w-full md:w-[700px] h-[200px]"
+                  ? "max-w-[1000px] h-[80vh] max-h-[800px]" 
+                  : "max-w-[700px] h-[200px]"
               }`}>
                 {messages.length > 1 && (
                   <div className="border-b border-neutral-100 pb-4 mb-4 select-text flex flex-col flex-1 min-h-0">
@@ -872,9 +877,9 @@ export default function Hero({
               animate="center"
               exit="exit"
               transition={slideTransition}
-              className="w-full flex flex-col items-center justify-center relative"
+              className="w-full flex flex-col items-center justify-center relative mt-[-200px]"
             >
-              <div className="flex space-x-2.5 mb-5 md:-mt-8">
+              <div className="flex space-x-2.5 mb-5 mt-24">
                 {SLIDES.map((_, index) => (
                   <button
                     key={index}
@@ -1048,9 +1053,9 @@ export default function Hero({
               animate="center"
               exit="exit"
               transition={slideTransition}
-              className="w-full flex flex-col items-center justify-center relative"
+              className="w-full flex flex-col items-center justify-center relative mt-[-200px]"
             >
-              <div className="flex space-x-2.5 mb-5 md:-mt-8">
+              <div className="flex space-x-2.5 mb-5 mt-24">
                 {SLIDES.map((_, index) => (
                   <button
                     key={index}

@@ -128,7 +128,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
               
               {/* Form Description */}
               <div className="text-center pb-2 border-b border-neutral-100">
-                <p className="text-neutral-500 text-xs font-light leading-relaxed max-w-sm mx-auto">
+                <p className="text-neutral-500 text-sm font-light leading-relaxed max-w-sm mx-auto">
                   {isLoginMode 
                     ? "Welcome back. Log in to track your production quotes and orders."
                     : "Premium 'Made in Korea' manufacturing for your brand. Enter your email to start the consultation and receive our proprietary size charts."}
@@ -139,7 +139,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Email input field */}
                 <div className="space-y-1.5 font-sans text-center animate-fadeIn">
-                  <label className="text-[10px] tracking-wider font-semibold text-neutral-400 uppercase block font-sans text-center">
+                  <label className="text-[12px] tracking-wider font-semibold text-neutral-400 uppercase block font-sans text-center">
                     Email Address
                   </label>
                   <div className="relative">
@@ -156,7 +156,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
 
                 {/* Password input field */}
                 <div className="space-y-1.5 font-sans text-center animate-fadeIn">
-                  <label className="text-[10px] tracking-wider font-semibold text-neutral-400 uppercase block font-sans text-center">
+                  <label className="text-[12px] tracking-wider font-semibold text-neutral-400 uppercase block font-sans text-center">
                     Password
                   </label>
                   <div className="relative">
@@ -174,7 +174,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
                 {/* Country input field (Searchable Combobox) - Full width - Only show in Sign Up mode */}
                 {!isLoginMode && (
                   <div ref={comboboxRef} className="col-span-1 sm:col-span-2 space-y-1.5 font-sans text-center animate-fadeIn relative">
-                    <label className="text-[10px] tracking-wider font-semibold text-neutral-400 uppercase block font-sans text-center">
+                    <label className="text-[12px] tracking-wider font-semibold text-neutral-400 uppercase block font-sans text-center">
                       Country
                     </label>
                     <div className="relative">

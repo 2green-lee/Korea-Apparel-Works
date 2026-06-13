@@ -1,5 +1,30 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/dm-sans/webfonts/dm-sans-latin-400-normal.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/dm-sans/webfonts/dm-sans-latin-500-normal.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/dm-sans/webfonts/dm-sans-latin-700-normal.woff2') format('woff2');
+  font-display: swap;
+}
+
+
 @theme {
   --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
   --font-sans: "DM Sans", "Pretendard", "Inter", system-ui, -apple-system, sans-serif;
