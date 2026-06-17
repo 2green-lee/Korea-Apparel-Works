@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/dm-sans/webfonts/dm-sans-latin-400-normal.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/dm-sans/webfonts/dm-sans-latin-500-normal.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/dm-sans/webfonts/dm-sans-latin-700-normal.woff2') format('woff2');
+  font-display: swap;
+}
+
+
+@theme {
+  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-sans: "DM Sans", "Pretendard", "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-tenor: "Tenor Sans", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
+  --font-syncopate: "Syncopate", sans-serif;
+  --font-dm-sans: "DM Sans", sans-serif;
+  --font-raleway: "Raleway", sans-serif;
+  --font-plus-jakarta: "Plus Jakarta Sans", sans-serif;
+
+  --color-luxury-cream: #fcfcfc;
+  --color-luxury-olive: #1a1a1a;
+  --color-luxury-olive-light: #2A3C29;
+  --color-luxury-charcoal: #1a1a1a;
+  --color-luxury-gold: #8a7256;
+  --color-luxury-gold-light: #bca384;
+  --color-luxury-sand: #efecdf;
+  --color-luxury-silver: #fcfcfc;
+}
+
+body {
+  background-color: var(--color-luxury-cream);
+  color: var(--color-luxury-charcoal);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+.pretendard-font {
+  font-family: "Pretendard", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+.font-dm-sans {
+  font-family: "DM Sans", sans-serif !important;
+}
+
+.font-plus-jakarta {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+}
+
+/* Custom fade scroll effects */
+::selection {
+  background-color: var(--color-luxury-gold-light);
+  color: var(--color-luxury-charcoal);
+}
+
+/* Hide scrollbars on main scroll containers */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Thin scrollbar for chat and overflow containers */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  display: block !important;
+  width: 4px !important;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+  border-radius: 2px;
+}
+
+/* GPU-accelerated animation containers */
+[class*="animate-float"] {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Floating Aurora Orbs Animations */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(8%, 12%, 0) scale(1.1);
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(-10%, -8%, 0) scale(0.95);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 22s infinite ease-in-out;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 28s infinite ease-in-out;
+}

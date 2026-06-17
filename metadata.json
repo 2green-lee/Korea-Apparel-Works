@@ -1,0 +1,6 @@
+{
+  "name": "Korea Apparel Works",
+  "description": "Premium, elegant landing page and interactive studio for Korea Apparel Works — connecting you directly with 30-year veteran Seoul sewing ateliers, premium technical fabrics, design pattern drafting, and luxury apparel services with low minimum order quantities (30pcs).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
