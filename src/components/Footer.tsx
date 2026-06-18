@@ -88,26 +88,26 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
                 <ul className="space-y-2 font-light flex flex-col items-center">
                   <li>
                     <button 
-                      onClick={() => navigateToSection(1)} 
+                      onClick={() => navigateToSection(1, "about-us-section")} 
                       className="hover:text-neutral-900 cursor-pointer select-none text-center"
                     >
-                      Atelier Workshop
+                      About us
                     </button>
                   </li>
                   <li>
                     <button 
-                      onClick={() => navigateToSection(1)} 
+                      onClick={() => navigateToSection(1, "core-capabilities-section")} 
                       className="hover:text-neutral-900 cursor-pointer select-none text-center"
                     >
-                      Tailor Assembly
+                      Core Capabilities
                     </button>
                   </li>
                   <li>
                     <button 
-                      onClick={() => navigateToSection(1)} 
+                      onClick={() => navigateToSection(1, "ai-tech-section")} 
                       className="hover:text-neutral-900 cursor-pointer select-none text-center"
                     >
-                      Quality Standards
+                      Process
                     </button>
                   </li>
                 </ul>
@@ -131,14 +131,7 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
                       Fabric
                     </button>
                   </li>
-                  <li>
-                    <button 
-                      onClick={() => navigateToSection(2, "ai-tech-section")} 
-                      className="hover:text-neutral-900 cursor-pointer select-none text-center"
-                    >
-                      AI system
-                    </button>
-                  </li>
+
                 </ul>
               </div>
             </div>

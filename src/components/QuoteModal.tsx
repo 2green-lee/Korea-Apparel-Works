@@ -104,11 +104,22 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
       {/* Outer Card */}
       <div className="relative w-full max-w-lg bg-white border border-neutral-200/80 shadow-[0_24px_64px_rgba(0,0,0,0.08)] rounded-3xl overflow-hidden transition-all duration-300 pretendard-font">
         
-        {/* Header Block (120px, Centered and styled) */}
-        <div className="h-[120px] flex flex-col justify-start items-center bg-neutral-50 border-b border-neutral-100 rounded-t-3xl relative select-none pt-10 pb-14">
-          <h3 className="font-sans font-normal text-[15px] tracking-[0.15em] text-neutral-900 leading-none">
-            Korea Apparel Works
-          </h3>
+        {/* Header & Description Block */}
+        <div className="flex flex-col items-center bg-white rounded-t-3xl relative select-none pt-10 px-7 md:px-9 pb-6">
+          <img 
+            src="/logo1.png" 
+            alt="Korea Apparel Works Logo" 
+            className="h-10 md:h-12 object-contain pointer-events-none select-none mb-5" 
+          />
+          
+          {/* Form Description Moved to Header */}
+          <div className="text-center">
+            <p className="text-neutral-500 text-sm md:text-[15px] font-light leading-relaxed max-w-sm mx-auto">
+              {isLoginMode 
+                ? "Welcome back. Log in to track your production quotes and orders."
+                : "Premium 'Made in Korea' manufacturing for your brand. Enter your email to start the consultation and receive our proprietary size charts."}
+            </p>
+          </div>
           
           {/* Header Close Option */}
           <button
@@ -121,19 +132,10 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
         </div>
 
         {/* Body Container */}
-        <div className="p-7 md:p-9">
+        <div className="px-7 md:px-9 pb-7 md:pb-9 pt-2">
           {!showPrivacyDetail ? (
             /* CORE QUOTE FORM VIEW */
             <form onSubmit={handleSubmit} className="space-y-6 select-text">
-              
-              {/* Form Description */}
-              <div className="text-center pb-2 border-b border-neutral-100">
-                <p className="text-neutral-500 text-sm font-light leading-relaxed max-w-sm mx-auto">
-                  {isLoginMode 
-                    ? "Welcome back. Log in to track your production quotes and orders."
-                    : "Premium 'Made in Korea' manufacturing for your brand. Enter your email to start the consultation and receive our proprietary size charts."}
-                </p>
-              </div>
 
               {/* Input Fields Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

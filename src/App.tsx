@@ -158,6 +158,22 @@ export default function App() {
     }
   }, [user]);
 
+  const handleQuoteModalClose = useCallback(() => {
+    setIsQuoteModalOpen(false);
+    
+    // 비로그인 상태에서 로그인 창을 껐다면 (로그인 포기),
+    // 현재 대화가 몇 개든 상관없이 무조건 초기화하고 메인 홈 슬라이드로 돌려보냅니다.
+    if (!user) {
+      setMessages([
+        {
+          role: "model",
+          text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
+        }
+      ]);
+      setCurrentSlide(0); // 홈(메인) 화면으로 확실하게 이동
+    }
+  }, [user]);
+
   const handleClearChat = useCallback(() => {
     if (messages.length > 1) {
       setSavedChats(prev => {
@@ -268,7 +284,7 @@ export default function App() {
       <Suspense fallback={null}>
         <QuoteModal 
           isOpen={isQuoteModalOpen} 
-          onClose={() => setIsQuoteModalOpen(false)} 
+          onClose={handleQuoteModalClose} 
           onSubmit={handleQuoteSubmit} 
         />
       </Suspense>

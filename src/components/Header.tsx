@@ -97,7 +97,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
             className="flex flex-col items-center group cursor-pointer focus:outline-hidden"
             title="Reset to home and clear conversation"
           >
-            <span className="font-sans font-medium text-[17px] tracking-[0.1em] transition-colors duration-500 select-none text-neutral-900 group-hover:opacity-80">
+            <span className="font-sans font-medium text-[13px] sm:text-[17px] tracking-normal sm:tracking-[0.1em] transition-colors duration-500 select-none text-neutral-900 group-hover:opacity-80 whitespace-nowrap">
               Korea Apparel Works
             </span>
           </button>
@@ -108,11 +108,11 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
           {user ? (
             <div className="flex items-center space-x-2">
               <button
-                onClick={onOpenAccount}
-                className="flex items-center space-x-1.5 bg-neutral-100 hover:bg-neutral-200 active:scale-95 rounded-full px-3.5 py-1.5 transition duration-200 cursor-pointer text-sm font-normal text-neutral-800"
+                onClick={(e) => e.preventDefault()}
+                className="flex items-center space-x-1.5 bg-neutral-100 rounded-full px-3.5 py-1.5 transition duration-200 cursor-default text-sm font-normal text-neutral-800"
               >
                 <User className="w-3.5 h-3.5" />
-                <span>My Account</span>
+                <span className="hidden sm:inline">My Account</span>
               </button>
               <button
                 onClick={onLogout}
@@ -128,7 +128,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
               className="flex items-center space-x-1.5 bg-neutral-900 hover:bg-neutral-800 active:scale-95 rounded-full px-4 py-2 transition duration-200 cursor-pointer text-sm font-normal text-white"
             >
               <User className="w-3.5 h-3.5" />
-              <span>Sign In</span>
+              <span className="hidden sm:inline">Sign In</span>
             </button>
           )}
         </div>

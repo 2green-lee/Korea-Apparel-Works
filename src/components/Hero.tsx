@@ -38,10 +38,11 @@ const SLIDES = [
 ];
 
 const CAROUSEL_IMAGES = [
-  "https://images.unsplash.com/photo-1612423284934-2850a4ea6b0f?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1524295981966-265647c05315?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?q=80&w=2070&auto=format&fit=crop"
+  "/a3.jpg",
+  "/a4.jpg",
+  "/a5.jpg",
+  "/a6.jpg",
+  "/a7.jpg"
 ];
 
 const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
@@ -384,6 +385,55 @@ export default function Hero({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const generationIdRef = useRef(0);
   const sessionIdRef = useRef(crypto.randomUUID());
+
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false; 
+
+      recognition.onstart = () => setIsListening(true);
+      recognition.onend = () => setIsListening(false);
+      recognition.onerror = (e: any) => {
+        console.error("Speech recognition error:", e.error);
+        setIsListening(false);
+      };
+
+      recognition.onresult = (event: any) => {
+        let finalTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          }
+        }
+        if (finalTranscript) {
+          setChatInput((prev) => (prev ? prev + " " + finalTranscript : finalTranscript));
+        }
+      };
+
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
+  const toggleListening = useCallback(() => {
+    if (!recognitionRef.current) {
+      alert("현재 브라우저는 음성 인식을 지원하지 않습니다. 최신 크롬(Chrome)을 사용해주세요.");
+      return;
+    }
+    if (isListening) {
+      recognitionRef.current.stop();
+    } else {
+      try {
+        recognitionRef.current.start();
+      } catch (e) {
+        // Ignore if already started
+      }
+    }
+  }, [isListening]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -781,12 +831,7 @@ export default function Hero({
                     ref={textareaRef}
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
-                    onFocus={() => {
-                      if (!user) {
-                        if (textareaRef.current) textareaRef.current.blur();
-                        onOpenLogin();
-                      }
-                    }}
+                    // onFocus 제거 (클릭 시 로그인 모달 뜨지 않게 변경)
                     placeholder="We excel in crafting bespoke apparel and tops with premium-grade fabrics. Tell us what you want to make..."
                     className="w-full bg-transparent resize-none overflow-hidden border-0 outline-none focus:ring-0 text-sm md:text-base text-neutral-900 placeholder-neutral-400 font-light leading-relaxed select-text min-h-[38px] pb-2"
                     disabled={isGenerating}
@@ -853,9 +898,13 @@ export default function Hero({
                     <div className="flex items-center space-x-2">
                       <button
                         type="button"
-                        onClick={() => setChatInput("Describe the fabrics for custom streetwear production.")}
-                        className="p-2.5 rounded-full hover:bg-neutral-100 text-neutral-500 hover:text-neutral-900 transition duration-300 cursor-pointer"
-                        title="Voice dictation prompt"
+                        onClick={toggleListening}
+                        className={`p-2.5 rounded-full transition duration-300 cursor-pointer ${
+                          isListening 
+                            ? "bg-red-50 text-red-500 animate-pulse hover:bg-red-100" 
+                            : "hover:bg-neutral-100 text-neutral-500 hover:text-neutral-900"
+                        }`}
+                        title={isListening ? "녹음 중지" : "음성 인식 시작"}
                       >
                         <Mic className="w-4 h-4" />
                       </button>
@@ -902,7 +951,7 @@ export default function Hero({
                 ))}
               </div>
 
-              <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent border border-transparent rounded-none overflow-hidden">
+              <div id="about-us-section" className="w-full flex flex-col font-sans text-left relative select-text bg-transparent border border-transparent rounded-none overflow-hidden scroll-mt-24">
                 <div className="py-10 md:py-12 border-b border-neutral-100/55 w-full bg-transparent">
                   <div className="w-full flex flex-col gap-8 md:gap-10 rounded-3xl bg-white border border-[#e9ecef]/80 p-8 md:p-10 lg:p-12 transition-all duration-300 hover:border-[#dee2e6] hover:shadow-md group">
                     <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-neutral-900 leading-[1.2] tracking-tight group-hover:text-black transition-colors w-full">
@@ -919,12 +968,10 @@ export default function Hero({
                       <div className="w-full relative h-full min-h-[300px]">
                         <div className="w-full aspect-[16/9] md:aspect-auto md:absolute md:inset-0 rounded-2xl overflow-hidden border border-neutral-200/60 relative group/img bg-neutral-100">
                           <img 
-                            src="https://images.unsplash.com/photo-1556905200-279565513a2d?q=80&w=2070&auto=format&fit=crop" 
+                            src="/a2.jpg" 
                             alt="Korea Apparel Works Sewing Facility" 
                             loading="lazy"
                             className="w-full h-full object-cover opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all duration-700" 
-                            crossOrigin="anonymous" 
-                            referrerPolicy="no-referrer" 
                           />
                         </div>
                       </div>
@@ -932,7 +979,7 @@ export default function Hero({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px] w-full">
+                <div id="core-capabilities-section" className="grid grid-cols-2 gap-[20px] w-full pt-12 scroll-mt-20">
                   <div className="p-8 md:p-10 rounded-2xl bg-[#f0f4f8] border border-[#e2e8f0]/60 flex flex-col transition-all duration-300 hover:border-[#cbd5e1] hover:shadow-md hover:-translate-y-1 group">
                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-blue-600 group-hover:scale-110 transition-transform duration-300">
                       <Factory size={24} strokeWidth={1.5} />
@@ -974,30 +1021,30 @@ export default function Hero({
                   </div>
                 </div>
 
-                <div id="ai-tech-section" className="w-full py-12 px-6 md:px-10 bg-[#e8f7f0] border border-[#b2e4cb] rounded-2xl mt-[50px] shadow-[0_8px_30px_rgba(5,150,105,0.04)]">
+                <div id="ai-tech-section" className="w-full py-12 px-6 md:px-10 bg-[#fef2f2] border border-[#fecaca] rounded-2xl mt-[100px] shadow-[0_8px_30px_rgba(239,68,68,0.04)]">
                   <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-10 items-start mb-10">
                     <div>
                       <h2 className="text-xl md:text-2xl font-bold text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>
                       <p className="text-sm md:text-base text-neutral-800 leading-relaxed font-light">We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                      <div className="p-6 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
-                           <MessageSquare className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
+                      <div className="p-6 border border-[#fecaca] bg-white rounded-2xl shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-[#ef4444]/10 flex items-center justify-center text-[#ef4444] mb-4">
+                           <MessageSquare className="w-5 h-5 text-[#ef4444]" strokeWidth={1.5} />
                         </div>
                         <h3 className="text-base font-bold text-neutral-950 mb-2">AI inquiry</h3>
                         <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Describe what you need in natural language. Our assistant extracts specs automatically.</p>
                       </div>
-                      <div className="p-6 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
-                           <FileText className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
+                      <div className="p-6 border border-[#fecaca] bg-white rounded-2xl shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-[#ef4444]/10 flex items-center justify-center text-[#ef4444] mb-4">
+                           <FileText className="w-5 h-5 text-[#ef4444]" strokeWidth={1.5} />
                         </div>
                         <h3 className="text-base font-bold text-neutral-950 mb-2">Smart quoting</h3>
                         <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Receive a detailed proposal within 24 hours based on your exact requirements.</p>
                       </div>
-                      <div className="p-5 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
-                           <Truck className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
+                      <div className="p-5 border border-[#fecaca] bg-white rounded-2xl shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-[#ef4444]/10 flex items-center justify-center text-[#ef4444] mb-4">
+                           <Truck className="w-5 h-5 text-[#ef4444]" strokeWidth={1.5} />
                         </div>
                         <h3 className="text-base font-bold text-neutral-950 mb-2">Production tracking</h3>
                         <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Real-time updates from sample approval through to shipment confirmation.</p>
@@ -1005,137 +1052,57 @@ export default function Hero({
                     </div>
                   </div>
 
-                  <div className="flex flex-col md:flex-row items-stretch border border-[#b2e4cb] bg-white rounded-2xl overflow-hidden shadow-sm">
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">01</div>
+                  <div className="flex flex-col md:flex-row items-stretch border border-[#fecaca] bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#fef2f2] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">01</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Inquiry</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Chat with AI</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 px-2.5 py-0.5 rounded-full">AI</div>
                     </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">02</div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#fef2f2] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">02</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Proposal</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Within 24h</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 px-2.5 py-0.5 rounded-full">AI</div>
                     </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">03</div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#fef2f2] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">03</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Sample</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">14 day turnaround</div>
                       <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
                     </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">04</div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#fef2f2] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">04</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Production</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Full QC inspection</div>
                       <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
                     </div>
                     <div className="flex-1 w-full md:w-auto p-6 text-center flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">05</div>
+                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">05</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Shipment</div>
                       <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Tracked delivery</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 px-2.5 py-0.5 rounded-full">AI</div>
                     </div>
                   </div>
                 </div>
 
-                <div className="py-10 md:py-12 border-b border-neutral-100/55 w-full bg-transparent">
+                <div className="py-10 md:py-12 border-b border-neutral-100/55 w-full bg-transparent mt-[50px]">
                   <div className="w-full rounded-3xl bg-white border border-[#e9ecef]/80 p-8 md:p-10 lg:p-12 transition-all duration-300 hover:border-[#dee2e6] hover:shadow-md group">
                     <div className="w-full flex flex-col gap-12 lg:gap-16 bg-transparent">
-                      <div className="w-full aspect-[16/9] rounded-2xl overflow-hidden border border-neutral-200/80 relative group bg-neutral-100">
-                      <div className="absolute inset-0 w-full h-full">
-                        {CAROUSEL_IMAGES.map((imgUrl, idx) => (
-                          <div
-                            key={idx}
-                            className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
-                              idx === activeImageIdx ? "opacity-100 z-10" : "opacity-0 z-0"
-                            }`}
-                          >
+                      <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                        {['/b1.jpg', '/b2-2.jpg', '/b3.jpg', '/b4.jpg', '/b5.jpg', '/b6.jpg', '/b7.jpg', '/b8.jpg', '/b9.jpg'].map((imgUrl, idx) => (
+                          <div key={idx} className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-neutral-200/80 relative group bg-neutral-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                             <img 
                               src={imgUrl} 
-                              alt={`Atelier scene ${idx + 1}`} 
+                              alt={`Atelier gallery ${idx + 1}`} 
                               loading="lazy"
                               className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-700" 
-                              crossOrigin="anonymous" 
-                              referrerPolicy="no-referrer" 
                             />
                           </div>
                         ))}
                       </div>
 
-                      <div className="absolute inset-x-3 top-1/2 -translate-y-1/2 z-20 flex justify-between pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveImageIdx((prev) => (prev === 0 ? CAROUSEL_IMAGES.length - 1 : prev - 1));
-                          }}
-                          className="w-9 h-9 rounded-full bg-white/80 hover:bg-white active:scale-95 border border-neutral-200 text-neutral-800 flex items-center justify-center transition-all pointer-events-auto cursor-pointer shadow-xs"
-                          aria-label="Previous Atelier Image"
-                        >
-                          <ChevronLeft className="w-4 h-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveImageIdx((prev) => (prev === CAROUSEL_IMAGES.length - 1 ? 0 : prev + 1));
-                          }}
-                          className="w-9 h-9 rounded-full bg-white/80 hover:bg-white active:scale-95 border border-neutral-200 text-neutral-800 flex items-center justify-center transition-all pointer-events-auto cursor-pointer shadow-xs"
-                          aria-label="Next Atelier Image"
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </button>
-                      </div>
 
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex space-x-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        {CAROUSEL_IMAGES.map((_, idx) => (
-                          <button
-                            key={idx}
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setActiveImageIdx(idx);
-                            }}
-                            className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                              idx === activeImageIdx ? "w-4 bg-neutral-950" : "w-1.5 bg-neutral-400/50"
-                            }`}
-                            aria-label={`Go to atelier image ${idx + 1}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="w-full flex flex-col px-2 md:px-8 pb-4 mt-2">
-                      <div className="text-[11px] md:text-xs font-mono font-semibold tracking-[0.1em] text-neutral-400 mb-10 uppercase text-center">Our timeline</div>
-                      <div className="relative w-full flex items-start justify-between">
-                        <div className="absolute top-[5px] left-[16.66%] right-[16.66%] h-[2px] bg-[#e2e8f0] z-0" />
-                        
-                        <div className="relative flex flex-col items-center group cursor-default z-10 w-1/3">
-                          <div className="w-3 h-3 rounded-full bg-white border-[2px] border-neutral-300 mb-5 group-hover:border-neutral-900 group-hover:scale-[1.6] transition-all duration-500" />
-                          <div className="flex flex-col items-center transition-transform duration-500 group-hover:translate-y-1">
-                            <span className="text-[11px] md:text-xs font-mono tracking-widest text-neutral-400 mb-1.5 transition-colors group-hover:text-neutral-600">1990</span>
-                            <h3 className="text-sm md:text-base lg:text-lg font-medium text-neutral-800 tracking-tight transition-colors group-hover:text-neutral-950 text-center">Caravan Apparel</h3>
-                          </div>
-                        </div>
-                        
-                        <div className="relative flex flex-col items-center group cursor-default z-10 w-1/3">
-                          <div className="w-3 h-3 rounded-full bg-white border-[2px] border-neutral-300 mb-5 group-hover:border-neutral-900 group-hover:scale-[1.6] transition-all duration-500" />
-                          <div className="flex flex-col items-center transition-transform duration-500 group-hover:translate-y-1">
-                            <span className="text-[11px] md:text-xs font-mono tracking-widest text-neutral-400 mb-1.5 transition-colors group-hover:text-neutral-600">1995</span>
-                            <h3 className="text-sm md:text-base lg:text-lg font-medium text-neutral-800 tracking-tight transition-colors group-hover:text-neutral-950 text-center">Daedeuk Apparel</h3>
-                          </div>
-                        </div>
-                        
-                        <div className="relative flex flex-col items-center group cursor-default z-10 w-1/3">
-                          <div className="w-3 h-3 rounded-full bg-neutral-900 mb-5 group-hover:scale-[1.6] group-hover:shadow-[0_0_12px_rgba(0,0,0,0.15)] transition-all duration-500" />
-                          <div className="flex flex-col items-center transition-transform duration-500 group-hover:translate-y-1">
-                            <span className="text-[11px] md:text-xs font-bold font-mono tracking-widest text-neutral-900 mb-1.5">2025</span>
-                            <h3 className="text-sm md:text-base lg:text-lg font-semibold text-neutral-950 tracking-tight text-center">KAW Founded</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -1187,7 +1154,7 @@ export default function Hero({
                       
                       <div className="mt-5 text-center px-4">
                         <p className="text-sm md:text-base text-neutral-500 font-light leading-relaxed">
-                          Premium Essential T-Shirt, Performance Q-Zip, Structured Heavyweight Hoodie, Classic & Active Polo. <br className="hidden md:block" />
+                          Premium Essential T-Shirt, Performance Q-Zip, 4-Way Stretch Performance Hoodie, Classic & Active Polo. <br className="hidden md:block" />
                           Discover KAW's signature production lineup featuring perfect fits and flawless details.
                         </p>
                       </div>
@@ -1239,17 +1206,17 @@ export default function Hero({
                             <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-5 md:p-6 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
                               <div>
                                 <div className="aspect-[3/2] w-full rounded-xl overflow-hidden mb-6 bg-neutral-100 relative">
-                                  <img src="/hoodie.png" alt="Structured Heavyweight Hoodie" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                  <img src="/hoodie.png" alt="4-Way Stretch Performance Hoodie" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                                   <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
                                 </div>
                                 <div className="flex items-center gap-3 mb-3">
                                   <div className="w-10 h-10 rounded-lg bg-neutral-100 text-neutral-800 flex items-center justify-center transition-colors group-hover:bg-neutral-950 group-hover:text-white shrink-0">
                                     <Shirt className="w-5 h-5" strokeWidth={1.5} />
                                   </div>
-                                  <h4 className="text-lg font-bold text-neutral-950">Structured Heavyweight Hoodie</h4>
+                                  <h4 className="text-lg font-bold text-neutral-950">4-Way Stretch Performance Hoodie</h4>
                                 </div>
                                 <p className="text-sm text-neutral-600 font-light leading-relaxed">
-                                  Beyond simple casual wear, we craft technical hoodies that stand out with exceptional volume and a 3D structural fit when worn.
+                                  Engineered for ultimate mobility, our 4-way stretch hoodies combine premium elastane with an athletic fit, perfect for dynamic movement and daily wear.
                                 </p>
 
                               </div>
@@ -1278,7 +1245,7 @@ export default function Hero({
                     </div>
                   </div>
 
-                <div className="w-full mt-10 md:mt-12 flex flex-col bg-white border border-neutral-200 rounded-3xl p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-md hover:border-neutral-300" id="fabrics-catalog">
+                <div className="w-full mt-[100px] flex flex-col bg-white border border-neutral-200 rounded-3xl p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-md hover:border-neutral-300" id="fabrics-catalog">
                   <div className="relative flex flex-col justify-center items-center w-full mb-8 pb-8 border-b border-neutral-100">
                     <div className="flex items-center w-full justify-center relative">
                       <div className="flex items-center gap-2 md:gap-3">
@@ -1302,7 +1269,7 @@ export default function Hero({
 
                   <div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="fabricGrid">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" id="fabricGrid">
                         {filteredFabrics.map((f) => (
                           <div
                             key={f.id}
