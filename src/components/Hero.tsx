@@ -179,7 +179,7 @@ const PREMIUM_FABRICS = [
   {
     id: "others",
     category: "Premium / Design",
-    name: "기타 (OTHERS)",
+    name: "OTHERS",
     engName: "OTHERS",
     weight: "Custom gsm",
     composition: "Various Specs",
@@ -932,7 +932,7 @@ export default function Hero({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-10 md:py-16 w-full border-b border-neutral-100/55 bg-neutral-50/30">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-[20px] w-full">
                   <div className="p-8 md:p-10 rounded-2xl bg-[#f0f4f8] border border-[#e2e8f0]/60 flex flex-col transition-all duration-300 hover:border-[#cbd5e1] hover:shadow-md hover:-translate-y-1 group">
                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-blue-600 group-hover:scale-110 transition-transform duration-300">
                       <Factory size={24} strokeWidth={1.5} />
@@ -971,6 +971,71 @@ export default function Hero({
                     <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                       We support your growth with an agile production scale. Avoid high industry minimums and test your market with our high-end prototyping service (starting from 1pc) before scaling up to bulk production.
                     </p>
+                  </div>
+                </div>
+
+                <div id="ai-tech-section" className="w-full py-12 px-6 md:px-10 bg-[#e8f7f0] border border-[#b2e4cb] rounded-2xl mt-[50px] shadow-[0_8px_30px_rgba(5,150,105,0.04)]">
+                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-10 items-start mb-10">
+                    <div>
+                      <h2 className="text-xl md:text-2xl font-bold text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>
+                      <p className="text-sm md:text-base text-neutral-800 leading-relaxed font-light">We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.</p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                      <div className="p-6 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
+                           <MessageSquare className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
+                        </div>
+                        <h3 className="text-base font-bold text-neutral-950 mb-2">AI inquiry</h3>
+                        <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Describe what you need in natural language. Our assistant extracts specs automatically.</p>
+                      </div>
+                      <div className="p-6 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
+                           <FileText className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
+                        </div>
+                        <h3 className="text-base font-bold text-neutral-950 mb-2">Smart quoting</h3>
+                        <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Receive a detailed proposal within 24 hours based on your exact requirements.</p>
+                      </div>
+                      <div className="p-5 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
+                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
+                           <Truck className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
+                        </div>
+                        <h3 className="text-base font-bold text-neutral-950 mb-2">Production tracking</h3>
+                        <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Real-time updates from sample approval through to shipment confirmation.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col md:flex-row items-stretch border border-[#b2e4cb] bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">01</div>
+                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Inquiry</div>
+                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Chat with AI</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
+                    </div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">02</div>
+                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Proposal</div>
+                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Within 24h</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
+                    </div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">03</div>
+                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Sample</div>
+                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">14 day turnaround</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
+                    </div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">04</div>
+                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Production</div>
+                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Full QC inspection</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
+                    </div>
+                    <div className="flex-1 w-full md:w-auto p-6 text-center flex flex-col items-center justify-center">
+                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">05</div>
+                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Shipment</div>
+                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Tracked delivery</div>
+                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
+                    </div>
                   </div>
                 </div>
 
@@ -1103,403 +1168,165 @@ export default function Hero({
               </div>
 
               <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent border border-transparent rounded-none p-4 md:p-0 overflow-hidden">
-                <div id="ai-tech-section" className="w-full py-12 px-6 md:px-10 bg-[#e8f7f0] border border-[#b2e4cb] rounded-2xl mt-10 md:mt-12 shadow-[0_8px_30px_rgba(5,150,105,0.04)]">
-                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-10 items-start mb-10">
-                    <div>
-                      <h2 className="text-xl md:text-2xl font-bold text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>
-                      <p className="text-sm md:text-base text-neutral-800 leading-relaxed font-light">We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.</p>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                      <div className="p-6 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
-                           <MessageSquare className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
-                        </div>
-                        <h3 className="text-base font-bold text-neutral-950 mb-2">AI inquiry</h3>
-                        <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Describe what you need in natural language. Our assistant extracts specs automatically.</p>
-                      </div>
-                      <div className="p-6 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
-                           <FileText className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
-                        </div>
-                        <h3 className="text-base font-bold text-neutral-950 mb-2">Smart quoting</h3>
-                        <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Receive a detailed proposal within 24 hours based on your exact requirements.</p>
-                      </div>
-                      <div className="p-5 border border-[#b2e4cb] bg-white rounded-2xl shadow-[0_4px_20px_rgba(5,150,105,0.03)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-[#059669]/10 flex items-center justify-center text-[#059669] mb-4">
-                           <Truck className="w-5 h-5 text-[#059669]" strokeWidth={1.5} />
-                        </div>
-                        <h3 className="text-base font-bold text-neutral-950 mb-2">Production tracking</h3>
-                        <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Real-time updates from sample approval through to shipment confirmation.</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col md:flex-row items-stretch border border-[#b2e4cb] bg-white rounded-2xl overflow-hidden shadow-sm">
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">01</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Inquiry</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Chat with AI</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
-                    </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">02</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Proposal</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Within 24h</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
-                    </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">03</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Sample</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">14 day turnaround</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
-                    </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#e8f7f0] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">04</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Production</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Full QC inspection</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
-                    </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#059669] font-bold tracking-widest mb-2">05</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Shipment</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Tracked delivery</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#059669]/10 text-[#059669] border border-[#059669]/20 px-2.5 py-0.5 rounded-full">AI</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="w-full flex flex-col bg-white border border-neutral-200 rounded-3xl p-6 md:p-8 mt-10 md:mt-12 shadow-[0_12px_40px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-md hover:border-neutral-300 group">
+                <div className="w-full flex flex-col bg-white border border-neutral-200 rounded-3xl p-6 md:p-8 mt-10 md:mt-12 shadow-[0_12px_40px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-md hover:border-neutral-300">
                     <div 
                       id="collection-section" 
-                      className={`relative flex justify-center items-center cursor-pointer transition-colors w-full ${isCollectionOpen ? 'mb-8 pb-6 border-b border-neutral-100' : ''}`}
-                      onClick={() => setIsCollectionOpen(!isCollectionOpen)}
+                      className="relative flex flex-col justify-center items-center w-full mb-8 pb-8 border-b border-neutral-100"
                     >
-                      <div className="flex items-center gap-2 md:gap-3">
-                        <div className={`p-1.5 md:p-2 rounded-lg md:rounded-xl transition-colors ${isCollectionOpen ? 'bg-neutral-950 text-white' : 'bg-neutral-100 text-neutral-500'}`}>
-                          <Shirt className="w-4 h-4 md:w-5 md:h-5" strokeWidth={1.5} />
+                      <div className="flex items-center w-full justify-center relative">
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <div className="p-1.5 md:p-2 rounded-lg md:rounded-xl transition-colors bg-neutral-950 text-white">
+                            <Shirt className="w-4 h-4 md:w-5 md:h-5" strokeWidth={1.5} />
+                          </div>
+                          <h3 className="font-sans text-xl md:text-2xl font-bold text-neutral-950 tracking-tight text-center">
+                            {SLIDES[2].headline}
+                          </h3>
                         </div>
-                        <h3 className="font-sans text-xl md:text-2xl font-bold text-neutral-950 tracking-tight group-hover:text-black transition-colors text-center">
-                          {SLIDES[2].headline}
+
+                      </div>
+                      
+                      <div className="mt-5 text-center px-4">
+                        <p className="text-sm md:text-base text-neutral-500 font-light leading-relaxed">
+                          Premium Essential T-Shirt, Performance Q-Zip, Structured Heavyweight Hoodie, Classic & Active Polo. <br className="hidden md:block" />
+                          Discover KAW's signature production lineup featuring perfect fits and flawless details.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                            {/* Card 1 */}
+                            <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-5 md:p-6 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+                              <div>
+                                <div className="aspect-[3/2] w-full rounded-xl overflow-hidden mb-6 bg-neutral-100 relative">
+                                  <img src="/T.png" alt="Premium Essential T-Shirt" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                  <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
+                                </div>
+                                <div className="flex items-center gap-3 mb-3">
+                                  <div className="w-10 h-10 rounded-lg bg-neutral-100 text-neutral-800 flex items-center justify-center transition-colors group-hover:bg-neutral-950 group-hover:text-white shrink-0">
+                                    <Shirt className="w-5 h-5" strokeWidth={1.5} />
+                                  </div>
+                                  <h4 className="text-lg font-bold text-neutral-950">Premium Essential T-Shirt</h4>
+                                </div>
+                                <p className="text-sm text-neutral-600 font-light leading-relaxed">
+                                  The quality of sewing determines the brand's standard, especially for the most fundamental items. From daily wear to activewear, we guarantee perfect durability and silhouettes for any purpose.
+                                </p>
+
+                              </div>
+                            </div>
+
+                            {/* Card 2 */}
+                            <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-5 md:p-6 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+                              <div>
+                                <div className="aspect-[3/2] w-full rounded-xl overflow-hidden mb-6 bg-neutral-100 relative">
+                                  <img src="/q-zip.png" alt="Performance Q-Zip" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                  <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
+                                </div>
+                                <div className="flex items-center gap-3 mb-3">
+                                  <div className="w-10 h-10 rounded-lg bg-neutral-100 text-neutral-800 flex items-center justify-center transition-colors group-hover:bg-neutral-950 group-hover:text-white shrink-0">
+                                    <Shirt className="w-5 h-5" strokeWidth={1.5} />
+                                  </div>
+                                  <h4 className="text-lg font-bold text-neutral-950">Performance Q-Zip</h4>
+                                </div>
+                                <p className="text-sm text-neutral-600 font-light leading-relaxed">
+                                  A best-seller among golfwear and premium outdoor brands. It integrates high-level sewing techniques that seamlessly handle demanding spandex-infused fabrics.
+                                </p>
+
+                              </div>
+                            </div>
+
+                            {/* Card 3 */}
+                            <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-5 md:p-6 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+                              <div>
+                                <div className="aspect-[3/2] w-full rounded-xl overflow-hidden mb-6 bg-neutral-100 relative">
+                                  <img src="/hoodie.png" alt="Structured Heavyweight Hoodie" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                  <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
+                                </div>
+                                <div className="flex items-center gap-3 mb-3">
+                                  <div className="w-10 h-10 rounded-lg bg-neutral-100 text-neutral-800 flex items-center justify-center transition-colors group-hover:bg-neutral-950 group-hover:text-white shrink-0">
+                                    <Shirt className="w-5 h-5" strokeWidth={1.5} />
+                                  </div>
+                                  <h4 className="text-lg font-bold text-neutral-950">Structured Heavyweight Hoodie</h4>
+                                </div>
+                                <p className="text-sm text-neutral-600 font-light leading-relaxed">
+                                  Beyond simple casual wear, we craft technical hoodies that stand out with exceptional volume and a 3D structural fit when worn.
+                                </p>
+
+                              </div>
+                            </div>
+
+                            {/* Card 4 */}
+                            <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-5 md:p-6 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+                              <div>
+                                <div className="aspect-[3/2] w-full rounded-xl overflow-hidden mb-6 bg-neutral-100 relative">
+                                  <img src="/polo.png" alt="Classic & Active Polo" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                  <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
+                                </div>
+                                <div className="flex items-center gap-3 mb-3">
+                                  <div className="w-10 h-10 rounded-lg bg-neutral-100 text-neutral-800 flex items-center justify-center transition-colors group-hover:bg-neutral-950 group-hover:text-white shrink-0">
+                                    <Shirt className="w-5 h-5" strokeWidth={1.5} />
+                                  </div>
+                                  <h4 className="text-lg font-bold text-neutral-950">Classic & Active Polo</h4>
+                                </div>
+                                <p className="text-sm text-neutral-600 font-light leading-relaxed">
+                                  Combines the precision of tailoring with the mobility of sportswear. The flawless collar structure and refined placket elevate the overall elegance.
+                                </p>
+
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                  </div>
+
+                <div className="w-full mt-10 md:mt-12 flex flex-col bg-white border border-neutral-200 rounded-3xl p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-md hover:border-neutral-300" id="fabrics-catalog">
+                  <div className="relative flex flex-col justify-center items-center w-full mb-8 pb-8 border-b border-neutral-100">
+                    <div className="flex items-center w-full justify-center relative">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <div className="p-1.5 md:p-2 rounded-lg md:rounded-xl transition-colors bg-emerald-600 text-white">
+                          <Layers className="w-4 h-4 md:w-5 md:h-5" strokeWidth={1.5} />
+                        </div>
+                        <h3 className="font-sans text-xl md:text-2xl font-bold text-neutral-950 tracking-tight text-center">
+                          Choose your fabric
                         </h3>
                       </div>
-                      <div className="absolute right-0 flex items-center gap-2 md:gap-3">
-                        <span className="hidden md:inline-flex items-center px-2.5 py-1 rounded-md bg-neutral-50 border border-neutral-200/60 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-widest">
-                          3 Collections
-                        </span>
-                        <div className={`p-2 rounded-full bg-neutral-50 transition-transform duration-300 ${isCollectionOpen ? "rotate-180" : ""}`}>
-                          <ChevronDown className="w-5 h-5 md:w-6 md:h-6 text-neutral-500" />
-                        </div>
-                      </div>
-                    </div>
-                    <AnimatePresence>
-                      {!isCollectionOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="mt-4 md:mt-5 text-center px-4" onClick={() => setIsCollectionOpen(true)} style={{ cursor: "pointer" }}>
-                            <p className="text-sm md:text-base text-neutral-500 font-light leading-relaxed">
-                              Signature Workshop Hoodie, Technical City Shell Jacket, Essential Cargo Pants 등 <br className="hidden md:block" />
-                              완벽한 핏과 디테일이 적용된 KAW의 시그니처 제작 라인업을 미리 확인해보세요.
-                            </p>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
 
-                    <AnimatePresence>
-                      {isCollectionOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          className="overflow-hidden"
-                        >
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                  <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-6 md:p-8 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
-                    <div>
-                      <div className="w-11 h-11 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center mb-5 transition-colors group-hover:bg-neutral-950 group-hover:text-white">
-                        <Shirt className="w-5.5 h-5.5" strokeWidth={1.5} />
-                      </div>
-                      <h4 className="text-base font-bold text-neutral-950 mb-2.5">Signature Workshop Hoodie</h4>
-                      <p className="text-sm text-neutral-600 font-light leading-relaxed mb-4">
-                        Uses 480gsm premium high-density cotton loopback French terry to guarantee a perfect drape, unique 3D silhouette, and excellent warmth.
+                    </div>
+                    
+                    <div className="mt-5 text-center px-4 max-w-3xl">
+                      <p className="text-sm md:text-base text-neutral-500 font-light leading-relaxed">
+                        From functional Performance to Classic and Premium, explore our lineup of over {filteredFabrics.length} exclusively sourced high-end fabrics.<br className="hidden md:block" />
+                        We offer a proven selection across three building blocks to help you find the perfect properties and style.
                       </p>
-                      
-                      <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-100/80 mb-5 text-[11px] space-y-1">
-                        <div className="flex justify-between">
-                          <span className="text-neutral-400">원단 종류</span>
-                          <span className="text-neutral-800 font-semibold">Heavy French Terry</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-neutral-400">중량/밀도</span>
-                          <span className="text-neutral-800 font-mono font-semibold">480 gsm</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-neutral-400">주원사</span>
-                          <span className="text-neutral-800 font-semibold">100% Combed Cotton</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="border-t border-neutral-100 pt-4 mt-auto">
-                      <div className="flex items-center justify-between text-xs md:text-sm font-mono text-neutral-500">
-                        <span>MOQ: 30장</span>
-                        <span className="text-neutral-950 font-semibold">M - XXL</span>
-                      </div>
                     </div>
                   </div>
 
-                  <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-6 md:p-8 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
-                    <div>
-                      <div className="w-11 h-11 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center mb-5 transition-colors group-hover:bg-neutral-950 group-hover:text-white">
-                        <Shirt className="w-5.5 h-5.5" strokeWidth={1.2} />
-                      </div>
-                      <h4 className="text-base font-bold text-neutral-950 mb-2.5">Compact Flawless T-Shirt</h4>
-                      <p className="text-sm text-neutral-600 font-light leading-relaxed mb-4">
-                        Designed with 280gsm compact single cotton knit for wash shrinkage under 1%, featuring shoulder chain stitching and a dense double rib finish.
-                      </p>
+                  <div>
 
-                      <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-100/80 mb-5 text-[11px] space-y-1">
-                        <div className="flex justify-between">
-                          <span className="text-neutral-400">원단 종류</span>
-                          <span className="text-neutral-800 font-semibold">Compact Silket Single</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-neutral-400">중량/밀도</span>
-                          <span className="text-neutral-800 font-mono font-semibold">280 gsm</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-neutral-400">주원사</span>
-                          <span className="text-neutral-800 font-semibold">100% Supima Cotton</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="border-t border-neutral-100 pt-4 mt-auto">
-                      <div className="flex items-center justify-between text-xs md:text-sm font-mono text-neutral-500">
-                        <span>MOQ: 50장</span>
-                        <span className="text-neutral-950 font-semibold">S - XL</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-6 md:p-8 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
-                    <div>
-                      <div className="w-11 h-11 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center mb-5 transition-colors group-hover:bg-neutral-950 group-hover:text-white">
-                        <Layers className="w-5.5 h-5.5" strokeWidth={1.5} />
-                      </div>
-                      <h4 className="text-base font-bold text-neutral-950 mb-2.5">Technical City Shell Jacket</h4>
-                      <p className="text-sm text-neutral-600 font-light leading-relaxed mb-4">
-                        Constructed from wind and water-resistant memory recycled nylon yarn, standing out with an urban 3D sleeve structure and high-precision seam sealing stitches.
-                      </p>
-
-                      <div className="bg-neutral-50/80 rounded-xl p-3 border border-neutral-100/80 mb-5 text-[11px] space-y-1">
-                        <div className="flex justify-between">
-                          <span className="text-neutral-400">원단 종류</span>
-                          <span className="text-neutral-800 font-semibold">Memory Recycled Nylon</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-neutral-400">중량/밀도</span>
-                          <span className="text-neutral-800 font-mono font-semibold">145 gsm</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-neutral-400">가공 처리</span>
-                          <span className="text-neutral-800 font-semibold">DWR Water-Repellent</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="border-t border-neutral-100 pt-4 mt-auto">
-                      <div className="flex items-center justify-between text-xs md:text-sm font-mono text-neutral-500">
-                        <span>MOQ: 30장</span>
-                        <span className="text-neutral-950 font-semibold">M - XL</span>
-                      </div>
-                    </div>
-                  </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                <div className="w-full mt-10 md:mt-12 flex flex-col bg-white border border-neutral-200 rounded-3xl p-6 md:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-md hover:border-neutral-300 group" id="fabrics-catalog">
-                  <div 
-                    className={`relative flex justify-center items-center cursor-pointer transition-colors w-full ${isFabricOpen ? 'mb-8 pb-6 border-b border-neutral-100' : ''}`} 
-                    onClick={() => setIsFabricOpen(!isFabricOpen)}
-                  >
-                    <div className="flex items-center gap-2 md:gap-3">
-                      <div className={`p-1.5 md:p-2 rounded-lg md:rounded-xl transition-colors ${isFabricOpen ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-600'}`}>
-                        <Layers className="w-4 h-4 md:w-5 md:h-5" strokeWidth={1.5} />
-                      </div>
-                      <h3 className="font-sans text-xl md:text-2xl font-bold text-neutral-950 tracking-tight group-hover:text-black transition-colors text-center">
-                        Choose your fabric
-                      </h3>
-                    </div>
-                    <div className="absolute right-0 flex items-center gap-2 md:gap-3">
-                      <span className="hidden md:inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-100/60 text-[10px] font-mono font-bold text-emerald-600 uppercase tracking-widest">
-                        {filteredFabrics.length} Fabrics
-                      </span>
-                      <div className={`p-2 rounded-full bg-neutral-50 transition-transform duration-300 ${isFabricOpen ? "rotate-180" : ""}`}>
-                        <ChevronDown className="w-5 h-5 md:w-6 md:h-6 text-neutral-500" />
-                      </div>
-                    </div>
-                  </div>
-                  <AnimatePresence>
-                    {!isFabricOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="mt-4 md:mt-5 text-center px-4" onClick={() => setIsFabricOpen(true)} style={{ cursor: "pointer" }}>
-                          <p className="text-sm md:text-base text-neutral-500 font-light leading-relaxed">
-                            Performance, Classic, Premium 등 기능성 원단부터 클래식 원단까지 <br className="hidden md:block" />
-                            {filteredFabrics.length}종 이상의 독점 소싱된 하이엔드 원단 라인업을 미리 확인해보세요.
-                          </p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  <AnimatePresence>
-                    {isFabricOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <p className="text-xs md:text-sm text-neutral-500 font-light mt-4 mb-6 max-w-2xl leading-relaxed">
-                          우리는 세 가지 빌딩 블록(Performance, Classic, Premium / Design) 유형의 검증된 고규격 원단 라인업을 제공합니다. 아래 카테고리를 활용해 원하는 물성과 스타일의 원단을 비교해 보세요.
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-8 mt-2">
-                    {[
-                      { id: "all", label: "All fabrics" },
-                      { id: "Performance", label: "Performance" },
-                      { id: "Classic", label: "Classic" },
-                      { id: "Premium / Design", label: "Premium / Design" }
-                    ].map((btn) => (
-                      <button
-                        key={btn.id}
-                        type="button"
-                        onClick={() => {
-                          setActiveFabricCategory(btn.id);
-                        }}
-                        className={`px-4.5 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-all duration-200 ${
-                          activeFabricCategory === btn.id
-                            ? "bg-neutral-950 text-white border border-neutral-950 shadow-sm"
-                            : "bg-white text-neutral-600 border border-neutral-200 hover:border-neutral-300 hover:text-neutral-900"
-                        }`}
-                      >
-                        {btn.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fabricGrid">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="fabricGrid">
                         {filteredFabrics.map((f) => (
                           <div
                             key={f.id}
                             className="bg-white border border-neutral-200/80 rounded-2xl overflow-hidden hover:border-emerald-500 hover:shadow-[0_12px_30px_rgba(5,150,105,0.06)] transition-all duration-300 flex flex-col group justify-between"
                           >
-                            <div className="h-24 bg-neutral-50 flex items-center justify-center border-b border-neutral-100 relative overflow-hidden">
+                            <div className="h-40 bg-neutral-50 flex items-center justify-center border-b border-neutral-100 relative overflow-hidden">
                               {getFabricPatternSvg(f.id, f.engName)}
                             </div>
 
-                            <div className="p-5 flex-1 flex flex-col justify-between">
-                              <div className="space-y-4">
-                                <div>
-                                  <div className="flex justify-between items-center text-[10px] font-mono mb-1.5">
-                                    <span className="font-bold text-emerald-700 bg-emerald-50/70 px-2 py-0.5 rounded">
-                                      {f.category}
-                                    </span>
-                                    <span className="font-semibold text-neutral-400">
-                                      {f.weight}
-                                    </span>
-                                  </div>
-                                  <h4 className="text-base font-bold text-neutral-900 tracking-tight font-sans">
-                                    {f.name}
-                                  </h4>
-                                  <div className="text-[10px] text-neutral-400 mt-1 font-sans leading-normal">
-                                    {f.composition}
-                                  </div>
-                                </div>
-
-                                <p className="text-xs text-neutral-500 font-light leading-relaxed">
-                                  {f.description}
-                                </p>
-
-                                <div className="flex flex-wrap gap-1">
-                                  {f.tags.map((tag, idx) => {
-                                    const colorClasses = 
-                                      idx === 0 ? "bg-blue-50 text-blue-800 border-blue-100/50" :
-                                      idx === 1 ? "bg-emerald-50 text-emerald-800 border-emerald-100/50" :
-                                      "bg-neutral-50 text-neutral-600 border-neutral-200/50";
-                                    return (
-                                      <span
-                                        key={idx}
-                                        className={`text-[9px] font-semibold px-2 py-0.5 rounded-full border ${colorClasses}`}
-                                      >
-                                        {tag}
-                                      </span>
-                                    );
-                                  })}
-                                </div>
-
-                                <div className="flex flex-wrap gap-1 border-t border-neutral-100 pt-3">
-                                  {f.uses.map((use, idx) => (
-                                    <span
-                                      key={idx}
-                                      className="text-[9px] text-neutral-400 bg-neutral-50 border border-neutral-100 px-2 py-0.5 rounded"
-                                    >
-                                      {use}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setCurrentSlide(0);
-                                  setChatInput(`"${f.name} (${f.engName})" 원단에 대하여 제작 견적과 발주 진행 요령에 대해 문의하고 싶습니다.`);
-                                  setTimeout(() => {
-                                    const textarea = document.querySelector("textarea");
-                                    if (textarea) {
-                                      textarea.focus();
-                                    }
-                                  }, 150);
-                                }}
-                                className="w-full mt-5 bg-white hover:bg-neutral-950 text-neutral-600 hover:text-white border border-neutral-200 hover:border-neutral-950 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer group"
-                              >
-                                <span>Inquire about {f.engName.split(' ').pop()}</span>
-                                <span className="text-neutral-400 group-hover:text-neutral-200 transition-colors">↗</span>
-                              </button>
+                            <div className="p-6 flex-1 flex flex-col">
+                              <h4 className="text-lg font-bold text-neutral-900 tracking-tight font-sans mb-3">
+                                {f.name}
+                              </h4>
+                              <p className="text-sm text-neutral-500 font-light leading-relaxed">
+                                {f.description}
+                              </p>
                             </div>
                           </div>
                         ))}
                       </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    </div>
                 </div>
 
-                <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-neutral-100">
-                  <span className="text-xs md:text-sm text-neutral-500 font-normal font-mono text-center sm:text-left">
-                    * Custom fabric sourcing, color dyeing, and creative direction consulting available for all products
-                  </span>
-                  <button
-                    onClick={onPreOrderClick}
-                    className="bg-neutral-950 hover:bg-neutral-900 active:scale-95 text-white text-sm uppercase tracking-wider px-7 py-3.5 rounded-full font-bold cursor-pointer transition-all duration-200 w-full sm:w-auto text-center shadow-[0_8px_16px_rgba(0,0,0,0.1)]"
-                  >
-                    샘플 조율 신청하기
-                  </button>
-                </div>
+
               </div>
             </motion.div>
           )}
