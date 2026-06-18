@@ -828,12 +828,13 @@ export default function Hero({
 
                 <form onSubmit={handleSendMessage} className={`w-full flex flex-col justify-between text-left ${messages.length > 1 ? "h-auto shrink-0 pt-2" : "flex-1 h-full"}`}>
                   <textarea
+                    id="chat-input-textarea"
                     ref={textareaRef}
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     // onFocus 제거 (클릭 시 로그인 모달 뜨지 않게 변경)
                     placeholder="We excel in crafting bespoke apparel and tops with premium-grade fabrics. Tell us what you want to make..."
-                    className="w-full bg-transparent resize-none overflow-hidden border-0 outline-none focus:ring-0 text-sm md:text-base text-neutral-900 placeholder-neutral-400 font-light leading-relaxed select-text min-h-[38px] pb-2"
+                    className="gtm-chat-open w-full bg-transparent resize-none overflow-hidden border-0 outline-none focus:ring-0 text-sm md:text-base text-neutral-900 placeholder-neutral-400 font-light leading-relaxed select-text min-h-[38px] pb-2"
                     disabled={isGenerating}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
@@ -910,9 +911,10 @@ export default function Hero({
                       </button>
 
                       <button
+                        id="chat-send-button"
                         type="submit"
                         disabled={!chatInput.trim() || isGenerating}
-                        className={`p-2.5 rounded-full aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                        className={`gtm-chat-send p-2.5 rounded-full aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer ${
                           chatInput.trim() && !isGenerating
                             ? "bg-neutral-950 text-white hover:bg-neutral-800 hover:scale-105"
                             : "bg-neutral-100 text-neutral-400 opacity-60 pointer-events-none"

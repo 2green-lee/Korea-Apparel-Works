@@ -264,9 +264,10 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
                 </span>
                 
                 <button
+                  id="auth-submit-button"
                   type="submit"
                   disabled={!isFormValid}
-                  className={`px-6 py-3 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center space-x-2 shrink-0 ${
+                  className={`gtm-auth-submit px-6 py-3 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center space-x-2 shrink-0 ${
                     isFormValid
                       ? "bg-neutral-950 text-white hover:bg-neutral-800 cursor-pointer active:scale-95 hover:scale-[1.02]"
                       : "bg-neutral-100 text-neutral-400 cursor-not-allowed"
