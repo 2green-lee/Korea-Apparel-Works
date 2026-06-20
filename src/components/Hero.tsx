@@ -962,9 +962,16 @@ export default function Hero({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 w-full">
                       <div className="flex flex-col justify-start">
                         <div className="space-y-4 text-[15px] md:text-base text-neutral-600 leading-relaxed font-light">
-                          <p>It started with my father. For over 30 years, he ran a garment manufacturing facility in Korea — producing premium men's polo shirts, golf wear, and performance collar tees with the kind of precision that only comes from decades of hands-on craft.</p>
-                          <p>The factory had deep expertise and a loyal client base, but like many traditional manufacturers, it had never been connected to the global market. Orders came through local networks. The technology stayed the same. The world moved on.</p>
-                          <p>Watching this, I saw an opportunity — not to replace what my father had built, but to open it up. Korea Apparel Works is the bridge between that 30 years of manufacturing heritage and the brands worldwide who are looking for exactly what we make.</p>
+                          <p>
+                            Our story begins with my father.<br />
+                            For over 30 years, he ran an apparel factory in Korea, crafting premium polo shirts and golf wear with true craftsmanship.
+                          </p>
+                          <p>
+                            Despite having outstanding technical skills, the factory was like many traditional manufacturers. It relied on local, word-of-mouth orders, entirely disconnected from the global market while the rest of the world rapidly moved forward.
+                          </p>
+                          <p>
+                            I wanted to bring the exceptional expertise my father spent a lifetime building out into the world. Connecting global brands with 30 years of steadfast manufacturing know-how and genuine quality.
+                          </p>
                         </div>
                       </div>
                       <div className="w-full relative h-full min-h-[300px]">
@@ -986,9 +993,9 @@ export default function Hero({
                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-blue-600 group-hover:scale-110 transition-transform duration-300">
                       <Factory size={24} strokeWidth={1.5} />
                     </div>
-                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">30-Year Production Backbone</div>
+                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">30 Years of Manufacturing Expertise</div>
                     <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
-                      We manufacture your garments directly in our family-owned, 30-year-old facility in Busan. Bypassing traditional middleman agencies, we guarantee unmatched craftsmanship and direct-to-factory transparency trusted by global brands.
+                      Family-owned factory in Busan with direct production and transparent processes.
                     </p>
                   </div>
 
@@ -996,9 +1003,9 @@ export default function Hero({
                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-orange-500 group-hover:scale-110 transition-transform duration-300">
                       <Package size={24} strokeWidth={1.5} />
                     </div>
-                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">Full-Package OEM (FOB) Solutions</div>
+                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">Full-Package OEM Solutions</div>
                     <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
-                      We manage the entire pipeline: pattern development, functional fabric sourcing, prototyping, and bulk manufacturing. Just send us your design, and we deliver fully finished, premium products ready for the shelf.
+                      From design to finished product, we manage every production stage.
                     </p>
                   </div>
 
@@ -1006,9 +1013,9 @@ export default function Hero({
                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-emerald-600 group-hover:scale-110 transition-transform duration-300">
                       <ShieldCheck size={24} strokeWidth={1.5} />
                     </div>
-                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">Strict Quality Control & Technical Precision</div>
+                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">Premium Quality Control</div>
                     <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
-                      Specializing in high-end golfwear, our master tailors oversee every stitch. We apply advanced sewing techniques required for performance wear, ensuring luxury department-store-level quality.
+                      High-end craftsmanship and technical expertise for performance apparel.
                     </p>
                   </div>
 
@@ -1016,9 +1023,9 @@ export default function Hero({
                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-purple-600 group-hover:scale-110 transition-transform duration-300">
                       <Zap size={24} strokeWidth={1.5} />
                     </div>
-                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">Flexible Production for Emerging Brands</div>
+                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">Flexible MOQ</div>
                     <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
-                      We support your growth with an agile production scale. Avoid high industry minimums and test your market with our high-end prototyping service (starting from 1pc) before scaling up to bulk production.
+                      Prototype from 1 piece and scale production as your brand grows.
                     </p>
                   </div>
                 </div>

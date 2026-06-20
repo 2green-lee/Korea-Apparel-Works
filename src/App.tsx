@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
+import StartLanding from "./components/StartLanding";
 const PreOrderModal = lazy(() => import("./components/PreOrderModal"));
 const AdminDashboard = lazy(() => import("./components/AdminDashboard"));
 const CookieBanner = lazy(() => import("./components/CookieBanner"));
@@ -13,9 +14,10 @@ import { User } from "@supabase/supabase-js";
 import bgImage from "./components/white-fabric-texture-bg-optimized.jpg";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<"client" | "admin">(() => {
-    if (typeof window !== "undefined" && window.location.pathname === "/admin") {
-      return "admin";
+  const [currentView, setCurrentView] = useState<"client" | "admin" | "start">(() => {
+    if (typeof window !== "undefined") {
+      if (window.location.pathname === "/admin") return "admin";
+      if (window.location.pathname === "/start") return "start";
     }
     return "client";
   });
@@ -226,6 +228,8 @@ export default function App() {
 
       {currentView === "admin" ? (
         <Suspense fallback={null}><AdminDashboard onExit={() => handleSetView("client")} /></Suspense>
+      ) : currentView === "start" ? (
+        <StartLanding />
       ) : (
         <>
           {/* 2. Brand sticky Navigation Header */}
