@@ -200,7 +200,7 @@ export default function StartLanding() {
 
           {/* Buttons */}
           <div className="flex justify-center mb-20 w-full">
-            <a href="/" className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-neutral-900 text-white rounded-xl font-medium text-lg hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
+            <a id="gtm-start-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-2 px-10 py-4 bg-neutral-900 text-white rounded-xl font-medium text-lg hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
               Get a Free Quote
               <ArrowRight size={20} />
             </a>
@@ -209,7 +209,7 @@ export default function StartLanding() {
           {/* Metrics */}
           <div className="grid grid-cols-3 gap-6 md:gap-16 pt-8 border-t border-neutral-200 max-w-3xl w-full">
             <div className="flex flex-col items-center">
-              <div className="text-3xl md:text-4xl font-extrabold text-neutral-900 mb-2">100<span className="text-xl md:text-2xl font-bold text-neutral-500">pcs~</span></div>
+              <div className="text-3xl md:text-4xl font-extrabold text-neutral-900 mb-2">1<span className="text-xl md:text-2xl font-bold text-neutral-500">pcs~</span></div>
               <div className="text-xs md:text-sm text-neutral-500 font-medium">Minimum Order (MOQ)</div>
             </div>
             <div className="flex flex-col items-center border-l border-neutral-200 pl-6 md:pl-16">
@@ -597,7 +597,7 @@ export default function StartLanding() {
           <p className="text-lg md:text-xl text-neutral-400 font-light mb-10">
             Start your journey with us today.
           </p>
-          <a href="/" className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">
+          <a id="gtm-start-footer-request-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">
             Request Production
           </a>
         </section>
