@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import ExportMap from './ExportMap';
 
 const fabricsData = [
   { id: "mesh", name: "MESH", desc: "An outstandingly fast sweat-wicking and refreshing mesh fabric featuring a hole structure that maximizes air circulation. It perfectly serves high-performance sports and daily casual outerwear in hot, humid climates." },
@@ -348,210 +349,140 @@ export default function StartLanding() {
                 <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-2 sm:mb-4 shrink-0">
                   <Bot className="w-4 h-4 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-[13px] sm:text-lg font-bold text-neutral-900 mb-3 sm:mb-4 leading-tight">AI inquiry</h3>
+                <h3 className="text-[15px] sm:text-[20px] font-bold text-neutral-900 mb-3 sm:mb-4 leading-tight">AI inquiry</h3>
                 <p className="text-[11px] sm:text-sm text-neutral-500 font-light leading-snug sm:leading-relaxed">Describe what you need in natural language. Our assistant extracts specs automatically.</p>
               </div>
               <div className="bg-white px-2 py-4 sm:p-6 rounded-xl sm:rounded-2xl border border-neutral-200 flex flex-col items-center text-center transition-all hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:-translate-y-1">
                 <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-2 sm:mb-4 shrink-0">
                   <Zap className="w-4 h-4 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-[13px] sm:text-lg font-bold text-neutral-900 mb-3 sm:mb-4 leading-tight">Smart quoting</h3>
+                <h3 className="text-[15px] sm:text-[20px] font-bold text-neutral-900 mb-3 sm:mb-4 leading-tight">Smart quoting</h3>
                 <p className="text-[11px] sm:text-sm text-neutral-500 font-light leading-snug sm:leading-relaxed">Receive a detailed proposal within 24 hours based on your exact requirements.</p>
               </div>
               <div className="bg-white px-2 py-4 sm:p-6 rounded-xl sm:rounded-2xl border border-neutral-200 flex flex-col items-center text-center transition-all hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:-translate-y-1">
                 <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-2 sm:mb-4 shrink-0">
                   <LineChart className="w-4 h-4 sm:w-6 sm:h-6" />
                 </div>
-                <h3 className="text-[13px] sm:text-lg font-bold text-neutral-900 mb-3 sm:mb-4 leading-tight">Production tracking</h3>
+                <h3 className="text-[15px] sm:text-[20px] font-bold text-neutral-900 mb-3 sm:mb-4 leading-tight">Production tracking</h3>
                 <p className="text-[11px] sm:text-sm text-neutral-500 font-light leading-snug sm:leading-relaxed">Real-time updates from sample approval through to shipment confirmation.</p>
               </div>
             </div>
 
-            {/* 5-Step Process */}
-            <div className="relative pt-2 sm:pt-0">
-              {/* Connecting lines (Desktop) */}
-              <div className="hidden sm:block absolute top-[52px] left-[10%] right-[10%] h-[2px] bg-neutral-800 z-0"></div>
+            {/* 5-Step Process (2 Rows Layout) */}
+            <div className="relative pt-2 sm:pt-0 flex flex-col gap-12 sm:gap-16 items-center">
+              
+              {/* Top Row (01 to 03) */}
+              <div className="relative w-full max-w-[770px]">
+                {/* Connecting lines for Row 1 */}
+                <div className="hidden sm:block absolute top-[66px] left-[16%] right-[16%] h-[2px] bg-neutral-800 z-0"></div>
+                <div className="sm:hidden absolute top-[66px] left-[25%] right-[25%] h-[2px] bg-neutral-800 z-0"></div>
 
-              {/* Connecting lines (Mobile) */}
-              {/* Top row horizontal (01 to 03) */}
-              <div className="sm:hidden absolute top-[52px] left-[20%] right-[20%] h-[2px] bg-neutral-800 z-0"></div>
-              {/* Bottom row horizontal (04 to 05) */}
-              <div className="sm:hidden absolute top-[calc(50%+68px)] left-[35%] right-[35%] h-[2px] bg-neutral-800 z-0"></div>
-
-              <div className="flex flex-wrap justify-center sm:grid sm:grid-cols-5 gap-y-8 sm:gap-4 relative z-10">
-                {/* Step 1 */}
-                <div className="flex flex-col items-center text-center group cursor-default w-[30%] sm:w-auto">
-                  <div className="text-xs font-bold text-blue-400 mb-2 transition-colors group-hover:text-blue-300">01</div>
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-3 text-blue-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_15px_rgba(37,99,235,0.3)] group-hover:border-blue-400">
-                    <MessageSquare size={20} />
+                <div className="flex flex-wrap justify-center sm:grid sm:grid-cols-3 gap-y-10 sm:gap-8 relative z-10">
+                  {/* Step 1 */}
+                  <div className="flex flex-col items-center text-center group cursor-default w-[45%] sm:w-auto">
+                    <div className="text-[13px] font-bold text-blue-400 mb-2.5 transition-colors group-hover:text-blue-300">01</div>
+                    <div className="w-[60px] h-[60px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-3.5 text-blue-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:border-blue-400">
+                      <MessageSquare className="w-[26px] h-[26px] sm:w-[30px] sm:h-[30px]" />
+                    </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Inquiry</h4>
+                    <p className="text-[11px] sm:text-[13px] text-neutral-400 mb-2.5 transition-colors group-hover:text-neutral-300">Chat with AI</p>
+                    <span className="px-2.5 py-1 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
                   </div>
-                  <h4 className="text-sm font-bold text-white mb-1">Inquiry</h4>
-                  <p className="text-[11px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">Chat with AI</p>
-                  <span className="px-2 py-0.5 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
+                  
+                  {/* Step 2 */}
+                  <div className="flex flex-col items-center text-center group cursor-default w-[45%] sm:w-auto">
+                    <div className="text-[13px] font-bold text-blue-400 mb-2.5 transition-colors group-hover:text-blue-300">02</div>
+                    <div className="w-[60px] h-[60px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-3.5 text-blue-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:border-blue-400">
+                      <FileText className="w-[26px] h-[26px] sm:w-[30px] sm:h-[30px]" />
+                    </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Proposal</h4>
+                    <p className="text-[11px] sm:text-[13px] text-neutral-400 mb-2.5 transition-colors group-hover:text-neutral-300">Within 24h</p>
+                    <span className="px-2.5 py-1 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div className="flex flex-col items-center text-center group cursor-default w-[45%] sm:w-auto">
+                    <div className="text-[13px] font-bold text-white mb-2.5 transition-colors group-hover:text-neutral-200">03</div>
+                    <div className="w-[60px] h-[60px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-white border border-amber-200 flex items-center justify-center shadow-sm mb-3.5 text-amber-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] group-hover:border-amber-400">
+                      <Scissors className="w-[26px] h-[26px] sm:w-[30px] sm:h-[30px]" />
+                    </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Sample</h4>
+                    <p className="text-[11px] sm:text-[13px] text-neutral-400 mb-2.5 transition-colors group-hover:text-neutral-300">14 days</p>
+                    <span className="px-2.5 py-1 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[10px] font-bold rounded-full tracking-wide">Handcraft</span>
+                  </div>
                 </div>
-                
-                {/* Step 2 */}
-                <div className="flex flex-col items-center text-center group cursor-default w-[30%] sm:w-auto">
-                  <div className="text-xs font-bold text-blue-400 mb-2 transition-colors group-hover:text-blue-300">02</div>
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-3 text-blue-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_15px_rgba(37,99,235,0.3)] group-hover:border-blue-400">
-                    <FileText size={20} />
-                  </div>
-                  <h4 className="text-sm font-bold text-white mb-1">Proposal</h4>
-                  <p className="text-[11px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">Within 24h</p>
-                  <span className="px-2 py-0.5 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
-                </div>
+              </div>
 
-                {/* Step 3 */}
-                <div className="flex flex-col items-center text-center group cursor-default w-[30%] sm:w-auto">
-                  <div className="text-xs font-bold text-white mb-2 transition-colors group-hover:text-neutral-200">03</div>
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-amber-200 flex items-center justify-center shadow-sm mb-3 text-amber-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_15px_rgba(245,158,11,0.3)] group-hover:border-amber-400">
-                    <Scissors size={20} />
-                  </div>
-                  <h4 className="text-sm font-bold text-white mb-1">Sample</h4>
-                  <p className="text-[11px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">14 days</p>
-                  <span className="px-2 py-0.5 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[10px] font-bold rounded-full tracking-wide">Handcraft</span>
-                </div>
+              {/* Bottom Row (04 to 05) */}
+              <div className="relative w-full max-w-[480px]">
+                {/* Connecting lines for Row 2 */}
+                <div className="absolute top-[66px] left-[25%] right-[25%] h-[2px] bg-neutral-800 z-0"></div>
 
-                {/* Step 4 */}
-                <div className="flex flex-col items-center text-center group cursor-default w-[30%] sm:w-auto">
-                  <div className="text-xs font-bold text-white mb-2 transition-colors group-hover:text-neutral-200">04</div>
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-amber-200 flex items-center justify-center shadow-sm mb-3 text-amber-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_15px_rgba(245,158,11,0.3)] group-hover:border-amber-400">
-                    <CheckCircle2 size={20} />
+                <div className="grid grid-cols-2 gap-y-10 sm:gap-8 relative z-10">
+                  {/* Step 4 */}
+                  <div className="flex flex-col items-center text-center group cursor-default">
+                    <div className="text-[13px] font-bold text-white mb-2.5 transition-colors group-hover:text-neutral-200">04</div>
+                    <div className="w-[60px] h-[60px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-white border border-amber-200 flex items-center justify-center shadow-sm mb-3.5 text-amber-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] group-hover:border-amber-400">
+                      <CheckCircle2 className="w-[26px] h-[26px] sm:w-[30px] sm:h-[30px]" />
+                    </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Production</h4>
+                    <p className="text-[11px] sm:text-[13px] text-neutral-400 mb-2.5 transition-colors group-hover:text-neutral-300">Full QC</p>
+                    <span className="px-2.5 py-1 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[10px] font-bold rounded-full tracking-wide">Handcraft</span>
                   </div>
-                  <h4 className="text-sm font-bold text-white mb-1">Production</h4>
-                  <p className="text-[11px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">Full QC</p>
-                  <span className="px-2 py-0.5 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[10px] font-bold rounded-full tracking-wide">Handcraft</span>
-                </div>
 
-                {/* Step 5 */}
-                <div className="flex flex-col items-center text-center group cursor-default w-[30%] sm:w-auto">
-                  <div className="text-xs font-bold text-blue-400 mb-2 transition-colors group-hover:text-blue-300">05</div>
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-3 text-blue-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_15px_rgba(37,99,235,0.3)] group-hover:border-blue-400">
-                    <Truck size={20} />
+                  {/* Step 5 */}
+                  <div className="flex flex-col items-center text-center group cursor-default">
+                    <div className="text-[13px] font-bold text-blue-400 mb-2.5 transition-colors group-hover:text-blue-300">05</div>
+                    <div className="w-[60px] h-[60px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-3.5 text-blue-600 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:border-blue-400">
+                      <Truck className="w-[26px] h-[26px] sm:w-[30px] sm:h-[30px]" />
+                    </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Shipment</h4>
+                    <p className="text-[11px] sm:text-[13px] text-neutral-400 mb-2.5 transition-colors group-hover:text-neutral-300">Tracked</p>
+                    <span className="px-2.5 py-1 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
                   </div>
-                  <h4 className="text-sm font-bold text-white mb-1">Shipment</h4>
-                  <p className="text-[11px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">Tracked</p>
-                  <span className="px-2 py-0.5 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Global Export Map Section placed inside the black area */}
+          <ExportMap />
         </section>
 
         {/* Product Collection Gradient Transition */}
-        <div className="h-[500px] md:h-[1000px] w-full bg-gradient-to-b from-neutral-950 via-neutral-100 to-white"></div>
+        <div className="h-[400px] md:h-[700px] w-full" style={{ background: "linear-gradient(to bottom, #0a0a0a 0%, #171717 25%, #262626 50%, #52525b 70%, #ffffff 100%)" }}></div>
 
         {/* Product Collection Section */}
-        <section className="pt-10 md:pt-20 pb-32 w-full overflow-hidden bg-white">
+        <section className="pt-[150px] md:pt-[200px] pb-32 w-full overflow-hidden bg-white">
           <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-8">
             <div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight mb-3">
-                Product Collection
+                Custom Apparel Solutions
               </h2>
               <p className="text-[15px] sm:text-lg text-neutral-600 font-light leading-relaxed max-w-2xl mx-auto">
                 Discover KAW's signature production lineup featuring perfect fits and flawless details.
               </p>
             </div>
-            <div className="flex gap-3 shrink-0 min-[1700px]:hidden">
-              <button onClick={() => scroll('left')} className="w-11 h-11 flex items-center justify-center bg-white border border-neutral-200/60 shadow-sm rounded-full hover:bg-neutral-50 hover:text-blue-600 transition-colors text-neutral-600" aria-label="Scroll left">
-                <ChevronLeft size={22} />
-              </button>
-              <button onClick={() => scroll('right')} className="w-11 h-11 flex items-center justify-center bg-white border border-neutral-200/60 shadow-sm rounded-full hover:bg-neutral-50 hover:text-blue-600 transition-colors text-neutral-600" aria-label="Scroll right">
-                <ChevronRight size={22} />
-              </button>
-            </div>
           </div>
-
-          <div className="w-full relative">
-            <div 
-              ref={scrollRef} 
-              className="flex gap-6 sm:gap-8 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 no-scrollbar before:m-auto after:m-auto"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {/* Dynamic Left Spacer */}
-              <div className="shrink-0 w-8 sm:w-12 md:w-[calc((100vw-770px)/2+1.5rem)] md:min-w-[3rem] 2xl:hidden" aria-hidden="true"></div>
-
-              {/* Card 1 */}
-              <div className="flex-none w-[50vw] sm:w-[300px] snap-start bg-white rounded-2xl border border-neutral-200 overflow-hidden transition-all hover:border-blue-200 hover:shadow-md group flex flex-col">
-                <div className="aspect-[4/3] w-full bg-neutral-100 relative overflow-hidden">
-                  <img src="/T.png" alt="Premium Essential T-Shirt" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                </div>
-                <div className="px-5 py-4 sm:p-6 flex-1 flex flex-col">
-                  <h4 className="text-[13px] sm:text-lg font-bold text-neutral-900 mb-1 sm:mb-2">Premium Essential T-Shirt</h4>
-                  <p className="text-[11px] sm:text-sm text-neutral-600 font-light leading-relaxed">
-                    Perfected basics with premium construction, durability, and everyday comfort.
-                  </p>
-                </div>
-              </div>
-
-              {/* Card 2 */}
-              <div className="flex-none w-[50vw] sm:w-[300px] snap-start bg-white rounded-2xl border border-neutral-200 overflow-hidden transition-all hover:border-blue-200 hover:shadow-md group flex flex-col">
-                <div className="aspect-[4/3] w-full bg-neutral-100 relative overflow-hidden">
-                  <img src="/q-zip.png" alt="Performance Q-Zip" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                </div>
-                <div className="px-5 py-4 sm:p-6 flex-1 flex flex-col">
-                  <h4 className="text-[13px] sm:text-lg font-bold text-neutral-900 mb-1 sm:mb-2">Performance Q-Zip</h4>
-                  <p className="text-[11px] sm:text-sm text-neutral-600 font-light leading-relaxed">
-                    A golfwear favorite built with advanced techniques for high-stretch performance fabrics.
-                  </p>
-                </div>
-              </div>
-
-              {/* Card 3 */}
-              <div className="flex-none w-[50vw] sm:w-[300px] snap-start bg-white rounded-2xl border border-neutral-200 overflow-hidden transition-all hover:border-blue-200 hover:shadow-md group flex flex-col">
-                <div className="aspect-[4/3] w-full bg-neutral-100 relative overflow-hidden">
-                  <img src="/hoodie.png" alt="4-Way Stretch Performance Hoodie" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                </div>
-                <div className="px-5 py-4 sm:p-6 flex-1 flex flex-col">
-                  <h4 className="text-[13px] sm:text-lg font-bold text-neutral-900 mb-1 sm:mb-2">4-Way Stretch Performance Hoodie</h4>
-                  <p className="text-[11px] sm:text-sm text-neutral-600 font-light leading-relaxed">
-                    Maximum flexibility and comfort for active movement and daily wear.
-                  </p>
-                </div>
-              </div>
-
-              {/* Card 4 */}
-              <div className="flex-none w-[50vw] sm:w-[300px] snap-start bg-white rounded-2xl border border-neutral-200 overflow-hidden transition-all hover:border-blue-200 hover:shadow-md group flex flex-col">
-                <div className="aspect-[4/3] w-full bg-neutral-100 relative overflow-hidden">
-                  <img src="/polo.png" alt="Classic & Active Polo" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                </div>
-                <div className="px-5 py-4 sm:p-6 flex-1 flex flex-col">
-                  <h4 className="text-[13px] sm:text-lg font-bold text-neutral-900 mb-1 sm:mb-2">Classic & Active Polo</h4>
-                  <p className="text-[11px] sm:text-sm text-neutral-600 font-light leading-relaxed">
-                    Tailored sophistication meets athletic comfort in a timeless polo design.
-                  </p>
-                </div>
-              </div>
-
-              {/* Card 5 - And More */}
-              <div className="flex-none w-[50vw] sm:w-[300px] snap-start bg-white rounded-2xl border border-neutral-200 overflow-hidden transition-all hover:border-blue-200 hover:shadow-md group flex flex-col cursor-pointer">
-                <div className="aspect-[4/3] w-full bg-neutral-50 relative overflow-hidden flex items-center justify-center">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white border border-neutral-200 text-neutral-400 flex items-center justify-center group-hover:scale-110 group-hover:text-blue-600 group-hover:border-blue-200 transition-all duration-500 shadow-sm">
-                    <MoreHorizontal className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />
+          <div className="max-w-[1200px] mx-auto px-6 w-full relative">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+              {[
+                "-29 001.png", "-30 003.png", "-34 012.png", "-33 008.png",
+                "-33 009.png", "-33 010.png", "-34 011.png", "-31 005.png",
+                "-35 013.png", "-35 014.png"
+              ].map((img, idx) => (
+                <div key={idx} className="bg-white rounded-2xl border border-neutral-200 overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-neutral-300 hover:shadow-lg">
+                  <div className="aspect-[3/4] w-full bg-neutral-100 relative overflow-hidden">
+                    <img src={`/clothes/${img}`} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
                   </div>
                 </div>
-                <div className="px-5 py-4 sm:p-6 flex-1 flex flex-col">
-                  <h4 className="text-[13px] sm:text-lg font-bold text-neutral-900 mb-1 sm:mb-2">And Many More</h4>
-                  <p className="text-[11px] sm:text-sm text-neutral-600 font-light leading-relaxed">
-                    We produce a diverse range of apparel, offering customized manufacturing solutions tailored to each brand's vision and requirements.
-                  </p>
-                </div>
-              </div>
-              
-              {/* Dynamic Right Spacer */}
-              <div className="shrink-0 w-6 sm:w-10 md:w-[calc((100vw-770px)/2+1.5rem)] md:min-w-[3rem] 2xl:hidden" aria-hidden="true"></div>
+              ))}
             </div>
-            
-            <style dangerouslySetInnerHTML={{__html: `
-              .no-scrollbar::-webkit-scrollbar {
-                display: none;
-              }
-            `}} />
           </div>
         </section>
 
         {/* Fabric Introduction Section */}
-        <section className="py-32 px-6 w-full max-w-[770px] mx-auto">
+        <section className="pt-32 pb-0 px-6 w-full max-w-[770px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight mb-4">
               Premium Fabrics
@@ -590,7 +521,7 @@ export default function StartLanding() {
         </section>
 
         {/* Final CTA Section */}
-        <section className="w-full bg-neutral-950 pt-32 pb-40 px-6 mt-16 flex flex-col items-center text-center border-t border-neutral-900">
+        <section className="w-full bg-neutral-950 pt-32 pb-40 px-6 mt-[400px] flex flex-col items-center text-center border-t border-neutral-900">
           <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
             The Ultimate Apparel<br />Production Partner
           </h2>

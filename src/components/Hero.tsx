@@ -32,7 +32,7 @@ const SLIDES = [
   },
   {
     image: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=1600",
-    headline: "Product Collection",
+    headline: "We make",
     sub: ""
   }
 ];
