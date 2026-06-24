@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography, Marker, Line } from "react-simple-maps";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -15,19 +15,38 @@ const koreaCoord = markers[0].coordinates;
 const targets = markers.slice(1);
 
 const ExportMap = ({ className }: { className?: string }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Mobile: wider view with less rotation so all continents fit without clipping
+  const projectionConfig = isMobile
+    ? { scale: 220, rotate: [-142, 0, 0] as [number, number, number], center: [0, 20] as [number, number] }
+    : { scale: 175, rotate: [-137, 0, 0] as [number, number, number], center: [0, 30] as [number, number] };
+
   return (
-    <div className={`w-full max-w-[900px] mx-auto pb-20 pt-0 px-6 relative ${className || 'mt-[250px]'}`}>
-      <div className="text-center mb-12">
+    <div className={`w-full max-w-[900px] mx-auto pb-20 pt-0 px-2 md:px-6 relative ${className || 'mt-[250px]'}`}>
+      <div className="text-center mb-8 md:mb-12">
         <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-4">
           Global Export Reach
         </h2>
-        <p className="text-[15px] sm:text-lg text-neutral-400 font-light max-w-lg mx-auto leading-relaxed">
+        <p className="text-[15px] sm:text-lg md:text-[20px] text-neutral-400 font-light max-w-lg mx-auto leading-relaxed">
           Delivering premium Korean apparel manufacturing to brands across the world.
         </p>
       </div>
 
-      <div className="relative w-full aspect-[2/1] min-h-[300px] bg-transparent rounded-3xl overflow-hidden p-0 md:p-4">
-        <ComposableMap projectionConfig={{ scale: 175, rotate: [-137, 0, 0], center: [0, 30] }} width={800} height={400} className="w-full h-full">
+      <div className="relative w-full bg-transparent rounded-3xl p-0 md:p-4">
+        <ComposableMap
+          projectionConfig={projectionConfig}
+          width={800}
+          height={isMobile ? 500 : 400}
+          className="w-full h-auto"
+        >
           <Geographies geography={geoUrl}>
             {({ geographies }) =>
               geographies.map((geo) => (
@@ -61,20 +80,18 @@ const ExportMap = ({ className }: { className?: string }) => {
 
           {markers.map((marker, idx) => {
             const isKorea = idx === 0;
-            const color = isKorea ? "#ef4444" : "#3b82f6"; // Red for Korea, Blue for targets
+            const color = isKorea ? "#ef4444" : "#3b82f6";
             return (
               <Marker key={idx} coordinates={marker.coordinates}>
-                {/* Animated pulse circle */}
                 <circle r={8} fill={color} opacity={0.3}>
                   <animate attributeName="r" from="4" to="16" dur="2s" repeatCount="indefinite" />
                   <animate attributeName="opacity" from="0.8" to="0" dur="2s" repeatCount="indefinite" />
                 </circle>
-                {/* Core circle */}
                 <circle r={4} fill={color} />
                 <text
                   textAnchor="middle"
-                  y={isKorea ? 22 : -16} // Text above or below based on location
-                  style={{ fontFamily: "Inter, sans-serif", fill: "#f3f4f6", fontSize: "15px", fontWeight: "700", letterSpacing: "0.5px" }}
+                  y={isKorea ? 22 : -16}
+                  style={{ fontFamily: "Inter, sans-serif", fill: "#f3f4f6", fontSize: isMobile ? "17px" : "15px", fontWeight: "700", letterSpacing: "0.5px" }}
                 >
                   {marker.name}
                 </text>

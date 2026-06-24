@@ -59,7 +59,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
       onMouseLeave={() => setIsHovered(false)}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-sans flex items-center ${
         currentSlide > 0
-          ? "bg-[#fcfcfc] h-16"
+          ? "bg-white h-16"
           : isScrolled || isHovered 
             ? "bg-[#e9eceb] h-16" 
             : "bg-transparent h-16"
@@ -111,7 +111,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
             className="flex flex-col items-center group cursor-pointer focus:outline-hidden"
             title="Reset to home and clear conversation"
           >
-            <span className="font-sans font-medium text-[13px] sm:text-[17px] tracking-normal sm:tracking-[0.1em] transition-colors duration-500 select-none text-neutral-900 group-hover:opacity-80 whitespace-nowrap">
+            <span className="font-sans font-medium text-[17px] tracking-normal sm:tracking-[0.1em] transition-colors duration-500 select-none text-neutral-900 group-hover:opacity-80 whitespace-nowrap">
               Korea Apparel Works
             </span>
           </button>

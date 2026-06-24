@@ -224,9 +224,9 @@ export default function App() {
       backgroundAttachment: "fixed, fixed",
       backgroundColor: "var(--color-luxury-cream)"
     } : {
-      backgroundColor: "var(--color-luxury-cream)"
+      backgroundColor: isMobile ? "#ffffff" : "var(--color-luxury-cream)"
     }
-  ) : {}, [currentView, currentSlide]);
+  ) : {}, [currentView, currentSlide, isMobile]);
 
   return (
     <div 

@@ -81,7 +81,7 @@ export default function MobileChatView({
 
       {/* Mobile Menu Drawer */}
       <div 
-        className={`fixed inset-y-0 left-0 w-[85%] max-w-[285px] bg-[#1e1e1e] text-white z-50 transform transition-transform duration-300 ease-in-out flex flex-col shadow-2xl ${
+        className={`fixed inset-y-0 left-0 w-[85%] max-w-[285px] bg-[#1e1e1e] text-white z-50 transform transition-transform duration-300 ease-in-out flex flex-col shadow-2xl rounded-r-2xl ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -169,7 +169,7 @@ export default function MobileChatView({
       {messages.length === 1 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-6">
           <img src="/logo1.png" alt="Korea Apparel Works Logo" className="w-[40px] h-[40px] mb-5 opacity-90 object-contain" />
-          <h2 className="text-[17px] font-normal text-neutral-800 text-center tracking-tight leading-snug">
+          <h2 className="text-[17px] font-normal text-neutral-700 text-center tracking-tight leading-snug">
             Please tell us What<br />you want to make
           </h2>
         </div>

@@ -23,10 +23,10 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
   };
 
   return (
-    <div className="w-full bg-transparent">
+    <div className="w-full bg-[#0a0a0a]">
       <footer 
         id="footer" 
-        className="pt-16 pb-12 overflow-hidden relative font-sans bg-transparent text-neutral-600"
+        className="pt-16 pb-12 overflow-hidden relative font-sans bg-transparent text-neutral-400"
       >
         <div className="max-w-6xl mx-auto px-6 md:px-10 relative z-10 flex flex-col justify-between items-stretch gap-12 select-text">
           
@@ -39,19 +39,19 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
                 <img
                   src="/logo1.png"
                   alt="Korea Apparel Works Logo"
-                  className="w-[18px] h-[18px] object-contain"
+                  className="w-[18px] h-[18px] object-contain brightness-0 invert opacity-90"
                 />
-                <span className="font-sans font-semibold tracking-widest text-[13px] text-neutral-900">
+                <span className="font-sans font-semibold tracking-widest text-[13px] text-white">
                   Korea Apparel Works
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-500 font-light leading-relaxed max-w-sm font-dm-sans">
+              <p className="text-[11px] text-neutral-400 font-light leading-relaxed max-w-sm font-dm-sans">
                 Forging the physical frontier of custom low-MOQ technical garments and structural style designs. Conceived elegantly for global labels, hand-assembled, pattern-drafted, and calibrated alongside veteran ateliers in Seoul, South Korea.
               </p>
               <div className="pt-4">
                 <a
                   href="mailto:contact@koreaapparelworks.com"
-                  className="inline-flex items-center justify-center bg-neutral-900 hover:bg-neutral-800 active:scale-95 rounded-full px-5 py-2.5 transition duration-200 cursor-pointer text-sm font-normal text-white font-dm-sans shadow-sm hover:shadow-md"
+                  className="inline-flex items-center justify-center bg-white hover:bg-neutral-200 active:scale-95 rounded-full px-5 py-2.5 transition duration-200 cursor-pointer text-sm font-medium text-neutral-900 font-dm-sans shadow-sm hover:shadow-md"
                 >
                   Contact us
                 </a>
@@ -59,14 +59,14 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
             </div>
 
             {/* Links grid (7 cols) */}
-            <div className="md:col-span-7 flex flex-row justify-between w-full font-dm-sans text-[11px] text-neutral-500">
+            <div className="md:col-span-7 flex flex-row justify-between w-full font-dm-sans text-[11px] text-neutral-400">
               <div className="flex flex-col items-center flex-1">
-                <span className="block text-neutral-800 font-dm-sans tracking-wider font-bold mb-3 select-none text-center">Home</span>
+                <span className="block text-white font-dm-sans tracking-wider font-bold mb-3 select-none text-center">Home</span>
                 <ul className="space-y-2 font-light flex flex-col items-center">
                   <li>
                     <button 
                       onClick={() => navigateToSection(0, "ai-dialogue-portal-container")} 
-                      className="hover:text-neutral-900 cursor-pointer select-none text-center"
+                      className="hover:text-white transition-colors cursor-pointer select-none text-center"
                     >
                       Chat
                     </button>
@@ -76,7 +76,7 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
                       onClick={() => {
                         window.dispatchEvent(new CustomEvent('open-cookie-policy'));
                       }} 
-                      className="hover:text-neutral-900 cursor-pointer select-none text-center"
+                      className="hover:text-white transition-colors cursor-pointer select-none text-center"
                     >
                       Cookie Policy
                     </button>
@@ -84,12 +84,12 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
                 </ul>
               </div>
               <div className="flex flex-col items-center flex-1">
-                <span className="block text-neutral-800 font-dm-sans tracking-wider font-bold mb-3 select-none text-center">Manufacturing</span>
+                <span className="block text-white font-dm-sans tracking-wider font-bold mb-3 select-none text-center">Manufacturing</span>
                 <ul className="space-y-2 font-light flex flex-col items-center">
                   <li>
                     <button 
                       onClick={() => navigateToSection(1, "about-us-section")} 
-                      className="hover:text-neutral-900 cursor-pointer select-none text-center"
+                      className="hover:text-white transition-colors cursor-pointer select-none text-center"
                     >
                       About us
                     </button>
@@ -97,7 +97,7 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
                   <li>
                     <button 
                       onClick={() => navigateToSection(1, "core-capabilities-section")} 
-                      className="hover:text-neutral-900 cursor-pointer select-none text-center"
+                      className="hover:text-white transition-colors cursor-pointer select-none text-center"
                     >
                       Core Capabilities
                     </button>
@@ -105,7 +105,7 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
                   <li>
                     <button 
                       onClick={() => navigateToSection(1, "ai-tech-section")} 
-                      className="hover:text-neutral-900 cursor-pointer select-none text-center"
+                      className="hover:text-white transition-colors cursor-pointer select-none text-center"
                     >
                       Process
                     </button>
@@ -113,12 +113,12 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
                 </ul>
               </div>
               <div className="flex flex-col items-center flex-1">
-                <span className="block text-neutral-800 font-dm-sans tracking-wider font-bold mb-3 select-none text-center">Product</span>
+                <span className="block text-white font-dm-sans tracking-wider font-bold mb-3 select-none text-center">Product</span>
                 <ul className="space-y-2 font-light flex flex-col items-center">
                   <li>
                     <button 
                       onClick={() => navigateToSection(2, "collection-section")} 
-                      className="hover:text-neutral-900 cursor-pointer select-none text-center"
+                      className="hover:text-white transition-colors cursor-pointer select-none text-center"
                     >
                       Collection
                     </button>
@@ -126,7 +126,7 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
                   <li>
                     <button 
                       onClick={() => navigateToSection(2, "fabrics-catalog")} 
-                      className="hover:text-neutral-900 cursor-pointer select-none text-center"
+                      className="hover:text-white transition-colors cursor-pointer select-none text-center"
                     >
                       Fabric
                     </button>
@@ -139,7 +139,7 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
           </div>
 
           {/* Lower Legal disclaimer row */}
-          <div className="border-t border-neutral-200/30 pt-8 flex flex-col sm:flex-row justify-between items-center text-[10px] text-neutral-500 font-mono gap-4 select-none">
+          <div className="border-t border-neutral-800 pt-8 flex flex-col sm:flex-row justify-between items-center text-[10px] text-neutral-600 font-mono gap-4 select-none">
             <div>
               © {new Date().getFullYear()} KOREA APPAREL WORKS DIRECT. ALL RIGHTS RESERVED.
             </div>
