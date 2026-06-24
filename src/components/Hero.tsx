@@ -710,8 +710,8 @@ export default function Hero({
                       <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight md:mb-4 group-hover:text-black transition-colors">30 Years of Expertise</div>
                     </div>
                     <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed text-center md:text-left">
-                      <span className="hidden md:inline">Family-owned factory in Busan with direct production and transparent processes.</span>
-                      <span className="md:hidden">Family-owned factory with direct production.</span>
+                      <span className="hidden md:inline">Family-owned factory with direct production and transparent processes.</span>
+                      <span className="md:hidden">Family-owned factory with direct production and transparent processes.</span>
                     </p>
                   </div>
 

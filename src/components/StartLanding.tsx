@@ -263,7 +263,7 @@ export default function StartLanding() {
               </div>
               <div className="text-[13px] sm:text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 sm:mb-3 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
               <p className="text-[11px] sm:text-sm text-neutral-500 font-light leading-relaxed">
-                Family-owned factory in Busan with direct production and transparent processes.
+                Family-owned factory with direct production and transparent processes.
               </p>
             </div>
 
