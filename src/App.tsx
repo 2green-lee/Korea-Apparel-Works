@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 import StartLanding from "./components/StartLanding";
+import MobileChatView from "./components/mobile/MobileChatView";
 const PreOrderModal = lazy(() => import("./components/PreOrderModal"));
 const AdminDashboard = lazy(() => import("./components/AdminDashboard"));
 const CookieBanner = lazy(() => import("./components/CookieBanner"));
@@ -26,6 +27,15 @@ export default function App() {
   const [customFinish, setCustomFinish] = useState<StreamColorFinish>("titanium-silver");
   const [customSize, setCustomSize] = useState<number>(9);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" ? window.innerWidth <= 768 : false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const [messages, setMessages] = useState<{ role: "user" | "model"; text: string; imageUrl?: string }[]>([
     {
       role: "model",
@@ -208,7 +218,7 @@ export default function App() {
   const clientViewBackgroundStyle = useMemo(() => currentView === "client" ? (
     currentSlide === 0 ? {
       backgroundImage: `linear-gradient(to bottom, transparent 60%, var(--color-luxury-cream) 100%), url(${bgImage})`,
-      backgroundSize: "cover, cover",
+      backgroundSize: "100% 100%, max(200vw, 200vh) auto",
       backgroundPosition: "center, center top",
       backgroundRepeat: "no-repeat, no-repeat",
       backgroundAttachment: "fixed, fixed",
@@ -230,6 +240,26 @@ export default function App() {
         <Suspense fallback={null}><AdminDashboard onExit={() => handleSetView("client")} /></Suspense>
       ) : currentView === "start" ? (
         <StartLanding />
+      ) : isMobile && currentSlide === 0 ? (
+        <MobileChatView
+          messages={messages}
+          setMessages={setMessages}
+          savedChats={savedChats}
+          onClearChat={handleClearChat}
+          onRestoreChat={handleRestoreChat}
+          user={user}
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          onOpenLogin={() => setIsQuoteModalOpen(true)}
+          onOpenAccount={() => setIsAccountModalOpen(true)}
+          onLogout={() => supabase.auth.signOut()}
+          onBackToStart={() => {
+            setCurrentView("start");
+            if (window.location.pathname !== "/start") {
+              window.history.pushState(null, "", "/start");
+            }
+          }}
+        />
       ) : (
         <>
           {/* 2. Brand sticky Navigation Header */}
@@ -244,6 +274,8 @@ export default function App() {
             onOpenLogin={() => setIsQuoteModalOpen(true)}
             onOpenAccount={() => setIsAccountModalOpen(true)}
             onLogout={() => supabase.auth.signOut()}
+            savedChats={savedChats}
+            onRestoreChat={handleRestoreChat}
           />
 
           {/* 3. Landing Modules */}

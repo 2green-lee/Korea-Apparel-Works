@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut, Home, RefreshCw, Factory, Shirt, History } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface HeaderProps {
@@ -13,9 +13,11 @@ interface HeaderProps {
   onOpenLogin: () => void;
   onOpenAccount: () => void;
   onLogout: () => void;
+  savedChats?: { role: "user" | "model"; text: string }[][];
+  onRestoreChat?: (index: number) => void;
 }
 
-const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCurrentSlide, messages, onClearChat, onAdminClick, user, onOpenLogin, onOpenAccount, onLogout }: HeaderProps) {
+const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCurrentSlide, messages, onClearChat, onAdminClick, user, onOpenLogin, onOpenAccount, onLogout, savedChats, onRestoreChat }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,6 +37,18 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
     return `transition-colors duration-300 ${
       currentSlide === slideIndex ? "text-neutral-950 font-medium" : "text-neutral-600 hover:text-neutral-950"
     } cursor-pointer focus:outline-hidden`;
+  };
+
+  const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
+    const firstUserMsg = chat.find(m => m.role === "user");
+    if (firstUserMsg) {
+      const text = firstUserMsg.text;
+      if (text.length > 10) {
+        return text.slice(0, 10).trim() + "...";
+      }
+      return text;
+    }
+    return "Saved Chat";
   };
 
   const textClass = `transition-colors duration-300 text-neutral-600 hover:text-neutral-950`;
@@ -135,53 +149,101 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
 
       </div>
 
-      {/* Mobile Navigation Panel */}
+      {/* Mobile Navigation Drawer Overlay */}
       {mobileMenuOpen && (
-        <div className="absolute top-16 left-0 right-0 bg-white border-b border-neutral-200/50 py-6 px-8 flex flex-col space-y-4 shadow-lg animate-fadeIn z-50 md:hidden">
-          <button
-            onClick={() => {
-              setCurrentSlide(0);
-              setMobileMenuOpen(false);
-            }}
-            className={`text-left text-base ${currentSlide === 0 ? "font-semibold text-neutral-950" : "font-medium text-neutral-600 hover:text-neutral-950"} cursor-pointer focus:outline-hidden`}
-          >
-            Home
-          </button>
-          <button
-            onClick={() => {
-              setCurrentSlide(1);
-              setMobileMenuOpen(false);
-            }}
-            className={`text-left text-base ${currentSlide === 1 ? "font-semibold text-neutral-950" : "font-medium text-neutral-600 hover:text-neutral-950"} cursor-pointer focus:outline-hidden`}
-          >
-            Manufacturing
-          </button>
-          <button
-            onClick={() => {
-              setCurrentSlide(2);
-              setMobileMenuOpen(false);
-            }}
-            className={`text-left text-base ${currentSlide === 2 ? "font-semibold text-neutral-950" : "font-medium text-neutral-600 hover:text-neutral-950"} cursor-pointer focus:outline-hidden`}
-          >
-            Product
-          </button>
-          <hr className="border-neutral-200/50" />
-          <div className="flex justify-end items-center text-sm text-neutral-500 pt-2">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                const footerEl = document.getElementById("footer");
-                if (footerEl) {
-                  footerEl.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-              className="hover:text-black text-left normal-case tracking-wider"
-            >
-              Contact us
-            </button>
-          </div>
-        </div>
+        <div 
+          className="fixed inset-0 bg-black/40 z-40 transition-opacity md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
       )}
+
+      {/* Mobile Menu Drawer */}
+      <div 
+        className={`fixed inset-y-0 left-0 w-[85%] max-w-[285px] bg-[#1e1e1e] text-white z-50 transform transition-transform duration-300 ease-in-out flex flex-col shadow-2xl md:hidden ${
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Drawer Header */}
+        <div className="flex items-center justify-between px-5 py-4 shrink-0">
+          <div className="flex items-center space-x-3">
+            <img src="/logo1.png" alt="Logo" className="w-6 h-6 object-contain invert opacity-90" />
+            <span className="font-medium text-[15px] tracking-wide text-neutral-100 whitespace-nowrap">Korea Apparel Works</span>
+          </div>
+          <button onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-neutral-400 hover:text-white transition-colors focus:outline-hidden">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Drawer Scrollable Content */}
+        <div className="flex-1 overflow-y-auto py-2 px-3 space-y-1 scrollbar-hide">
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              onClearChat();
+              setCurrentSlide(0);
+            }}
+            className="flex items-center space-x-4 w-full text-left px-4 py-3 rounded-2xl text-[15px] font-medium text-neutral-200 hover:bg-white/5 transition-colors focus:outline-hidden"
+          >
+            <RefreshCw className="w-5 h-5 text-neutral-400" />
+            <span>New Chat</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setCurrentSlide(0);
+            }}
+            className="flex items-center space-x-4 w-full text-left px-4 py-3 rounded-2xl text-[15px] font-medium text-neutral-200 hover:bg-white/5 transition-colors focus:outline-hidden"
+          >
+            <Home className="w-5 h-5 text-neutral-400" />
+            <span>Home</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setCurrentSlide(1);
+            }}
+            className="flex items-center space-x-4 w-full text-left px-4 py-3 rounded-2xl text-[15px] font-medium text-neutral-200 hover:bg-white/5 transition-colors focus:outline-hidden"
+          >
+            <Factory className="w-5 h-5 text-neutral-400" />
+            <span>Manufacturing</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setCurrentSlide(2);
+            }}
+            className="flex items-center space-x-4 w-full text-left px-4 py-3 rounded-2xl text-[15px] font-medium text-neutral-200 hover:bg-white/5 transition-colors focus:outline-hidden"
+          >
+            <Shirt className="w-5 h-5 text-neutral-400" />
+            <span>Product</span>
+          </button>
+
+          {/* Recent Chats Section */}
+          {savedChats && savedChats.length > 0 && (
+            <div className="pt-6 pb-2">
+              <div className="px-4 pb-3 text-[13px] font-medium text-neutral-500">Recent</div>
+              {savedChats.map((chat, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setCurrentSlide(0);
+                    if (onRestoreChat) onRestoreChat(idx);
+                  }}
+                  className="flex items-center space-x-4 w-full text-left px-4 py-3 rounded-2xl text-[14px] text-neutral-300 hover:bg-white/5 transition-colors focus:outline-hidden"
+                >
+                  <History className="w-4 h-4 text-neutral-500 shrink-0" />
+                  <span className="truncate">{getChatLabel(chat)}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+      </div>
     </header>
   );
 });

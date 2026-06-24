@@ -14,9 +14,9 @@ const markers = [
 const koreaCoord = markers[0].coordinates;
 const targets = markers.slice(1);
 
-const ExportMap = () => {
+const ExportMap = ({ className }: { className?: string }) => {
   return (
-    <div className="w-full max-w-[900px] mx-auto pb-20 pt-0 px-6 relative mt-[250px]">
+    <div className={`w-full max-w-[900px] mx-auto pb-20 pt-0 px-6 relative ${className || 'mt-[250px]'}`}>
       <div className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-4">
           Global Export Reach

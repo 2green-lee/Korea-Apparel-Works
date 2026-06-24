@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler, ChevronLeft, ChevronRight, ChevronDown, Shirt, Award, Layers, Sparkles, Check, History, MessageSquare, FileText, Truck, User, Factory, Package, ShieldCheck, Zap } from "lucide-react";
+import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler, ChevronLeft, ChevronRight, ChevronDown, Shirt, Award, Layers, Sparkles, Check, History, MessageSquare, FileText, Truck, User, Factory, Package, ShieldCheck, Zap, LineChart, Scissors, CheckCircle2 } from "lucide-react";
+import ExportMap from "./ExportMap";
 import { AnimatePresence, motion } from "motion/react";
 import tshirtIcon from "./free-icon-clothes-7640468.png";
 import { supabase } from "../lib/supabase";
@@ -18,6 +19,8 @@ interface HeroProps {
   onLogout: () => void;
   onOpenAccount: () => void;
 }
+
+import { useChat } from "../lib/useChat";
 
 const SLIDES = [
   {
@@ -378,318 +381,20 @@ export default function Hero({
     ease: [0.16, 1, 0.3, 1]
   }), []);
 
-  const [chatInput, setChatInput] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const generationIdRef = useRef(0);
-  const sessionIdRef = useRef(crypto.randomUUID());
-
-  const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef<any>(null);
-
-  useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false; 
-
-      recognition.onstart = () => setIsListening(true);
-      recognition.onend = () => setIsListening(false);
-      recognition.onerror = (e: any) => {
-        console.error("Speech recognition error:", e.error);
-        setIsListening(false);
-      };
-
-      recognition.onresult = (event: any) => {
-        let finalTranscript = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
-          }
-        }
-        if (finalTranscript) {
-          setChatInput((prev) => (prev ? prev + " " + finalTranscript : finalTranscript));
-        }
-      };
-
-      recognitionRef.current = recognition;
-    }
-  }, []);
-
-  const toggleListening = useCallback(() => {
-    if (!recognitionRef.current) {
-      alert("현재 브라우저는 음성 인식을 지원하지 않습니다. 최신 크롬(Chrome)을 사용해주세요.");
-      return;
-    }
-    if (isListening) {
-      recognitionRef.current.stop();
-    } else {
-      try {
-        recognitionRef.current.start();
-      } catch (e) {
-        // Ignore if already started
-      }
-    }
-  }, [isListening]);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages, isGenerating]);
-
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      const newHeight = textarea.scrollHeight;
-      if (messages.length > 1) {
-        textarea.style.height = `${Math.min(Math.max(newHeight, 38), 180)}px`;
-      } else {
-        textarea.style.height = `${Math.min(Math.max(newHeight, 52), 300)}px`;
-      }
-    }
-  }, [chatInput, messages.length]);
-
-  const handlePrevSlide = useCallback(() => {
-    setDirection(-1);
-    setCurrentSlide((prev) => (prev === 0 ? SLIDES.length - 1 : prev - 1));
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, [setCurrentSlide]);
-
-  const handleNextSlide = useCallback(() => {
-    setDirection(1);
-    setCurrentSlide((prev) => (prev === SLIDES.length - 1 ? 0 : prev + 1));
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, [setCurrentSlide]);
-
-  const handleSendMessage = useCallback(async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!chatInput.trim() || isGenerating) return;
-
-    const userMsg = chatInput.trim();
-    setChatInput("");
-
-    const isFirstConversationTurn = messages.length === 1;
-
-    generationIdRef.current += 1;
-    const currentId = generationIdRef.current;
-
-    setMessages((prev) => [...prev, { role: "user", text: userMsg }]);
-    setIsGenerating(true);
-
-    // if (isFirstConversationTurn && !user) {
-    //   setTimeout(() => {
-    //     if (currentId === generationIdRef.current) {
-    //       onOpenLogin();
-    //     }
-    //   }, 1200);
-    // }
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId: sessionIdRef.current,
-          userId: user?.id,
-          userEmail: user?.email,
-          message: userMsg,
-          history: messages.slice(1)
-        })
-      });
-
-      const data = await response.json();
-      if (currentId !== generationIdRef.current) return;
-
-      if (data.error) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "model",
-            text: `Query error: ${data.error}. Please ensure your Gemini API key is configured under Settings > Secrets.`
-          }
-        ]);
-      } else {
-        setMessages((prev) => [...prev, { role: "model", text: data.text }]);
-      }
-    } catch (err) {
-      if (currentId !== generationIdRef.current) return;
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "model",
-          text: "Communication offline. Make sure the server is booted up and try again."
-        }
-      ]);
-    } finally {
-      if (currentId === generationIdRef.current) {
-        setIsGenerating(false);
-      }
-    }
-  }, [chatInput, isGenerating, messages, user, onOpenLogin]);
-
-  const handleQuickCommand = useCallback(async (promptText: string) => {
-    if (isGenerating) return;
-
-    const isFirstConversationTurn = messages.length === 1;
-
-    generationIdRef.current += 1;
-    const currentId = generationIdRef.current;
-
-    setMessages((prev) => [...prev, { role: "user", text: promptText }]);
-    setIsGenerating(true);
-
-    // if (isFirstConversationTurn && !user) {
-    //   setTimeout(() => {
-    //     if (currentId === generationIdRef.current) {
-    //       onOpenLogin();
-    //     }
-    //   }, 1200);
-    // }
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId: sessionIdRef.current,
-          userId: user?.id,
-          message: promptText,
-          history: messages.slice(1)
-        })
-      });
-
-      const data = await response.json();
-      if (currentId !== generationIdRef.current) return;
-
-      if (data.error) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "model",
-            text: `Query error: ${data.error}. Please configure your API key.`
-          }
-        ]);
-      } else {
-        setMessages((prev) => [...prev, { role: "model", text: data.text }]);
-      }
-    } catch (err) {
-      if (currentId !== generationIdRef.current) return;
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "model",
-          text: "Communication offline. Please check that the server is active."
-        }
-      ]);
-    } finally {
-      if (currentId === generationIdRef.current) {
-        setIsGenerating(false);
-      }
-    }
-  }, [isGenerating, messages, user, onOpenLogin]);
-
-  const handleImageSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || isGenerating) return;
-
-    e.target.value = '';
-
-    const isFirstConversationTurn = messages.length === 1;
-    generationIdRef.current += 1;
-    const currentId = generationIdRef.current;
-
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text: `Uploading: ${file.name}`, imageUrl: URL.createObjectURL(file) }
-    ]);
-    setIsGenerating(true);
-
-    // if (isFirstConversationTurn && !user) {
-    //   setTimeout(() => {
-    //     if (currentId === generationIdRef.current) {
-    //       onOpenLogin();
-    //     }
-    //   }, 1200);
-    // }
-
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const folderName = user ? user.id : sessionIdRef.current;
-      const isDocument = file.type === 'application/pdf';
-      const subFolder = isDocument ? 'tech-packs' : 'sample-images';
-      const filePath = `${folderName}/${subFolder}/${fileName}`;
-
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folderName", `${folderName}/${subFolder}`);
-      formData.append("fileName", fileName);
-
-      const uploadResponse = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json();
-        throw new Error(errorData.error || "Failed to upload file");
-      }
-
-      const publicUrlData = await uploadResponse.json();
-
-      const imageUrl = publicUrlData.publicUrl;
-
-      setMessages((prev) => {
-        const newMsgs = [...prev];
-        newMsgs[newMsgs.length - 1] = { role: "user", text: file.name, imageUrl: imageUrl };
-        return newMsgs;
-      });
-
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId: sessionIdRef.current,
-          userId: user?.id,
-          message: `[Image Attached: ${imageUrl}] Please analyze this image for apparel manufacturing.`,
-          imageUrl: imageUrl,
-          history: messages.slice(1)
-        })
-      });
-
-      const data = await response.json();
-      if (currentId !== generationIdRef.current) return;
-
-      if (data.error) {
-        setMessages((prev) => [...prev, { role: "model", text: `Error: ${data.error}` }]);
-      } else {
-        setMessages((prev) => [...prev, { role: "model", text: data.text }]);
-      }
-    } catch (err: any) {
-      if (currentId !== generationIdRef.current) return;
-      setMessages((prev) => [
-        ...prev,
-        { role: "model", text: `Image processing failed: ${err.message || 'Unknown error'}` }
-      ]);
-    } finally {
-      if (currentId === generationIdRef.current) setIsGenerating(false);
-    }
-  }, [isGenerating, messages, user, onOpenLogin]);
-
-  const handleAnalyzeImage = useCallback(() => {
-    // if (!user) {
-    //   onOpenLogin();
-    //   return;
-    // }
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  }, [user, onOpenLogin]);
+  const {
+    chatInput,
+    setChatInput,
+    isGenerating,
+    textareaRef,
+    fileInputRef,
+    scrollRef,
+    isListening,
+    toggleListening,
+    handleSendMessage,
+    handleQuickCommand,
+    handleImageSelect,
+    handleAnalyzeImage
+  } = useChat({ messages, setMessages, user, onOpenLogin });
 
   const filteredFabrics = useMemo(() => {
     let filtered = [...PREMIUM_FABRICS];
@@ -699,6 +404,14 @@ export default function Hero({
     return filtered;
   }, [activeFabricCategory]);
 
+  const handlePrevSlide = useCallback(() => {
+    setCurrentSlide((prev: number) => (prev > 0 ? prev - 1 : SLIDES.length - 1));
+  }, [setCurrentSlide]);
+
+  const handleNextSlide = useCallback(() => {
+    setCurrentSlide((prev: number) => (prev < SLIDES.length - 1 ? prev + 1 : 0));
+  }, [setCurrentSlide]);
+
   return (
     <section className={`relative w-full flex flex-col justify-center items-center overflow-x-hidden overflow-y-visible z-10 px-4 md:px-8 transition-all duration-500 min-h-[100vh] py-20`}>
       
@@ -706,7 +419,7 @@ export default function Hero({
 
       <button
         onClick={handlePrevSlide}
-        className="fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 flex items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
+        className="hidden md:flex fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
         aria-label="Previous Slide"
       >
         <ChevronLeft className="w-[28px] h-[28px] group-hover:-translate-x-0.5 transition-transform" />
@@ -714,7 +427,7 @@ export default function Hero({
 
       <button
         onClick={handleNextSlide}
-        className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 flex items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
+        className="hidden md:flex fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
         aria-label="Next Slide"
       >
         <ChevronRight className="w-[28px] h-[28px] group-hover:translate-x-0.5 transition-transform" />
@@ -988,80 +701,90 @@ export default function Hero({
                   </div>
                 </div>
 
-                <div id="core-capabilities-section" className="grid grid-cols-2 gap-[20px] w-full pt-12 scroll-mt-20">
+                <div id="core-capabilities-section" className="grid grid-cols-1 md:grid-cols-2 gap-[20px] w-full pt-12 scroll-mt-20">
                   <div className="p-8 md:p-10 rounded-2xl bg-[#f0f4f8] border border-[#e2e8f0]/60 flex flex-col transition-all duration-300 hover:border-[#cbd5e1] hover:shadow-md hover:-translate-y-1 group">
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-blue-600 group-hover:scale-110 transition-transform duration-300">
-                      <Factory size={24} strokeWidth={1.5} />
+                    <div className="flex flex-row md:flex-col items-center md:items-start mb-4 md:mb-0">
+                      <div className="flex w-12 h-12 md:w-12 md:h-12 rounded-full bg-white items-center justify-center shadow-sm mr-4 md:mr-0 md:mb-6 text-blue-600 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <Factory className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
+                      </div>
+                      <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight md:mb-4 group-hover:text-black transition-colors">30 Years of Expertise</div>
                     </div>
-                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">30 Years of Manufacturing Expertise</div>
-                    <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
-                      Family-owned factory in Busan with direct production and transparent processes.
+                    <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed text-center md:text-left">
+                      <span className="hidden md:inline">Family-owned factory in Busan with direct production and transparent processes.</span>
+                      <span className="md:hidden">Family-owned factory with direct production.</span>
                     </p>
                   </div>
 
                   <div className="p-8 md:p-10 rounded-2xl bg-[#f8f5f2] border border-[#eee8e3]/60 flex flex-col transition-all duration-300 hover:border-[#dfd8d0] hover:shadow-md hover:-translate-y-1 group">
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-orange-500 group-hover:scale-110 transition-transform duration-300">
-                      <Package size={24} strokeWidth={1.5} />
+                    <div className="flex flex-row md:flex-col items-center md:items-start mb-4 md:mb-0">
+                      <div className="flex w-12 h-12 md:w-12 md:h-12 rounded-full bg-white items-center justify-center shadow-sm mr-4 md:mr-0 md:mb-6 text-orange-500 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <Package className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
+                      </div>
+                      <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight md:mb-4 group-hover:text-black transition-colors">Full-Package OEM/ODM</div>
                     </div>
-                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">Full-Package OEM Solutions</div>
-                    <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
+                    <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed text-center md:text-left">
                       From design to finished product, we manage every production stage.
                     </p>
                   </div>
 
                   <div className="p-8 md:p-10 rounded-2xl bg-[#f3f6f4] border border-[#e2eae5]/60 flex flex-col transition-all duration-300 hover:border-[#c5d6cc] hover:shadow-md hover:-translate-y-1 group">
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-emerald-600 group-hover:scale-110 transition-transform duration-300">
-                      <ShieldCheck size={24} strokeWidth={1.5} />
+                    <div className="flex flex-row md:flex-col items-center md:items-start mb-4 md:mb-0">
+                      <div className="flex w-12 h-12 md:w-12 md:h-12 rounded-full bg-white items-center justify-center shadow-sm mr-4 md:mr-0 md:mb-6 text-emerald-600 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <ShieldCheck className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
+                      </div>
+                      <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight md:mb-4 group-hover:text-black transition-colors">Premium QC</div>
                     </div>
-                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">Premium Quality Control</div>
-                    <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
-                      High-end craftsmanship and technical expertise for performance apparel.
+                    <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed text-center md:text-left">
+                      Premium Quality Control and technical expertise for high-end performance apparel
                     </p>
                   </div>
 
                   <div className="p-8 md:p-10 rounded-2xl bg-[#f5f3f7] border border-[#e8e4ec]/60 flex flex-col transition-all duration-300 hover:border-[#d4cddc] hover:shadow-md hover:-translate-y-1 group">
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-6 text-purple-600 group-hover:scale-110 transition-transform duration-300">
-                      <Zap size={24} strokeWidth={1.5} />
+                    <div className="flex flex-row md:flex-col items-center md:items-start mb-4 md:mb-0">
+                      <div className="flex w-12 h-12 md:w-12 md:h-12 rounded-full bg-white items-center justify-center shadow-sm mr-4 md:mr-0 md:mb-6 text-purple-600 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <Zap className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
+                      </div>
+                      <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight md:mb-4 group-hover:text-black transition-colors">Flexible MOQ</div>
                     </div>
-                    <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight mb-4 group-hover:text-black transition-colors">Flexible MOQ</div>
-                    <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
+                    <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed text-center md:text-left">
                       Prototype from 1 piece and scale production as your brand grows.
                     </p>
                   </div>
                 </div>
 
-                <div id="ai-tech-section" className="w-full py-12 px-6 md:px-10 bg-[#fef2f2] border border-[#fecaca] rounded-2xl mt-[100px] shadow-[0_8px_30px_rgba(239,68,68,0.04)]">
-                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-10 items-start mb-10">
-                    <div>
-                      <h2 className="text-xl md:text-2xl font-bold text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>
-                      <p className="text-sm md:text-base text-neutral-800 leading-relaxed font-light">We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.</p>
+                <div id="ai-tech-section" className="relative w-full py-12 md:px-10 md:bg-[#fef2f2] md:border md:border-[#fecaca] md:rounded-2xl mt-16 md:mt-[100px] md:shadow-[0_8px_30px_rgba(239,68,68,0.04)]">
+                  <div className="absolute inset-y-0 w-[100vw] left-1/2 -translate-x-1/2 bg-[#0a0a0a] -z-10 md:hidden"></div>
+                  <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.8fr] gap-6 md:gap-10 items-center md:items-start mb-10 text-center md:text-left">
+                    <div className="max-w-xs mx-auto md:max-w-none md:mx-0">
+                      <h2 className="text-xl md:text-2xl font-bold text-white md:text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>
+                      <p className="text-sm md:text-base text-neutral-400 md:text-neutral-800 leading-relaxed font-light">With AI integrated across production, international buyers can place orders in any language and get accurate quotes instantly</p>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                      <div className="p-6 border border-[#fecaca] bg-white rounded-2xl shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-[#ef4444]/10 flex items-center justify-center text-[#ef4444] mb-4">
-                           <MessageSquare className="w-5 h-5 text-[#ef4444]" strokeWidth={1.5} />
+                    <div className="grid grid-cols-3 gap-2 sm:gap-5 w-full">
+                      <div className="px-2 py-4 md:p-6 border-none md:border md:border-[#fecaca] bg-white rounded-xl md:rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] md:shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow flex flex-col items-center md:items-start text-center md:text-left">
+                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 md:bg-[#ef4444]/10 flex items-center justify-center text-blue-500 md:text-[#ef4444] mb-2 md:mb-4 shrink-0">
+                           <MessageSquare className="w-4 h-4 md:w-5 md:h-5 text-blue-500 md:text-[#ef4444]" strokeWidth={1.5} />
                         </div>
-                        <h3 className="text-base font-bold text-neutral-950 mb-2">AI inquiry</h3>
-                        <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Describe what you need in natural language. Our assistant extracts specs automatically.</p>
+                        <h3 className="text-[11px] sm:text-xs md:text-base font-bold text-neutral-950 md:mb-2 whitespace-nowrap">AI inquiry</h3>
+                        <p className="text-[9px] sm:text-[10px] md:text-sm text-neutral-500 md:text-neutral-600 leading-[1.4] md:leading-[1.6] font-light mt-1 md:mt-0">Describe what you need in natural language. Our assistant extracts specs automatically.</p>
                       </div>
-                      <div className="p-6 border border-[#fecaca] bg-white rounded-2xl shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-[#ef4444]/10 flex items-center justify-center text-[#ef4444] mb-4">
-                           <FileText className="w-5 h-5 text-[#ef4444]" strokeWidth={1.5} />
+                      <div className="px-2 py-4 md:p-6 border-none md:border md:border-[#fecaca] bg-white rounded-xl md:rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] md:shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow flex flex-col items-center md:items-start text-center md:text-left">
+                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 md:bg-[#ef4444]/10 flex items-center justify-center text-blue-500 md:text-[#ef4444] mb-2 md:mb-4 shrink-0">
+                           <FileText className="w-4 h-4 md:w-5 md:h-5 text-blue-500 md:text-[#ef4444]" strokeWidth={1.5} />
                         </div>
-                        <h3 className="text-base font-bold text-neutral-950 mb-2">Smart quoting</h3>
-                        <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Receive a detailed proposal within 24 hours based on your exact requirements.</p>
+                        <h3 className="text-[11px] sm:text-xs md:text-base font-bold text-neutral-950 md:mb-2 whitespace-nowrap">Smart quoting</h3>
+                        <p className="text-[9px] sm:text-[10px] md:text-sm text-neutral-500 md:text-neutral-600 leading-[1.4] md:leading-[1.6] font-light mt-1 md:mt-0">Receive a detailed proposal within 24 hours based on your exact requirements.</p>
                       </div>
-                      <div className="p-5 border border-[#fecaca] bg-white rounded-2xl shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow">
-                        <div className="w-10 h-10 rounded-xl bg-[#ef4444]/10 flex items-center justify-center text-[#ef4444] mb-4">
-                           <Truck className="w-5 h-5 text-[#ef4444]" strokeWidth={1.5} />
+                      <div className="px-2 py-4 md:p-6 border-none md:border md:border-[#fecaca] bg-white rounded-xl md:rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] md:shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow flex flex-col items-center md:items-start text-center md:text-left">
+                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 md:bg-[#ef4444]/10 flex items-center justify-center text-blue-500 md:text-[#ef4444] mb-2 md:mb-4 shrink-0">
+                           <LineChart className="w-4 h-4 md:w-5 md:h-5 text-blue-500 md:text-[#ef4444]" strokeWidth={1.5} />
                         </div>
-                        <h3 className="text-base font-bold text-neutral-950 mb-2">Production tracking</h3>
-                        <p className="text-xs md:text-sm text-neutral-600 leading-[1.6] font-light">Real-time updates from sample approval through to shipment confirmation.</p>
+                        <h3 className="text-[10px] sm:text-[11px] md:text-base font-bold text-neutral-950 md:mb-2 leading-tight">Production tracking</h3>
+                        <p className="text-[9px] sm:text-[10px] md:text-sm text-neutral-500 md:text-neutral-600 leading-[1.4] md:leading-[1.6] font-light mt-1 md:mt-0">Real-time updates from sample approval through to shipment confirmation.</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-col md:flex-row items-stretch border border-[#fecaca] bg-white rounded-2xl overflow-hidden shadow-sm">
+                  <div className="hidden md:flex flex-col md:flex-row items-stretch border border-[#fecaca] bg-white rounded-2xl overflow-hidden shadow-sm">
                     <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#fef2f2] flex flex-col items-center justify-center">
                       <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">01</div>
                       <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Inquiry</div>
@@ -1093,6 +816,86 @@ export default function Hero({
                       <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 px-2.5 py-0.5 rounded-full">AI</div>
                     </div>
                   </div>
+                
+
+                {/* Mobile only 2-row flowchart from StartLanding */}
+                <div className="flex md:hidden relative pt-8 flex-col gap-12 items-center mt-4 pb-8">
+                  {/* Top Row (01 to 03) */}
+                  <div className="relative w-full">
+                    {/* Connecting lines for Row 1 */}
+                    <div className="absolute top-[30px] left-[15%] right-[15%] h-[2px] bg-neutral-800 z-0"></div>
+
+                    <div className="grid grid-cols-3 gap-2 relative z-10">
+                      {/* Step 1 */}
+                      <div className="flex flex-col items-center text-center group cursor-default">
+                        <div className="text-[11px] font-bold text-blue-400 mb-1.5 transition-colors group-hover:text-blue-300">01</div>
+                        <div className="w-[45px] h-[45px] rounded-xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-2 text-blue-600">
+                          <MessageSquare className="w-[20px] h-[20px]" />
+                        </div>
+                        <h4 className="text-[12px] font-bold text-white mb-0.5 leading-tight">Inquiry</h4>
+                        <p className="text-[9px] text-neutral-400 mb-1.5">Chat with AI</p>
+                        <span className="px-2 py-0.5 bg-blue-900/50 text-blue-300 text-[8px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
+                      </div>
+                      
+                      {/* Step 2 */}
+                      <div className="flex flex-col items-center text-center group cursor-default">
+                        <div className="text-[11px] font-bold text-blue-400 mb-1.5 transition-colors group-hover:text-blue-300">02</div>
+                        <div className="w-[45px] h-[45px] rounded-xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-2 text-blue-600">
+                          <FileText className="w-[20px] h-[20px]" />
+                        </div>
+                        <h4 className="text-[12px] font-bold text-white mb-0.5 leading-tight">Proposal</h4>
+                        <p className="text-[9px] text-neutral-400 mb-1.5">Within 24h</p>
+                        <span className="px-2 py-0.5 bg-blue-900/50 text-blue-300 text-[8px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
+                      </div>
+
+                      {/* Step 3 */}
+                      <div className="flex flex-col items-center text-center group cursor-default">
+                        <div className="text-[11px] font-bold text-white mb-1.5 transition-colors group-hover:text-neutral-200">03</div>
+                        <div className="w-[45px] h-[45px] rounded-xl bg-white border border-amber-200 flex items-center justify-center shadow-sm mb-2 text-amber-600">
+                          <Scissors className="w-[20px] h-[20px]" />
+                        </div>
+                        <h4 className="text-[12px] font-bold text-white mb-0.5 leading-tight">Sample</h4>
+                        <p className="text-[9px] text-neutral-400 mb-1.5">14 days</p>
+                        <span className="px-2 py-0.5 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[8px] font-bold rounded-full tracking-wide">Handcraft</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Row (04 to 05) */}
+                  <div className="relative w-[70%] max-w-[300px]">
+                    {/* Connecting lines for Row 2 */}
+                    <div className="absolute top-[30px] left-[25%] right-[25%] h-[2px] bg-neutral-800 z-0"></div>
+
+                    <div className="grid grid-cols-2 gap-4 relative z-10">
+                      {/* Step 4 */}
+                      <div className="flex flex-col items-center text-center group cursor-default">
+                        <div className="text-[11px] font-bold text-white mb-1.5 transition-colors group-hover:text-neutral-200">04</div>
+                        <div className="w-[45px] h-[45px] rounded-xl bg-white border border-amber-200 flex items-center justify-center shadow-sm mb-2 text-amber-600">
+                          <CheckCircle2 className="w-[20px] h-[20px]" />
+                        </div>
+                        <h4 className="text-[12px] font-bold text-white mb-0.5 leading-tight">Production</h4>
+                        <p className="text-[9px] text-neutral-400 mb-1.5">Full QC</p>
+                        <span className="px-2 py-0.5 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[8px] font-bold rounded-full tracking-wide">Handcraft</span>
+                      </div>
+
+                      {/* Step 5 */}
+                      <div className="flex flex-col items-center text-center group cursor-default">
+                        <div className="text-[11px] font-bold text-blue-400 mb-1.5 transition-colors group-hover:text-blue-300">05</div>
+                        <div className="w-[45px] h-[45px] rounded-xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-2 text-blue-600">
+                          <Truck className="w-[20px] h-[20px]" />
+                        </div>
+                        <h4 className="text-[12px] font-bold text-white mb-0.5 leading-tight">Shipment</h4>
+                        <p className="text-[9px] text-neutral-400 mb-1.5">Tracked</p>
+                        <span className="px-2 py-0.5 bg-blue-900/50 text-blue-300 text-[8px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Export Map for Mobile inside the dark section */}
+                <div className="flex md:hidden w-full mt-2">
+                  <ExportMap className="mt-0 pb-10 pt-4" />
+                </div>
                 </div>
 
                 <div className="py-10 md:py-12 border-b border-neutral-100/55 w-full bg-transparent mt-[50px]">
