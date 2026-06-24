@@ -12,7 +12,7 @@ const UserAccountModal = lazy(() => import("./components/UserAccountModal"));
 import { StreamColorFinish } from "./types";
 import { supabase } from "./lib/supabase";
 import { User } from "@supabase/supabase-js";
-import bgImage from "./components/white-fabric-texture-bg-optimized.jpg";
+const bgImage = "https://tznhtceeqozjndfllknm.supabase.co/storage/v1/object/public/public-assets/white-fabric-texture-bg-optimized2.jpg";
 
 export default function App() {
   const [currentView, setCurrentView] = useState<"client" | "admin" | "start">(() => {
@@ -42,7 +42,6 @@ export default function App() {
       text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
     }
   ]);
-  const [savedChats, setSavedChats] = useState<{ role: "user" | "model"; text: string; imageUrl?: string }[][]>([]);
 
   // Auth State
   const [user, setUser] = useState<User | null>(null);
@@ -63,7 +62,6 @@ export default function App() {
             text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
           }
         ]);
-        setSavedChats([]);
         setCurrentView("client");
         setCurrentSlide(0);
         if (window.location.pathname !== "/") {
@@ -187,27 +185,13 @@ export default function App() {
   }, [user]);
 
   const handleClearChat = useCallback(() => {
-    if (messages.length > 1) {
-      setSavedChats(prev => {
-        const updated = [messages, ...prev];
-        return updated.slice(0, 5);
-      });
-    }
     setMessages([
       {
         role: "model",
         text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (30pcs) luxury apparel services."
       }
     ]);
-  }, [messages]);
-
-  const handleRestoreChat = useCallback((index: number) => {
-    const chatToRestore = savedChats[index];
-    if (chatToRestore) {
-      setMessages(chatToRestore);
-      setSavedChats(prev => prev.filter((_, i) => i !== index));
-    }
-  }, [savedChats]);
+  }, []);
 
   const handleOpenPreOrder = useCallback((finish?: StreamColorFinish, size?: number) => {
     if (finish) setCustomFinish(finish);
@@ -218,7 +202,7 @@ export default function App() {
   const clientViewBackgroundStyle = useMemo(() => currentView === "client" ? (
     currentSlide === 0 ? {
       backgroundImage: `linear-gradient(to bottom, transparent 60%, var(--color-luxury-cream) 100%), url(${bgImage})`,
-      backgroundSize: "100% 100%, max(200vw, 200vh) auto",
+      backgroundSize: "100% 100%, cover",
       backgroundPosition: "center, center top",
       backgroundRepeat: "no-repeat, no-repeat",
       backgroundAttachment: "fixed, fixed",
@@ -235,6 +219,19 @@ export default function App() {
       }`}
       style={clientViewBackgroundStyle}
     >
+      {currentView === "client" && isMobile && (
+        <div 
+          className="fixed inset-0 pointer-events-none transition-opacity duration-500"
+          style={{
+            backgroundImage: currentSlide === 0 ? `linear-gradient(to bottom, transparent 60%, var(--color-luxury-cream) 100%), url(${bgImage})` : 'none',
+            backgroundSize: "100% 100%, max(200vw, 200vh) auto",
+            backgroundPosition: "center, center top",
+            backgroundRepeat: "no-repeat, no-repeat",
+            backgroundColor: "var(--color-luxury-cream)",
+            opacity: currentSlide === 0 ? 1 : 0
+          }}
+        />
+      )}
 
       {currentView === "admin" ? (
         <Suspense fallback={null}><AdminDashboard onExit={() => handleSetView("client")} /></Suspense>
@@ -244,9 +241,7 @@ export default function App() {
         <MobileChatView
           messages={messages}
           setMessages={setMessages}
-          savedChats={savedChats}
           onClearChat={handleClearChat}
-          onRestoreChat={handleRestoreChat}
           user={user}
           currentSlide={currentSlide}
           setCurrentSlide={setCurrentSlide}
@@ -274,8 +269,6 @@ export default function App() {
             onOpenLogin={() => setIsQuoteModalOpen(true)}
             onOpenAccount={() => setIsAccountModalOpen(true)}
             onLogout={() => supabase.auth.signOut()}
-            savedChats={savedChats}
-            onRestoreChat={handleRestoreChat}
           />
 
           {/* 3. Landing Modules */}
@@ -288,9 +281,7 @@ export default function App() {
               setCurrentSlide={setCurrentSlide} 
               messages={messages}
               setMessages={setMessages}
-              savedChats={savedChats}
               onClearChat={handleClearChat}
-              onRestoreChat={handleRestoreChat}
               user={user}
               onOpenLogin={() => setIsQuoteModalOpen(true)}
               onLogout={() => supabase.auth.signOut()}

@@ -13,11 +13,9 @@ interface HeaderProps {
   onOpenLogin: () => void;
   onOpenAccount: () => void;
   onLogout: () => void;
-  savedChats?: { role: "user" | "model"; text: string }[][];
-  onRestoreChat?: (index: number) => void;
 }
 
-const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCurrentSlide, messages, onClearChat, onAdminClick, user, onOpenLogin, onOpenAccount, onLogout, savedChats, onRestoreChat }: HeaderProps) {
+const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCurrentSlide, messages, onClearChat, onAdminClick, user, onOpenLogin, onOpenAccount, onLogout }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -39,17 +37,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
     } cursor-pointer focus:outline-hidden`;
   };
 
-  const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
-    const firstUserMsg = chat.find(m => m.role === "user");
-    if (firstUserMsg) {
-      const text = firstUserMsg.text;
-      if (text.length > 10) {
-        return text.slice(0, 10).trim() + "...";
-      }
-      return text;
-    }
-    return "Saved Chat";
-  };
+
 
   const textClass = `transition-colors duration-300 text-neutral-600 hover:text-neutral-950`;
 
@@ -222,25 +210,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
           </button>
 
           {/* Recent Chats Section */}
-          {savedChats && savedChats.length > 0 && (
-            <div className="pt-6 pb-2">
-              <div className="px-4 pb-3 text-[13px] font-medium text-neutral-500">Recent</div>
-              {savedChats.map((chat, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setCurrentSlide(0);
-                    if (onRestoreChat) onRestoreChat(idx);
-                  }}
-                  className="flex items-center space-x-4 w-full text-left px-4 py-3 rounded-2xl text-[14px] text-neutral-300 hover:bg-white/5 transition-colors focus:outline-hidden"
-                >
-                  <History className="w-4 h-4 text-neutral-500 shrink-0" />
-                  <span className="truncate">{getChatLabel(chat)}</span>
-                </button>
-              ))}
-            </div>
-          )}
+
         </div>
 
       </div>

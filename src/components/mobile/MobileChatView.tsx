@@ -5,9 +5,7 @@ import { useChat, Message } from "../../lib/useChat";
 interface MobileChatViewProps {
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  savedChats: Message[][];
   onClearChat: () => void;
-  onRestoreChat: (index: number) => void;
   user: any;
   currentSlide: number;
   setCurrentSlide: (slide: number) => void;
@@ -17,21 +15,11 @@ interface MobileChatViewProps {
   onBackToStart: () => void;
 }
 
-const getChatLabel = (chat: Message[]) => {
-  const firstUserMsg = chat.find((m) => m.role === "user");
-  if (firstUserMsg) {
-    const text = firstUserMsg.text;
-    return text.length > 10 ? text.slice(0, 10).trim() + "..." : text;
-  }
-  return "Saved Chat";
-};
 
 export default function MobileChatView({
   messages,
   setMessages,
-  savedChats,
   onClearChat,
-  onRestoreChat,
   user,
   currentSlide,
   setCurrentSlide,
@@ -65,9 +53,16 @@ export default function MobileChatView({
         >
           {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
-        <div className="font-medium text-neutral-900 text-[17px] tracking-normal select-none">
+        <button
+          onClick={() => {
+            setCurrentSlide(0);
+            onClearChat();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="font-medium text-neutral-900 text-[17px] tracking-normal select-none transition-colors active:opacity-70 focus:outline-none cursor-pointer"
+        >
           Korea Apparel Works
-        </div>
+        </button>
         <div className="w-8" /> {/* Placeholder for balance */}
       </div>
 
@@ -142,25 +137,7 @@ export default function MobileChatView({
             <span>Product</span>
           </button>
 
-          {/* Recent Chats Section */}
-          {savedChats && savedChats.length > 0 && (
-            <div className="pt-6 pb-2">
-              <div className="px-4 pb-3 text-[13px] font-medium text-neutral-500">Recent</div>
-              {savedChats.map((chat, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    onRestoreChat(idx);
-                  }}
-                  className="flex items-center space-x-4 w-full text-left px-4 py-3 rounded-2xl text-[14px] text-neutral-300 hover:bg-white/5 transition-colors"
-                >
-                  <History className="w-4 h-4 text-neutral-500 shrink-0" />
-                  <span className="truncate">{getChatLabel(chat)}</span>
-                </button>
-              ))}
-            </div>
-          )}
+
         </div>
 
       </div>
@@ -169,7 +146,7 @@ export default function MobileChatView({
       {messages.length === 1 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-6">
           <img src="/logo1.png" alt="Korea Apparel Works Logo" className="w-[40px] h-[40px] mb-5 opacity-90 object-contain" />
-          <h2 className="text-[17px] font-normal text-neutral-700 text-center tracking-tight leading-snug">
+          <h2 className="text-[20px] font-normal text-neutral-700 text-center tracking-tight leading-snug">
             Smart Apparel Manufacturing<br />from Korea
           </h2>
         </div>
@@ -226,14 +203,14 @@ export default function MobileChatView({
       )}
 
       {/* Input Area */}
-      <div className="px-4 pt-2 pb-[calc(env(safe-area-inset-bottom,16px)+12px)] shrink-0">
+      <div className="px-4 pt-2 pb-[calc(env(safe-area-inset-bottom,16px)+12px)] focus-within:pb-3 shrink-0 transition-all duration-300">
         <form onSubmit={handleSendMessage} className="bg-white/95 backdrop-blur-xl border border-neutral-200/80 rounded-[28px] px-4 py-3 flex flex-col space-y-2 shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
           <textarea
             ref={textareaRef}
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
             placeholder="Tell us what you want to make..."
-            className="w-full bg-transparent resize-none overflow-hidden border-0 outline-none focus:ring-0 text-[15px] text-neutral-900 placeholder-neutral-400 font-light min-h-[44px] max-h-[120px]"
+            className="w-full bg-transparent resize-none overflow-hidden border-0 outline-none focus:ring-0 text-[16px] text-neutral-900 placeholder-neutral-400 font-light min-h-[44px] max-h-[120px]"
             disabled={isGenerating}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
@@ -274,16 +251,7 @@ export default function MobileChatView({
                 <Mic className="w-5 h-5" />
               </button>
 
-              {messages.length > 1 && (
-                <button
-                  type="button"
-                  onClick={onClearChat}
-                  className="p-2 rounded-full text-neutral-500 hover:bg-neutral-100 transition-colors"
-                  title="Clear chat"
-                >
-                  <RefreshCw className="w-5 h-5" />
-                </button>
-              )}
+
             </div>
 
             <button

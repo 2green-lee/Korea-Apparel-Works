@@ -11,9 +11,7 @@ interface HeroProps {
   setCurrentSlide: React.Dispatch<React.SetStateAction<number>> | ((slide: number | ((prev: number) => number)) => void);
   messages: { role: "user" | "model"; text: string; imageUrl?: string }[];
   setMessages: React.Dispatch<React.SetStateAction<{ role: "user" | "model"; text: string; imageUrl?: string }[]>>;
-  savedChats: { role: "user" | "model"; text: string }[][];
   onClearChat: () => void;
-  onRestoreChat: (index: number) => void;
   user: any;
   onOpenLogin: () => void;
   onLogout: () => void;
@@ -48,17 +46,7 @@ const CAROUSEL_IMAGES = [
   "/a7.jpg"
 ];
 
-const getChatLabel = (chat: { role: "user" | "model"; text: string }[]) => {
-  const firstUserMsg = chat.find(m => m.role === "user");
-  if (firstUserMsg) {
-    const text = firstUserMsg.text;
-    if (text.length > 10) {
-      return text.slice(0, 10).trim() + "...";
-    }
-    return text;
-  }
-  return "Saved Chat";
-};
+
 
 const PREMIUM_FABRICS = [
   {
@@ -337,9 +325,7 @@ export default function Hero({
   setCurrentSlide, 
   messages, 
   setMessages,
-  savedChats,
   onClearChat,
-  onRestoreChat,
   user,
   onOpenLogin,
   onLogout,
@@ -363,13 +349,13 @@ export default function Hero({
   }, [currentSlide]);
 
   useEffect(() => {
-    if (messages.length > 1) {
+    if (currentSlide === 0 && messages.length > 1) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
     return () => { document.body.style.overflow = ""; };
-  }, [messages.length]);
+  }, [messages.length, currentSlide]);
 
   const slideVariants = useMemo(() => ({
     enter: (dir: number) => ({
@@ -480,7 +466,7 @@ export default function Hero({
 
               {messages.length === 1 && (
                 <div className="mb-10 select-none flex flex-col items-center w-full px-2">
-                  <h1 className="font-dm-sans text-[clamp(23px,calc(-4px+4.5vw),41px)] font-[550] tracking-tight text-neutral-900 leading-tight text-center whitespace-nowrap transition-all duration-300">
+                  <h1 className="font-dm-sans text-[clamp(26px,calc(-4px+4.5vw),41px)] font-[550] tracking-tight text-neutral-900 leading-tight text-center whitespace-nowrap transition-all duration-300">
                     Smart Apparel Manufacturing from Korea
                   </h1>
                   <p className="pretendard-font mt-4 text-neutral-600 text-[clamp(14px,calc(11px+0.5vw),16px)] max-w-lg mx-auto font-normal text-center transition-all duration-300">
@@ -587,26 +573,7 @@ export default function Hero({
 
 
 
-                      {messages.length === 1 && savedChats && savedChats.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 items-center">
-                          {savedChats.map((chat, idx) => {
-                            const label = getChatLabel(chat);
-                            const fullText = chat.find(m => m.role === "user")?.text || "Untitled Chat";
-                            return (
-                              <button
-                                key={idx}
-                                onClick={() => onRestoreChat(idx)}
-                                type="button"
-                                className="inline-flex items-center space-x-1 bg-neutral-50 hover:bg-neutral-100 border border-neutral-200/80 rounded-full px-3 py-1.5 transition duration-300 text-neutral-700 hover:text-neutral-900 text-xs font-normal cursor-pointer select-none max-w-[150px] shadow-[0_0_12px_rgba(0,0,0,0.01)]"
-                                title={fullText}
-                              >
-                                <History className="w-3 h-3 text-neutral-400 shrink-0" />
-                                <span className="truncate">{label}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
+
                     </div>
 
                     <div className="flex items-center space-x-2">
