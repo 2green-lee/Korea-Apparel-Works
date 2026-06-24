@@ -103,8 +103,8 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
           </button>
         </div>
 
-        {/* Right Side: Options */}
-        <div className="flex items-center space-x-3 text-[15px] font-normal">
+        {/* Right Side: Options (Hidden for now) */}
+        <div className="hidden">
           {user ? (
             <div className="flex items-center space-x-2">
               <button

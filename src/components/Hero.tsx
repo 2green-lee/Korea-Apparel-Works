@@ -481,13 +481,13 @@ export default function Hero({
     setMessages((prev) => [...prev, { role: "user", text: userMsg }]);
     setIsGenerating(true);
 
-    if (isFirstConversationTurn && !user) {
-      setTimeout(() => {
-        if (currentId === generationIdRef.current) {
-          onOpenLogin();
-        }
-      }, 1200);
-    }
+    // if (isFirstConversationTurn && !user) {
+    //   setTimeout(() => {
+    //     if (currentId === generationIdRef.current) {
+    //       onOpenLogin();
+    //     }
+    //   }, 1200);
+    // }
 
     try {
       const response = await fetch("/api/chat", {
@@ -543,13 +543,13 @@ export default function Hero({
     setMessages((prev) => [...prev, { role: "user", text: promptText }]);
     setIsGenerating(true);
 
-    if (isFirstConversationTurn && !user) {
-      setTimeout(() => {
-        if (currentId === generationIdRef.current) {
-          onOpenLogin();
-        }
-      }, 1200);
-    }
+    // if (isFirstConversationTurn && !user) {
+    //   setTimeout(() => {
+    //     if (currentId === generationIdRef.current) {
+    //       onOpenLogin();
+    //     }
+    //   }, 1200);
+    // }
 
     try {
       const response = await fetch("/api/chat", {
@@ -609,13 +609,13 @@ export default function Hero({
     ]);
     setIsGenerating(true);
 
-    if (isFirstConversationTurn && !user) {
-      setTimeout(() => {
-        if (currentId === generationIdRef.current) {
-          onOpenLogin();
-        }
-      }, 1200);
-    }
+    // if (isFirstConversationTurn && !user) {
+    //   setTimeout(() => {
+    //     if (currentId === generationIdRef.current) {
+    //       onOpenLogin();
+    //     }
+    //   }, 1200);
+    // }
 
     try {
       const fileExt = file.name.split('.').pop();
@@ -682,10 +682,10 @@ export default function Hero({
   }, [isGenerating, messages, user, onOpenLogin]);
 
   const handleAnalyzeImage = useCallback(() => {
-    if (!user) {
-      onOpenLogin();
-      return;
-    }
+    // if (!user) {
+    //   onOpenLogin();
+    //   return;
+    // }
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }

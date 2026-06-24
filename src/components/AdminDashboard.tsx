@@ -144,7 +144,7 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
     if (isAuthenticated) {
       if (activeMainTab === "dashboard") fetchSubmissions();
       if (activeMainTab === "adminManagement" && currentAdmin?.role === "master") fetchAdmins();
-      if (activeMainTab === "chats") fetchChats();
+      if (activeMainTab === "chats") { fetchChats(); fetchPos(); }
       if (activeMainTab === "orders") fetchPos();
     }
   }, [isAuthenticated, activeMainTab, currentAdmin?.role]);
@@ -827,13 +827,18 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
             {(() => {
               const grouped: Record<string, any[]> = {};
               chatData.sessions.forEach(session => {
-                const email = session.user_email || "알 수 없는 고객 (과거 세션)";
-                let key = email;
-                if (session.user_email) {
-                  const relatedSub = submissions.find(s => s.email === session.user_email);
-                  const countryStr = relatedSub ? ` / ${relatedSub.country.split(' - ')[0]}` : '';
-                  key = `${email}${countryStr}`;
-                }
+                const po = pos.find(p => p.session_id === session.session_id);
+                
+                const loggedInEmail = session.user_email;
+                const poCustomerName = po?.customer_name && po.customer_name !== "Unknown" ? po.customer_name : null;
+                
+                // Merge logic for UI display
+                let keyParts = [];
+                if (loggedInEmail) keyParts.push(`가입 이메일: ${loggedInEmail}`);
+                if (poCustomerName) keyParts.push(`AI 수집 정보: ${poCustomerName}`);
+                
+                let key = keyParts.length > 0 ? keyParts.join(" / ") : `미식별 고객 (세션: ${session.session_id.substring(0, 8)})`;
+                
                 if (!grouped[key]) grouped[key] = [];
                 grouped[key].push(session);
               });
@@ -845,7 +850,7 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
                     <table className="w-full text-left">
                       <thead>
                         <tr className="bg-neutral-950 border-b border-white/5 font-sans text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
-                          <th className="py-4 px-6">고객 계정 (이메일 / 방문자)</th>
+                          <th className="py-4 px-6">고객 계정 (가입 이메일 및 AI 연락처 정보)</th>
                           <th className="py-4 px-6 text-center">진행된 세션 수</th>
                           <th className="py-4 px-6 text-right">상세 기록</th>
                         </tr>
