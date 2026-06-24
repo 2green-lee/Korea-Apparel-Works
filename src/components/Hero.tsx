@@ -752,8 +752,7 @@ export default function Hero({
                   </div>
                 </div>
 
-                <div id="ai-tech-section" className="relative w-full py-12 md:px-10 md:bg-[#fef2f2] md:border md:border-[#fecaca] md:rounded-2xl mt-16 md:mt-[100px] md:shadow-[0_8px_30px_rgba(239,68,68,0.04)]">
-                  <div className="absolute inset-y-0 w-[100vw] left-1/2 -translate-x-1/2 bg-[#0a0a0a] -z-10 md:hidden"></div>
+                <div id="ai-tech-section" className="-mx-8 px-4 w-[calc(100%+64px)] md:mx-0 md:w-full py-12 md:px-10 bg-[#0a0a0a] md:bg-[#fef2f2] md:border md:border-[#fecaca] md:rounded-2xl mt-16 md:mt-[100px] md:shadow-[0_8px_30px_rgba(239,68,68,0.04)]">
                   <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.8fr] gap-6 md:gap-10 items-center md:items-start mb-10 text-center md:text-left">
                     <div className="max-w-xs mx-auto md:max-w-none md:mx-0">
                       <h2 className="text-xl md:text-2xl font-bold text-white md:text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>
