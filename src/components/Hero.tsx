@@ -491,7 +491,7 @@ export default function Hero({
                   <div className="border-b border-neutral-100 pb-4 mb-4 select-text flex flex-col flex-1 min-h-0">
                     <div 
                       ref={scrollRef}
-                      className="flex-1 overflow-y-auto space-y-4 pr-1 text-[14px] text-left scrollbar-thin pb-2"
+                      className="flex-1 overflow-y-auto overscroll-contain touch-pan-y space-y-4 pr-1 text-[15px] text-left scrollbar-thin pb-2"
                     >
                       {messages.map((msg, index) => (
                         <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -548,7 +548,7 @@ export default function Hero({
                     onChange={(e) => setChatInput(e.target.value)}
                     // onFocus 제거 (클릭 시 로그인 모달 뜨지 않게 변경)
                     placeholder="We excel in crafting bespoke apparel and tops with premium-grade fabrics. Tell us what you want to make..."
-                    className="gtm-chat-open w-full bg-transparent resize-none overflow-hidden border-0 outline-none focus:ring-0 text-sm md:text-base text-neutral-900 placeholder-neutral-400 font-light leading-relaxed select-text min-h-[38px] pb-2"
+                    className="gtm-chat-open w-full bg-transparent resize-none overflow-hidden border-0 outline-none focus:ring-0 text-[16px] text-neutral-900 placeholder-neutral-400 font-light leading-relaxed select-text min-h-[38px] pb-2"
                     disabled={isGenerating}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
