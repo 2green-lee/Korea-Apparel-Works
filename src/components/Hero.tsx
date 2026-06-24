@@ -362,6 +362,15 @@ export default function Hero({
     lastSlideRef.current = currentSlide;
   }, [currentSlide]);
 
+  useEffect(() => {
+    if (messages.length > 1) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [messages.length]);
+
   const slideVariants = useMemo(() => ({
     enter: (dir: number) => ({
       y: dir > 0 ? "100vh" : "-100vh",
@@ -482,10 +491,10 @@ export default function Hero({
                 </div>
               )}
 
-              <div className={`w-full bg-white/85 backdrop-blur-2xl rounded-[28px] border border-neutral-200/80 shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-6 flex flex-col font-sans transition-all duration-500 overflow-hidden relative group/card select-text ${
+              <div className={`w-full backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.06)] flex flex-col font-sans transition-all duration-500 overflow-hidden relative group/card select-text ${
                 messages.length > 1 
-                  ? "max-w-[1000px] h-[80vh] max-h-[800px]" 
-                  : "max-w-[700px] h-[200px]"
+                  ? "fixed top-16 bottom-0 left-0 right-0 z-40 bg-white/95 rounded-none border-none p-4 pb-[max(env(safe-area-inset-bottom),16px)] md:relative md:top-auto md:bottom-auto md:left-auto md:right-auto md:bg-white/85 md:rounded-[28px] md:border md:border-neutral-200/80 md:p-6 md:max-w-[1000px] md:h-[80vh] md:max-h-[800px]" 
+                  : "relative max-w-[700px] h-[200px] bg-white/85 rounded-[28px] border border-neutral-200/80 p-6"
               }`}>
                 {messages.length > 1 && (
                   <div className="border-b border-neutral-100 pb-4 mb-4 select-text flex flex-col flex-1 min-h-0">
@@ -576,17 +585,7 @@ export default function Hero({
                         <span>Upload</span>
                       </button>
 
-                      {messages.length > 1 && (
-                        <button
-                          onClick={onClearChat}
-                          type="button"
-                          className="inline-flex items-center space-x-1.5 bg-neutral-50 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.98] border border-neutral-200/80 rounded-full px-4 py-2 transition duration-300 text-neutral-500 text-xs font-medium cursor-pointer"
-                          title="Back home"
-                        >
-                          <RefreshCw className="w-3.5 h-3.5" />
-                          <span>Back home</span>
-                        </button>
-                      )}
+
 
                       {messages.length === 1 && savedChats && savedChats.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 items-center">
