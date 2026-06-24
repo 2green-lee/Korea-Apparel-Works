@@ -189,7 +189,7 @@ export default function StartLanding() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1]">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
             Apparel Production <br />
             <span className="text-blue-600">Handled from A to Z.</span>
           </h1>
@@ -210,15 +210,15 @@ export default function StartLanding() {
           {/* Metrics */}
           <div className="grid grid-cols-3 gap-6 md:gap-16 pt-8 border-t border-neutral-200 max-w-3xl w-full">
             <div className="flex flex-col items-center">
-              <div className="text-3xl md:text-4xl font-extrabold text-neutral-900 mb-2">1<span className="text-xl md:text-2xl font-bold text-neutral-500">pcs~</span></div>
+              <div className="text-3xl md:text-4xl font-bold text-neutral-900 mb-2">1<span className="text-xl md:text-2xl font-bold text-neutral-500">pcs~</span></div>
               <div className="text-xs md:text-sm text-neutral-500 font-medium">Minimum Order (MOQ)</div>
             </div>
             <div className="flex flex-col items-center border-l border-neutral-200 pl-6 md:pl-16">
-              <div className="text-3xl md:text-4xl font-extrabold text-neutral-900 mb-2">3~14<span className="text-xl md:text-2xl font-bold text-neutral-500">days</span></div>
+              <div className="text-3xl md:text-4xl font-bold text-neutral-900 mb-2">3~14<span className="text-xl md:text-2xl font-bold text-neutral-500">days</span></div>
               <div className="text-xs md:text-sm text-neutral-500 font-medium">Sample Lead Time</div>
             </div>
             <div className="flex flex-col items-center border-l border-neutral-200 pl-6 md:pl-16">
-              <div className="text-3xl md:text-4xl font-extrabold text-neutral-900 mb-2">100<span className="text-xl md:text-2xl font-bold text-neutral-500">+</span></div>
+              <div className="text-3xl md:text-4xl font-bold text-neutral-900 mb-2">100<span className="text-xl md:text-2xl font-bold text-neutral-500">+</span></div>
               <div className="text-xs md:text-sm text-neutral-500 font-medium">Partner Brands</div>
             </div>
           </div>
@@ -227,7 +227,7 @@ export default function StartLanding() {
         {/* Story Section */}
         <section className="w-full bg-transparent py-16 md:py-24 px-6 flex flex-col items-center text-center">
           <div className="max-w-4xl w-full flex flex-col items-center bg-white/70 backdrop-blur-xl border border-white/80 shadow-xl rounded-3xl p-10 md:p-16 hover:-translate-y-2 hover:shadow-2xl hover:bg-white/80 transition-all duration-500">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-10">
               From one factory floor to a global platform
             </h2>
             <div className="space-y-6 text-[15px] sm:text-lg md:text-xl text-neutral-800 font-light leading-relaxed max-w-3xl">
@@ -252,7 +252,7 @@ export default function StartLanding() {
         <section className="w-full bg-white py-24 md:py-32 px-6">
           <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
+              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">
                 Why Korea Apparel Works
               </h2>
             </div>
@@ -335,7 +335,7 @@ export default function StartLanding() {
         <section className="mt-20 py-24 px-6 w-full bg-neutral-950 text-white border-t border-neutral-900">
           <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6 text-white">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 text-white">
                 AI-powered from inquiry to delivery
               </h2>
               <p className="text-[15px] sm:text-lg text-neutral-400 font-light leading-relaxed px-6 sm:px-0">
@@ -456,7 +456,7 @@ export default function StartLanding() {
         <section className="pt-[150px] md:pt-[200px] pb-32 w-full overflow-hidden bg-white">
           <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-8">
             <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight mb-3">
+              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-3">
                 Custom Apparel Solutions
               </h2>
               <p className="text-[15px] sm:text-lg text-neutral-600 font-light leading-relaxed max-w-2xl mx-auto">
@@ -484,7 +484,7 @@ export default function StartLanding() {
         {/* Fabric Introduction Section */}
         <section className="pt-32 pb-0 px-6 w-full max-w-[770px] mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-4">
               Premium Fabrics
             </h2>
             <p className="text-[15px] sm:text-lg text-neutral-500 font-light max-w-lg mx-auto leading-relaxed">
@@ -522,7 +522,7 @@ export default function StartLanding() {
 
         {/* Final CTA Section */}
         <section className="w-full bg-neutral-950 pt-32 pb-40 px-6 mt-[400px] flex flex-col items-center text-center border-t border-neutral-900">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+          <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4 leading-tight">
             The Ultimate Apparel<br />Production Partner
           </h2>
           <p className="text-lg md:text-xl text-neutral-400 font-light mb-10">

@@ -739,7 +739,7 @@ export default function Hero({
             >
               {messages.length === 1 && (
                 <>
-                  <img src="/logo1.png" alt="Korea Apparel Works Logo" loading="lazy" className="w-[clamp(50px,calc(35px+2.5vw),60px)] mb-[50px] select-none pointer-events-none transition-all duration-300" />
+                  <img src="/logo1.png" alt="Korea Apparel Works Logo"  className="w-[clamp(50px,calc(35px+2.5vw),60px)] mb-[50px] select-none pointer-events-none transition-all duration-300" />
                   <div className="flex space-x-2.5 mb-5 select-none">
                     {SLIDES.map((_, index) => (
                       <button
@@ -797,7 +797,7 @@ export default function Hero({
                                   <img 
                                     src={msg.imageUrl} 
                                     alt="Uploaded" 
-                                    loading="lazy"
+                                    
                                     className="rounded-xl max-h-[200px] w-auto object-cover border border-neutral-200/60"
                                   />
                                 )}
@@ -979,7 +979,7 @@ export default function Hero({
                           <img 
                             src="/a2.jpg" 
                             alt="Korea Apparel Works Sewing Facility" 
-                            loading="lazy"
+                            
                             className="w-full h-full object-cover opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all duration-700" 
                           />
                         </div>
@@ -1104,7 +1104,7 @@ export default function Hero({
                             <img 
                               src={imgUrl} 
                               alt={`Atelier gallery ${idx + 1}`} 
-                              loading="lazy"
+                              
                               className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-700" 
                             />
                           </div>
@@ -1175,7 +1175,7 @@ export default function Hero({
                             <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-5 md:p-6 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
                               <div>
                                 <div className="aspect-[3/2] w-full rounded-xl overflow-hidden mb-6 bg-neutral-100 relative">
-                                  <img src="/T.png" alt="Premium Essential T-Shirt" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                  <img src="/T.png" alt="Premium Essential T-Shirt" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"  />
                                   <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
                                 </div>
                                 <div className="flex items-center gap-3 mb-3">
@@ -1195,7 +1195,7 @@ export default function Hero({
                             <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-5 md:p-6 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
                               <div>
                                 <div className="aspect-[3/2] w-full rounded-xl overflow-hidden mb-6 bg-neutral-100 relative">
-                                  <img src="/q-zip.png" alt="Performance Q-Zip" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                  <img src="/q-zip.png" alt="Performance Q-Zip" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"  />
                                   <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
                                 </div>
                                 <div className="flex items-center gap-3 mb-3">
@@ -1215,7 +1215,7 @@ export default function Hero({
                             <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-5 md:p-6 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
                               <div>
                                 <div className="aspect-[3/2] w-full rounded-xl overflow-hidden mb-6 bg-neutral-100 relative">
-                                  <img src="/hoodie.png" alt="4-Way Stretch Performance Hoodie" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                  <img src="/hoodie.png" alt="4-Way Stretch Performance Hoodie" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"  />
                                   <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
                                 </div>
                                 <div className="flex items-center gap-3 mb-3">
@@ -1235,7 +1235,7 @@ export default function Hero({
                             <div className="bg-white hover:bg-neutral-50/50 rounded-2xl p-5 md:p-6 border border-neutral-200/60 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
                               <div>
                                 <div className="aspect-[3/2] w-full rounded-xl overflow-hidden mb-6 bg-neutral-100 relative">
-                                  <img src="/polo.png" alt="Classic & Active Polo" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                  <img src="/polo.png" alt="Classic & Active Polo" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"  />
                                   <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl pointer-events-none"></div>
                                 </div>
                                 <div className="flex items-center gap-3 mb-3">
