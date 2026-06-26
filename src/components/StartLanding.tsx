@@ -29,7 +29,7 @@ export default function StartLanding() {
       </header>
 
       <main className="flex-1 flex flex-col">
-        <div className="w-full bg-gradient-to-br from-white from-40% via-blue-100 via-75% to-indigo-200">
+        <div className="w-full bg-gradient-to-br from-rose-100 from-[35%] to-blue-200 to-[45%]">
           {/* Hero Section */}
           <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 px-6 flex flex-col items-center text-center overflow-hidden flex-1 justify-center">
           
@@ -40,14 +40,25 @@ export default function StartLanding() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
-            Apparel Production <br />
-            <span className="text-blue-600">Handled from A to Z.</span>
+          <h1 className="text-[11vw] sm:text-6xl md:text-7xl font-bold tracking-tight mb-8 leading-[1.2] whitespace-nowrap">
+            Looking for <br />
+            <span 
+              style={{ 
+                backgroundImage: 'linear-gradient(135deg, #CD2E3A 45%, #0047A0 55%)', 
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                color: 'transparent'
+              }}
+            >
+              "Made in Korea"
+            </span> <br />
+            Apparel?
           </h1>
 
           {/* Description */}
-          <p className="max-w-2xl text-lg md:text-xl text-neutral-500 font-light mb-12 leading-relaxed">
-            From sampling to low-MOQ runs and bulk OEM/ODM manufacturing — we take care of the complex garment production process from start to finish, giving you direct access to premium "Made in Korea" production.
+          <p className="max-w-2xl text-lg md:text-xl text-neutral-600 font-light mb-12 leading-relaxed">
+            Consultation and quotes are always 100% free.
           </p>
 
           {/* Buttons */}
@@ -59,18 +70,33 @@ export default function StartLanding() {
           </div>
 
           {/* Metrics */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-6 md:gap-16 pt-8 border-t border-neutral-200 max-w-3xl w-full">
-            <div className="flex flex-col items-center text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 mb-2 whitespace-nowrap">1<span className="text-sm sm:text-xl md:text-2xl font-bold text-neutral-500">pcs~</span></div>
-              <div className="text-[13px] text-neutral-500 font-medium">Minimum Order (MOQ)</div>
+          <div className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-4xl mx-auto">
+            {/* Item 1 */}
+            <div className="flex flex-col items-center gap-3 sm:gap-5">
+              <div className="w-full flex items-center justify-center py-6 sm:py-10 md:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
+                <div className="text-[7vw] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
+                  1<span className="text-[4vw] sm:text-2xl md:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">pcs~</span>
+                </div>
+              </div>
+              <div className="text-[11px] sm:text-sm md:text-base text-neutral-600 font-medium text-center leading-tight">Minimum Order<br className="sm:hidden"/> (MOQ)</div>
             </div>
-            <div className="flex flex-col items-center border-l border-neutral-200 pl-2 sm:pl-6 md:pl-16 text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 mb-2 whitespace-nowrap">3~14<span className="text-sm sm:text-xl md:text-2xl font-bold text-neutral-500">days</span></div>
-              <div className="text-[13px] text-neutral-500 font-medium">Sample Lead Time</div>
+            {/* Item 2 */}
+            <div className="flex flex-col items-center gap-3 sm:gap-5">
+              <div className="w-full flex items-center justify-center py-6 sm:py-10 md:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
+                <div className="text-[7vw] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
+                  3~14<span className="text-[4vw] sm:text-2xl md:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">days</span>
+                </div>
+              </div>
+              <div className="text-[11px] sm:text-sm md:text-base text-neutral-600 font-medium text-center leading-tight">Sample<br className="sm:hidden"/> Lead Time</div>
             </div>
-            <div className="flex flex-col items-center border-l border-neutral-200 pl-2 sm:pl-6 md:pl-16 text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 mb-2 whitespace-nowrap">100<span className="text-sm sm:text-xl md:text-2xl font-bold text-neutral-500">+</span></div>
-              <div className="text-[13px] text-neutral-500 font-medium">Partner Brands</div>
+            {/* Item 3 */}
+            <div className="flex flex-col items-center gap-3 sm:gap-5">
+              <div className="w-full flex items-center justify-center py-6 sm:py-10 md:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
+                <div className="text-[7vw] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
+                  100<span className="text-[4vw] sm:text-2xl md:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">+</span>
+                </div>
+              </div>
+              <div className="text-[11px] sm:text-sm md:text-base text-neutral-600 font-medium text-center leading-tight">Partner<br className="sm:hidden"/> Brands</div>
             </div>
           </div>
         </section>
