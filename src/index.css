@@ -98,6 +98,15 @@ body::-webkit-scrollbar {
   border-radius: 2px;
 }
 
+/* Hide scrollbar completely but allow scrolling */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
 /* GPU-accelerated animation containers */
 [class*="animate-float"] {
   will-change: transform;
