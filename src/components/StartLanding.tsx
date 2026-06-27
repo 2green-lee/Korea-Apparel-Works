@@ -131,6 +131,9 @@ export default function StartLanding() {
         </section>
         </div>
 
+        {/* Hero to Custom Apparel Gradient Transition */}
+        <div className="h-[300px] md:h-[500px] w-full" style={{ background: "linear-gradient(to bottom, #BFDBFE 0%, #dbeafe 20%, #eff6ff 45%, #ffffff 100%)" }}></div>
+
         {/* Custom Apparel Solutions Section (Moved from bottom) */}
         <section className="w-full bg-white py-20 md:py-32 px-6 overflow-hidden">
           <div className="max-w-[1000px] mx-auto mb-12 flex flex-col items-center text-center gap-8">
@@ -192,8 +195,11 @@ export default function StartLanding() {
         </section>
 
 
+        {/* Why Korea + Capabilities - Orange Gradient */}
+        <div className="w-full" style={{ background: "radial-gradient(ellipse at 50% 50%, #FED7AA 0%, #FFEDD5 30%, #FFF7ED 55%, #ffffff 80%)" }}>
+
         {/* Why Korea Section - Card Grid */}
-        <section className="w-full bg-white pt-24 md:pt-32 pb-16 md:pb-24 px-6">
+        <section className="w-full pt-24 md:pt-32 pb-16 md:pb-24 px-6">
           <div className="max-w-[1000px] mx-auto w-full">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">
@@ -204,44 +210,44 @@ export default function StartLanding() {
             <div className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 gap-4 md:gap-8 mt-12 md:mt-16 snap-x snap-mandatory scrollbar-hide">
               
               {/* Card 1 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                   <FileCheck className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-blue-600 transition-colors leading-tight">No Section 301 tariffs.</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">No Section 301 tariffs.</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   None of the punitive surcharges that hit Chinese goods.
                 </p>
               </div>
 
               {/* Card 2 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-500 group-hover:bg-orange-500 group-hover:text-white group-hover:border-orange-500 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                   <MapPin className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-500 transition-colors leading-tight">The whole supply chain stays in Korea.</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">The whole supply chain stays in Korea.</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   Yarn to finish, all in one country. Not one ocean away.
                 </p>
               </div>
 
               {/* Card 3 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                   <FileText className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-emerald-600 transition-colors leading-tight">Built for FTA benefit.</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">Built for FTA benefit.</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   Korean fabrics can qualify for 0% base duty under KORUS.
                 </p>
               </div>
 
               {/* Card 4 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-3 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                   <Award className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-purple-600 transition-colors leading-tight">Global brands have sourced here for decades.</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">Global brands have sourced here for decades.</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   Quality isn't a promise. It's a track record.
                 </p>
@@ -253,53 +259,53 @@ export default function StartLanding() {
 
 
         {/* Capabilities Section */}
-        <section className="w-full bg-white py-12 md:py-16 px-6">
+        <section className="w-full py-12 md:py-16 px-6">
           <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">
-                Why Korea Apparel Works
+                Why Korea Apparel Works?
               </h2>
             </div>
             <div className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 gap-4 md:gap-8 snap-x snap-mandatory scrollbar-hide">
               {/* Card 1 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                   <Factory className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   Family-owned factory with direct production and transparent processes.
                 </p>
               </div>
 
               {/* Card 2 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-500 group-hover:bg-orange-500 group-hover:text-white group-hover:border-orange-500 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                   <Package className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-500 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   From design to finished product, we manage every production stage.
                 </p>
               </div>
 
               {/* Card 3 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                   <ShieldCheck className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">Premium Quality Control</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   High-end craftsmanship and technical expertise for performance apparel.
                 </p>
               </div>
 
               {/* Card 4 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-3 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                   <Zap className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-purple-600 transition-colors leading-tight">Flexible MOQ</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   Prototype from 1 piece and scale production as your brand grows.
                 </p>
@@ -308,6 +314,7 @@ export default function StartLanding() {
             </div>
           </div>
         </section>
+        </div>
 
           {/* Atelier Image Gallery */}
           <div className="w-full mt-20 md:mt-[250px] overflow-hidden relative bg-white py-12 md:py-16">
