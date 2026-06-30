@@ -146,8 +146,8 @@ export default function MobileChatView({
       {messages.length === 1 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-6">
           <img src="/logo1.png" alt="Korea Apparel Works Logo" className="w-[40px] h-[40px] mb-5 opacity-90 object-contain" />
-          <h2 className="text-[20px] font-normal text-neutral-700 text-center tracking-tight leading-snug">
-            Talk to Mark, our AI agent,<br /><span className="text-blue-600">about making your apparel.</span>
+          <h2 className="text-[20px] font-normal text-neutral-900 text-center tracking-tight leading-snug">
+            Talk to Mark, our AI agent,<br />about making your apparel.
           </h2>
         </div>
       ) : (

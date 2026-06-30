@@ -468,7 +468,7 @@ export default function Hero({
                 <div className="mb-10 select-none flex flex-col items-center w-full px-2">
                   <h1 className="font-dm-sans text-[clamp(26px,calc(-4px+4.5vw),41px)] font-[550] tracking-tight text-neutral-900 leading-tight text-center transition-all duration-300">
                     Talk to Mark, our AI agent,<br />
-                    <span className="text-blue-600">about making your apparel.</span>
+                    <span className="text-neutral-900">about making your apparel.</span>
                   </h1>
                   <p className="pretendard-font mt-4 text-neutral-600 text-[clamp(14px,calc(11px+0.5vw),16px)] max-w-lg mx-auto font-normal text-center transition-all duration-300">
                     Upload a photo or just describe it — get pricing, MOQ, and lead time.
