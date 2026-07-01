@@ -339,7 +339,7 @@ export default function StartLanding() {
             <div ref={whyKoreaScrollRef} className="flex overflow-x-auto pb-12 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-12 gap-6 snap-x snap-mandatory scrollbar-hide">
               
               {/* Card 1: Tariffs */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px]">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px] lg:h-auto">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -351,19 +351,19 @@ export default function StartLanding() {
                   <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
                     No Section 301 tariffs.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-10 max-w-lg relative z-10">
+                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-4 lg:mb-10 max-w-lg relative z-10">
                     None of the punitive surcharges that hit Chinese goods.
                   </p>
 
                   {/* Visual Chart: Horizontal Bar Comparison */}
-                  <div className="w-full flex flex-col justify-center gap-6 md:gap-8 items-center mt-auto relative px-2 md:px-0 z-10">
+                  <div className="w-full flex flex-col justify-center gap-6 md:gap-4 lg:gap-8 items-center mt-auto relative px-2 md:px-0 z-10">
                     
                     {/* Others Row */}
                     <div className="flex flex-col items-center w-full group/row">
                       <div className="text-neutral-400 font-extrabold mb-3 tracking-wider text-xs md:text-sm uppercase">
                         CHINA
                       </div>
-                      <div className="flex w-full h-[72px] sm:h-[90px] md:h-[100px] rounded-xl overflow-hidden shadow-sm border border-neutral-200">
+                      <div className="flex w-full h-[72px] sm:h-[90px] md:h-[70px] lg:h-[100px] rounded-xl overflow-hidden shadow-sm border border-neutral-200">
                         <div className="w-[50%] bg-[#8F908C] flex items-center justify-center px-2">
                           <span className="text-white font-extrabold text-[9px] sm:text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Product Cost</span>
                         </div>
@@ -388,7 +388,7 @@ export default function StartLanding() {
                         </span>
                         KOREA
                       </div>
-                      <div className="flex w-full h-[72px] sm:h-[90px] md:h-[100px] rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg border-2 border-blue-200">
+                      <div className="flex w-full h-[72px] sm:h-[90px] md:h-[70px] lg:h-[100px] rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg border-2 border-blue-200">
                         <div className="w-[50%] bg-blue-600 flex items-center justify-center px-2">
                           <span className="text-white font-extrabold text-[9px] sm:text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Product Cost</span>
                         </div>
@@ -409,7 +409,7 @@ export default function StartLanding() {
               </div>
 
               {/* Card 2: Supply Chain */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px]">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px] lg:h-auto">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -421,17 +421,17 @@ export default function StartLanding() {
                   <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
                     One Supply Chain.<br className="hidden md:block"/> One Country.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-10 max-w-lg relative z-10">
+                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-4 lg:mb-10 max-w-lg relative z-10">
                     Yarn to finish, all in one country. Not one ocean away.
                   </p>
 
                   {/* Visual Chart: Supply Chain Comparison */}
-                  <div className="w-full flex flex-col justify-center gap-6 md:gap-8 items-center mt-auto relative z-10">
+                  <div className="w-full flex flex-col justify-center gap-6 md:gap-4 lg:gap-8 items-center mt-auto relative z-10">
                     
                     {/* Traditional Offshore Sourcing */}
                     <div className="flex flex-col items-center w-full group/row">
                       <div className="text-neutral-400 font-extrabold mb-3 tracking-wider text-xs md:text-sm uppercase">OTHERS</div>
-                      <div className="flex items-center gap-1 w-full justify-between bg-white/60 p-2 sm:p-3 md:p-4 rounded-xl border border-neutral-200 shadow-sm h-[72px] sm:h-[90px] md:h-[100px]">
+                      <div className="flex items-center gap-1 w-full justify-between bg-white/60 p-2 sm:p-3 md:p-4 rounded-xl border border-neutral-200 shadow-sm h-[72px] sm:h-[90px] md:h-[70px] lg:h-[100px]">
                         {/* Stage 1 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-neutral-400 border border-neutral-100 shrink-0">
@@ -477,7 +477,7 @@ export default function StartLanding() {
                         </span>
                         KOREA
                       </div>
-                      <div className="flex items-center gap-1 w-full justify-between bg-blue-50 p-2 sm:p-3 md:p-4 rounded-xl border-2 border-blue-200 relative overflow-hidden shadow-md h-[72px] sm:h-[90px] md:h-[100px]">
+                      <div className="flex items-center gap-1 w-full justify-between bg-blue-50 p-2 sm:p-3 md:p-4 rounded-xl border-2 border-blue-200 relative overflow-hidden shadow-md h-[72px] sm:h-[90px] md:h-[70px] lg:h-[100px]">
                         {/* Stage 1 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 z-10 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
@@ -519,7 +519,7 @@ export default function StartLanding() {
               </div>
 
               {/* Card 3: FTA */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px]">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px] lg:h-auto">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -531,13 +531,13 @@ export default function StartLanding() {
                   <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
                     Built for FTA benefit.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-10 max-w-lg relative z-10">
+                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-4 lg:mb-10 max-w-lg relative z-10">
                     Korean fabrics can qualify for 0% base duty under KORUS.
                   </p>
 
                   {/* Visual Chart: Price Tag Comparison */}
-                  <div className="w-full flex flex-col justify-center gap-6 md:gap-8 items-center mt-auto relative z-10">
-                    <div className="w-full max-w-[260px] sm:max-w-[300px] h-[220px] lg:h-[265px] bg-white rounded-2xl border border-neutral-200 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] overflow-hidden relative group/tag hover:-translate-y-1 transition-all duration-500 flex flex-col">
+                  <div className="w-full flex flex-col justify-center gap-6 md:gap-4 lg:gap-8 items-center mt-auto relative z-10">
+                    <div className="w-full max-w-[260px] sm:max-w-[300px] h-[220px] md:h-[160px] lg:h-[265px] bg-white rounded-2xl border border-neutral-200 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] overflow-hidden relative group/tag hover:-translate-y-1 transition-all duration-500 flex flex-col">
                       
                       {/* Tag Header (Hole) */}
                       <div className="h-8 shrink-0 bg-neutral-50/50 border-b border-neutral-100 flex justify-center items-center relative">
@@ -581,7 +581,7 @@ export default function StartLanding() {
               </div>
 
               {/* Card 4: Global Brands */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px]">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px] lg:h-auto">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -593,12 +593,12 @@ export default function StartLanding() {
                   <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
                     Global brands have sourced here for decades.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-10 max-w-lg relative z-10">
+                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-4 lg:mb-10 max-w-lg relative z-10">
                     Quality isn't a promise. It's a track record.
                   </p>
 
                   {/* Visual Chart: Abstract Global Map Nodes */}
-                  <div className="w-full max-w-[600px] h-[220px] lg:h-[265px] relative mt-auto z-10 bg-indigo-50/40 rounded-3xl border border-indigo-100/50 overflow-hidden shadow-inner">
+                  <div className="w-full max-w-[600px] h-[220px] md:h-[160px] lg:h-[265px] relative mt-auto z-10 bg-indigo-50/40 rounded-3xl border border-indigo-100/50 overflow-hidden shadow-inner">
                     
                     {/* SVG Connections */}
                     <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 400" preserveAspectRatio="none">
