@@ -339,7 +339,7 @@ export default function StartLanding() {
             <div ref={whyKoreaScrollRef} className="flex overflow-x-auto pb-12 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-12 gap-6 snap-x snap-mandatory scrollbar-hide">
               
               {/* Card 1: Tariffs */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[55vw] lg:w-[45%] snap-center sm:snap-start h-auto">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px]">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -409,7 +409,7 @@ export default function StartLanding() {
               </div>
 
               {/* Card 2: Supply Chain */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[55vw] lg:w-[45%] snap-center sm:snap-start h-auto">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px]">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -519,7 +519,7 @@ export default function StartLanding() {
               </div>
 
               {/* Card 3: FTA */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[55vw] lg:w-[45%] snap-center sm:snap-start h-auto">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px]">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -581,7 +581,7 @@ export default function StartLanding() {
               </div>
 
               {/* Card 4: Global Brands */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[55vw] lg:w-[45%] snap-center sm:snap-start h-auto">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px]">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
