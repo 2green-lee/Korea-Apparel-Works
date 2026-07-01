@@ -329,9 +329,9 @@ export default function StartLanding() {
         <div ref={whyKoreaRef} className={`w-full pt-24 md:pt-40 pb-16 md:pb-32 px-6 transition-all duration-1000 ease-out ${whyKoreaIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
           
           <div className="max-w-[1200px] mx-auto w-full text-center mb-12 md:mb-20">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-8 flex items-center justify-center gap-3 md:gap-5 z-10">
-              <CheckCircle2 className="w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500" strokeWidth={2.5} />
-              <span>Why Korea?</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-8 flex items-start justify-center gap-3 md:gap-5 z-10">
+              <CheckCircle2 className="hidden md:block w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 md:mt-2" strokeWidth={2.5} />
+              <span className="text-center">Why Korea?</span>
             </h2>
           </div>
 
@@ -682,9 +682,9 @@ export default function StartLanding() {
         <section ref={capabilitiesRef} className={`w-full pt-12 md:pt-16 pb-6 md:pb-8 px-6 transition-all duration-1000 ease-out ${capabilitiesIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
           <div className="max-w-[1200px] mx-auto w-full">
             <div className="text-center mb-[90px]">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight flex items-center justify-center gap-3 md:gap-5">
-                <CheckCircle2 className="w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0" strokeWidth={2.5} />
-                <span>Why Korea Apparel Works?</span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 md:gap-5">
+                <CheckCircle2 className="hidden md:block w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 md:mt-2" strokeWidth={2.5} />
+                <span className="text-center">Why Korea Apparel Works?</span>
               </h2>
             </div>
             <div className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 lg:grid-cols-4 gap-[25px] snap-x snap-mandatory scrollbar-hide">
@@ -763,8 +763,8 @@ export default function StartLanding() {
             <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-6 tracking-tight leading-tight flex items-start justify-center gap-3 md:gap-5 z-10">
-                <CheckCircle2 className="w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 md:mt-2" strokeWidth={2.5} />
-                <span className="text-left md:text-center">AI-powered from<br className="hidden md:block" /> inquiry to delivery</span>
+                <CheckCircle2 className="hidden md:block w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 md:mt-2" strokeWidth={2.5} />
+                <span className="text-center">AI-powered from<br className="hidden md:block" /> inquiry to delivery</span>
               </h2>
               <p className="text-[15px] sm:text-lg md:text-[20px] text-neutral-400 font-light leading-relaxed px-6 sm:px-0">
                 We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.
