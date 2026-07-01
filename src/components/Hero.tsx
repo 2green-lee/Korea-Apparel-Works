@@ -466,7 +466,7 @@ export default function Hero({
 
               {messages.length === 1 && (
                 <div className="mb-10 select-none flex flex-col items-center w-full px-2">
-                  <h1 className="font-dm-sans text-[clamp(26px,calc(-4px+4.5vw),41px)] font-[550] tracking-tight text-neutral-900 leading-tight text-center transition-all duration-300">
+                  <h1 className="font-dm-sans text-[clamp(26px,calc(-4px+4.5vw),41px)] font-[450] tracking-tight text-neutral-900 leading-tight text-center transition-all duration-300">
                     Talk to Mark, our AI agent,<br />
                     <span className="text-neutral-900">about making your apparel.</span>
                   </h1>

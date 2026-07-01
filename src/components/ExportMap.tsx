@@ -36,7 +36,7 @@ const ExportMap = ({ className }: { className?: string }) => {
           Global Export Reach
         </h2>
         <p className="text-[15px] sm:text-lg md:text-[20px] text-neutral-400 font-light max-w-lg mx-auto leading-relaxed">
-          Delivering premium Korean apparel manufacturing to brands across the world.
+          This is how we supply worldwide.
         </p>
       </div>
 

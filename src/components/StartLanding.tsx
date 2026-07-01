@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ExportMap from './ExportMap';
 import { fabricsData, getFabricPatternSvg } from '../lib/fabricData';
-import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCheck, Zap, Bot, LineChart, MessageSquare, FileText, Scissors, CheckCircle2, Check, Truck, MapPin, FileCheck, Award, ChevronLeft, ChevronRight, Ship, Layers } from 'lucide-react';
+import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCheck, Zap, Bot, LineChart, MessageSquare, FileText, Scissors, CheckCircle2, Check, Truck, MapPin, FileCheck, Award, ChevronLeft, ChevronRight, Ship, Layers, Globe } from 'lucide-react';
 
 export default function StartLanding() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -24,22 +24,73 @@ export default function StartLanding() {
   // Sequential reveal of the chat thread: photo bubble first, then Mark's reply
   const [chatReveal, setChatReveal] = useState(0);
   useEffect(() => {
-    const t1 = setTimeout(() => setChatReveal(1), 450);
-    const t2 = setTimeout(() => setChatReveal(2), 1400);
+    const t1 = setTimeout(() => setChatReveal(1), 1000);
+    const t2 = setTimeout(() => setChatReveal(2), 3000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
-  // Metrics cards reveal when scrolled into view
   const metricsRef = useRef<HTMLDivElement>(null);
   const [metricsIn, setMetricsIn] = useState(false);
+  const whyKoreaRef = useRef<HTMLDivElement>(null);
+  const [whyKoreaIn, setWhyKoreaIn] = useState(false);
+
+  const capabilitiesRef = useRef<HTMLDivElement>(null);
+  const [capabilitiesIn, setCapabilitiesIn] = useState(false);
+
+  const atelierRef = useRef<HTMLDivElement>(null);
+  const [atelierIn, setAtelierIn] = useState(false);
+
+  const aiWorkflowRef = useRef<HTMLDivElement>(null);
+  const [aiWorkflowIn, setAiWorkflowIn] = useState(false);
+
   useEffect(() => {
+    const observers: IntersectionObserver[] = [];
     const el = metricsRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) { setMetricsIn(true); obs.disconnect(); }
-    }, { threshold: 0.25 });
-    obs.observe(el);
-    return () => obs.disconnect();
+    if (el) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { setMetricsIn(true); obs.disconnect(); }
+      }, { threshold: 0.25 });
+      obs.observe(el);
+      observers.push(obs);
+    }
+    
+    const atEl = atelierRef.current;
+    if (atEl) {
+      const obs3 = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { setAtelierIn(true); obs3.disconnect(); }
+      }, { threshold: 0.1 });
+      obs3.observe(atEl);
+      observers.push(obs3);
+    }
+    
+    const capEl = capabilitiesRef.current;
+    if (capEl) {
+      const obsCap = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { setCapabilitiesIn(true); obsCap.disconnect(); }
+      }, { threshold: 0.1 });
+      obsCap.observe(capEl);
+      observers.push(obsCap);
+    }
+    
+    const aiEl = aiWorkflowRef.current;
+    if (aiEl) {
+      const obsAi = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { setAiWorkflowIn(true); obsAi.disconnect(); }
+      }, { threshold: 0.1 });
+      obsAi.observe(aiEl);
+      observers.push(obsAi);
+    }
+    
+    const wkEl = whyKoreaRef.current;
+    if (wkEl) {
+      const obsWk = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { setWhyKoreaIn(true); obsWk.disconnect(); }
+      }, { threshold: 0.1 });
+      obsWk.observe(wkEl);
+      observers.push(obsWk);
+    }
+    
+    return () => observers.forEach(o => o.disconnect());
   }, []);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -68,14 +119,14 @@ export default function StartLanding() {
         <div className="w-full bg-gradient-to-b from-white via-blue-50 to-blue-200">
           {/* Hero Section */}
           <section className="relative pt-12 pb-16 md:pt-16 md:pb-24 px-6 overflow-hidden flex-1 flex items-center">
-          <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-[49px] items-stretch">
+          <div className="max-w-[1200px] mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-[49px] items-stretch">
 
             {/* Left: Copy */}
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
               {/* Badge */}
               <a href="/" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/70 border border-neutral-200 text-[clamp(12px,1.4vw,14px)] whitespace-nowrap font-medium text-neutral-600 mb-6 shadow-sm hover:bg-white hover:shadow-md transition-all cursor-pointer">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                Made in Korea · No Section 301 Tariffs
+                The Apparel OEM/ODM Solution Made in Korea
               </a>
 
               {/* Headline */}
@@ -146,7 +197,7 @@ export default function StartLanding() {
                 </div>
 
                 {/* Chat composer (design only) */}
-                <div className={`mt-1 lg:mt-auto self-center w-[94%] flex items-center gap-2 bg-white border border-neutral-200 rounded-full pl-2 pr-2 py-1.5 shadow-sm transition-all duration-700 ease-out ${chatReveal >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
+                <div className="mt-1 lg:mt-auto self-center w-[94%] flex items-center gap-2 bg-white border border-neutral-200 rounded-full pl-2 pr-2 py-1.5 shadow-sm">
                   <button type="button" aria-label="Upload a photo" className="w-9 h-9 rounded-full flex items-center justify-center text-neutral-500 hover:bg-neutral-100 transition-colors shrink-0">
                     <ImagePlus size={18} />
                   </button>
@@ -162,7 +213,7 @@ export default function StartLanding() {
         </section>
 
         {/* Metrics */}
-        <section className="px-6 pb-16 md:pb-20">
+        <section className="px-6 pb-[150px]">
           <div ref={metricsRef} className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-4xl mx-auto">
             {/* Item 1 */}
             <div className={`flex flex-col items-center gap-3 sm:gap-5 transition-all duration-700 ease-out ${metricsIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: metricsIn ? '0ms' : '0ms' }}>
@@ -194,6 +245,36 @@ export default function StartLanding() {
           </div>
         </section>
 
+        {/* Combined Image Grid */}
+        <section className="w-full px-4 md:px-6 pb-12 md:pb-20">
+          <div className="max-w-[1200px] mx-auto w-full grid grid-cols-3 md:grid-cols-4 gap-[1px] sm:gap-[2px] border border-neutral-200/60 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-transparent">
+            {[
+              { type: "remote", name: "-29 001.png" },
+              { type: "remote", name: "-30 003.png" },
+              { type: "remote", name: "-33 008.png" },
+              { type: "remote", name: "-33 009.png" },
+              { type: "remote", name: "-33 010.png" },
+              { type: "remote", name: "-34 011.png" },
+              { type: "remote", name: "-31 005.png" },
+              { type: "remote", name: "-35 013.png" },
+              { type: "local", name: "w1.png" },
+              { type: "local", name: "w2.png" },
+              { type: "local", name: "w3.png" },
+              { type: "local", name: "w4.png" }
+            ].map((img, idx) => {
+              const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
+              const optimizedUrl = img.type === "remote" 
+                ? `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(img.name)}?format=webp&quality=80`
+                : `/${img.name}`;
+              return (
+                <div key={idx} className="relative aspect-[4/5] sm:aspect-square bg-black/5 group overflow-hidden">
+                  <img src={optimizedUrl} alt={`Product ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
         {/* Story Section - Temporarily hidden */}
         <section className="hidden w-full bg-transparent py-16 md:py-24 px-6 flex flex-col items-center text-center">
           <div className="max-w-4xl w-full flex flex-col items-center bg-white/70 backdrop-blur-xl border border-white/80 shadow-xl rounded-3xl p-10 md:p-16 hover:-translate-y-2 hover:shadow-2xl hover:bg-white/80 transition-all duration-500">
@@ -215,73 +296,13 @@ export default function StartLanding() {
         {/* Hero to Custom Apparel Gradient Transition */}
         <div className="h-[500px] w-full" style={{ background: "linear-gradient(to bottom, #BFDBFE 0%, #dbeafe 20%, #eff6ff 45%, #ffffff 100%)" }}></div>
 
-        {/* Custom Apparel Solutions Section (Moved from bottom) */}
-        <section className="w-full bg-white py-20 md:py-32 px-6 overflow-hidden">
-          <div className="max-w-[1000px] mx-auto mb-12 flex flex-col items-center text-center gap-8">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-bold text-neutral-900 tracking-tight mb-6">
-                Custom Apparel Solutions
-              </h2>
-              <p className="text-lg md:text-xl text-neutral-500 font-light leading-relaxed max-w-2xl mx-auto">
-                Discover KAW's signature production lineup featuring perfect fits and flawless details.
-              </p>
-            </div>
-          </div>
-          {/* Men's Collection */}
-          <div className="max-w-[1200px] mx-auto w-full relative mb-12 sm:mb-16 group/carousel">
-            <div ref={mensScrollRef} className="flex overflow-x-auto pb-6 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-6 gap-3 sm:gap-6 snap-x snap-mandatory scrollbar-hide">
-              {[
-                "-29 001.png", "-30 003.png", "-33 008.png",
-                "-33 009.png", "-33 010.png", "-34 011.png", "-31 005.png",
-                "-35 013.png", "-35 014.png"
-              ].map((img, idx) => {
-                const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-                const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(img)}?format=webp&quality=80`;
-                return (
-                <div key={idx} className="flex-none w-[calc(50vw-1.5rem)] sm:w-[calc(40%-1rem)] md:w-[calc(33.333%-1rem)] lg:w-[calc(28%-1rem)] bg-white rounded-2xl sm:rounded-[1.5rem] border-none shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] overflow-hidden transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)] flex flex-col group snap-start">
-                  <div className="aspect-[3/4] w-full bg-neutral-100 relative overflow-hidden">
-                    <img src={optimizedUrl} alt={`Men's Product ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                  </div>
-                </div>
-              )})}
-            </div>
-            <button onClick={() => scrollGallery(mensScrollRef, 'left')} className="absolute left-0 top-1/2 -translate-y-[calc(50%+12px)] -ml-4 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white border border-neutral-200 shadow-md text-neutral-600 hover:text-blue-600 hover:border-blue-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 z-10 focus:outline-hidden">
-              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
-            <button onClick={() => scrollGallery(mensScrollRef, 'right')} className="absolute right-0 top-1/2 -translate-y-[calc(50%+12px)] -mr-4 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white border border-neutral-200 shadow-md text-neutral-600 hover:text-blue-600 hover:border-blue-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 z-10 focus:outline-hidden">
-              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
-          </div>
-
-          {/* Women's Collection */}
-          <div className="max-w-[1200px] mx-auto w-full relative group/carousel">
-            <div ref={womensScrollRef} className="flex overflow-x-auto pb-6 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-6 gap-3 sm:gap-6 snap-x snap-mandatory scrollbar-hide">
-              {[
-                "w1.png", "w2.png", "w3.png", "w4.png"
-              ].map((img, idx) => (
-                <div key={`w-${idx}`} className="flex-none w-[calc(50vw-1.5rem)] sm:w-[calc(40%-1rem)] md:w-[calc(33.333%-1rem)] lg:w-[calc(28%-1rem)] bg-white rounded-2xl sm:rounded-[1.5rem] border-none shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] overflow-hidden transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)] flex flex-col group snap-start">
-                  <div className="aspect-[3/4] w-full bg-neutral-100 relative overflow-hidden">
-                    <img src={`/${img}`} alt={`Women's Product ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button onClick={() => scrollGallery(womensScrollRef, 'left')} className="absolute left-0 top-1/2 -translate-y-[calc(50%+12px)] -ml-4 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white border border-neutral-200 shadow-md text-neutral-600 hover:text-blue-600 hover:border-blue-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 z-10 focus:outline-hidden">
-              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
-            <button onClick={() => scrollGallery(womensScrollRef, 'right')} className="absolute right-0 top-1/2 -translate-y-[calc(50%+12px)] -mr-4 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white border border-neutral-200 shadow-md text-neutral-600 hover:text-blue-600 hover:border-blue-200 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 z-10 focus:outline-hidden">
-              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
-          </div>
-        </section>
-
 
         {/* Why Korea + Capabilities Wrapper */}
         <div className="w-full bg-white">
 
         {/* Expanded Why Korea Sections */}
         {/* Expanded Why Korea Sections */}
-        <div className="w-full pt-24 md:pt-40 pb-16 md:pb-32 px-6">
+        <div ref={whyKoreaRef} className={`w-full pt-24 md:pt-40 pb-16 md:pb-32 px-6 transition-all duration-1000 ease-out ${whyKoreaIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
           
           <div className="max-w-[1200px] mx-auto w-full text-center mb-12 md:mb-20">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight">
@@ -293,11 +314,11 @@ export default function StartLanding() {
             <div ref={whyKoreaScrollRef} className="flex overflow-x-auto pb-12 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-12 gap-6 snap-x snap-mandatory scrollbar-hide">
               
               {/* Card 1: Tariffs */}
-              <div className="flex-none w-[85vw] sm:w-[85vw] md:w-[85vw] lg:w-[45%] snap-center sm:snap-start h-auto">
-                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-12 md:p-10 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[55vw] lg:w-[45%] snap-center sm:snap-start h-auto">
+                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-orange-50/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
+                  <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-orange-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
 
                   <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white border border-orange-100 flex items-center justify-center mb-6 text-orange-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
                     <FileCheck className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.5} />
@@ -315,7 +336,7 @@ export default function StartLanding() {
                     {/* Others Row */}
                     <div className="flex flex-col items-center w-full group/row">
                       <div className="text-neutral-400 font-extrabold mb-3 tracking-wider text-xs md:text-sm uppercase">
-                        OTHERS
+                        CHINA
                       </div>
                       <div className="flex w-full h-[72px] sm:h-[90px] md:h-[100px] rounded-xl overflow-hidden shadow-sm border border-neutral-200">
                         <div className="w-[50%] bg-[#8F908C] flex items-center justify-center px-2">
@@ -363,11 +384,11 @@ export default function StartLanding() {
               </div>
 
               {/* Card 2: Supply Chain */}
-              <div className="flex-none w-[85vw] sm:w-[85vw] md:w-[85vw] lg:w-[45%] snap-center sm:snap-start h-auto">
-                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-12 md:p-10 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[55vw] lg:w-[45%] snap-center sm:snap-start h-auto">
+                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-blue-50/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
+                  <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-blue-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
 
                   <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white border border-blue-100 flex items-center justify-center mb-6 text-blue-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
                     <MapPin className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.5} />
@@ -391,33 +412,33 @@ export default function StartLanding() {
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-neutral-400 border border-neutral-100 shrink-0">
                             <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-[9px] sm:text-[10px] md:text-xs text-neutral-500 font-bold text-center leading-tight">Yarn</span>
+                          <span className="text-xs sm:text-[13px] md:text-[15px] text-neutral-500 font-bold text-center leading-tight">Yarn</span>
                         </div>
                         {/* Route 1 */}
                         <div className="flex-1 flex flex-col items-center relative min-w-[20px]">
                           <div className="w-full border-t-2 border-dashed border-neutral-300 absolute top-1/2 -translate-y-1/2"></div>
                           <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400 relative z-10" />
-                          <span className="text-[7px] sm:text-[8px] md:text-[9px] text-neutral-400 font-black mt-1.5 whitespace-nowrap tracking-tighter">BORDERS</span>
+                          <span className="text-[10px] sm:text-[11px] md:text-[13px] text-neutral-400 font-black mt-1.5 whitespace-nowrap tracking-tighter">BORDERS</span>
                         </div>
                         {/* Stage 2 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-neutral-400 border border-neutral-100 shrink-0">
                             <Factory className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-[9px] sm:text-[10px] md:text-xs text-neutral-500 font-bold text-center leading-tight">Fabric</span>
+                          <span className="text-xs sm:text-[13px] md:text-[15px] text-neutral-500 font-bold text-center leading-tight">Fabric</span>
                         </div>
                         {/* Route 2 */}
                         <div className="flex-1 flex flex-col items-center relative min-w-[20px]">
                           <div className="w-full border-t-2 border-dashed border-neutral-300 absolute top-1/2 -translate-y-1/2"></div>
                           <Ship className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400 relative z-10 animate-[bounce_2s_ease-in-out_infinite]" />
-                          <span className="text-[7px] sm:text-[8px] md:text-[9px] text-neutral-400 font-black mt-1.5 whitespace-nowrap tracking-tighter">30+ DAYS</span>
+                          <span className="text-[10px] sm:text-[11px] md:text-[13px] text-neutral-400 font-black mt-1.5 whitespace-nowrap tracking-tighter">30+ DAYS</span>
                         </div>
                         {/* Stage 3 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-neutral-400 border border-neutral-100 shrink-0">
                             <Scissors className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-[9px] sm:text-[10px] md:text-xs text-neutral-500 font-bold text-center leading-tight">Sewing</span>
+                          <span className="text-xs sm:text-[13px] md:text-[15px] text-neutral-500 font-bold text-center leading-tight">Sewing</span>
                         </div>
                       </div>
                     </div>
@@ -431,41 +452,41 @@ export default function StartLanding() {
                         </span>
                         KOREA
                       </div>
-                      <div className="flex items-center gap-1 w-full justify-between bg-blue-50 p-2 sm:p-3 md:p-4 rounded-xl border-2 border-blue-200 relative overflow-hidden shadow-md group-hover/row:-translate-y-1 transition-all duration-300 h-[72px] sm:h-[90px] md:h-[100px]">
+                      <div className="flex items-center gap-1 w-full justify-between bg-blue-50 p-2 sm:p-3 md:p-4 rounded-xl border-2 border-blue-200 relative overflow-hidden shadow-md h-[72px] sm:h-[90px] md:h-[100px]">
                         {/* Stage 1 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 z-10 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
                             <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-[9px] sm:text-[10px] md:text-xs text-blue-700 font-extrabold text-center leading-tight">Yarn<br className="sm:hidden"/>Spinning</span>
+                          <span className="text-xs sm:text-[13px] md:text-[15px] text-blue-700 font-extrabold text-center leading-tight">Yarn</span>
                         </div>
                         {/* Route 1 */}
                         <div className="flex-1 flex flex-col items-center relative z-10 min-w-[20px]">
                           <div className="w-full border-t-[3px] border-blue-400 absolute top-1/2 -translate-y-1/2"></div>
                           <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 relative z-10" />
-                          <span className="text-[7px] sm:text-[8px] md:text-[9px] text-blue-600 font-black mt-1.5 whitespace-nowrap tracking-tighter">50KM</span>
+                          <span className="text-[10px] sm:text-[11px] md:text-[13px] text-blue-600 font-black mt-1.5 whitespace-nowrap tracking-tighter">50KM</span>
                         </div>
                         {/* Stage 2 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 z-10 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
                             <Factory className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-[9px] sm:text-[10px] md:text-xs text-blue-700 font-extrabold text-center leading-tight">Fabric<br className="sm:hidden"/>Mill</span>
+                          <span className="text-xs sm:text-[13px] md:text-[15px] text-blue-700 font-extrabold text-center leading-tight">Fabric</span>
                         </div>
                         {/* Route 2 */}
                         <div className="flex-1 flex flex-col items-center relative z-10 min-w-[20px]">
                           <div className="w-full border-t-[3px] border-blue-400 absolute top-1/2 -translate-y-1/2"></div>
                           <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 relative z-10" />
-                          <span className="text-[7px] sm:text-[8px] md:text-[9px] text-blue-600 font-black mt-1.5 whitespace-nowrap tracking-tighter">50KM</span>
+                          <span className="text-[10px] sm:text-[11px] md:text-[13px] text-blue-600 font-black mt-1.5 whitespace-nowrap tracking-tighter">50KM</span>
                         </div>
                         {/* Stage 3 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 z-10 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
                             <Scissors className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-[9px] sm:text-[10px] md:text-xs text-blue-700 font-extrabold text-center leading-tight">Sewing<br className="sm:hidden"/>Factory</span>
+                          <span className="text-xs sm:text-[13px] md:text-[15px] text-blue-700 font-extrabold text-center leading-tight">Sewing</span>
                         </div>
-                        <div className="absolute inset-0 bg-blue-400 opacity-0 group-hover/row:opacity-10 transition-opacity duration-300"></div>
+
                       </div>
                     </div>
                   </div>
@@ -473,32 +494,148 @@ export default function StartLanding() {
               </div>
 
               {/* Card 3: FTA */}
-              <div className="flex-none w-[85vw] sm:w-[85vw] md:w-[85vw] lg:w-[45%] snap-center sm:snap-start h-auto">
-                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-12 md:p-10 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 justify-center">
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-6 text-orange-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[55vw] lg:w-[45%] snap-center sm:snap-start h-auto">
+                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
+                  
+                  {/* Subtle background glow for the card */}
+                  <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-emerald-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
+
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-6 text-emerald-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
                     <FileText className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.5} />
                   </div>
                   <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
                     Built for FTA benefit.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed max-w-lg relative z-10">
+                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-10 max-w-lg relative z-10">
                     Korean fabrics can qualify for 0% base duty under KORUS.
                   </p>
+
+                  {/* Visual Chart: Price Tag Comparison */}
+                  <div className="w-full flex flex-col justify-center gap-6 md:gap-8 items-center mt-auto relative z-10">
+                    <div className="w-full max-w-[260px] sm:max-w-[300px] h-[220px] lg:h-[265px] bg-white rounded-2xl border border-neutral-200 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] overflow-hidden relative group/tag hover:-translate-y-1 transition-all duration-500 flex flex-col">
+                      
+                      {/* Tag Header (Hole) */}
+                      <div className="h-8 shrink-0 bg-neutral-50/50 border-b border-neutral-100 flex justify-center items-center relative">
+                        <div className="w-3.5 h-3.5 rounded-full bg-neutral-200/60 shadow-inner"></div>
+                      </div>
+
+                      {/* Tag Content */}
+                      <div className="flex-1 p-5 sm:p-6 flex flex-col text-left justify-between">
+                        
+                        {/* Standard Base Duty */}
+                        <div className="flex justify-between items-center text-sm sm:text-base text-neutral-400 border-b border-dashed border-neutral-200 pb-3">
+                          <span className="font-semibold tracking-wide">Base Duty (Max)</span>
+                          <span className="font-bold relative">
+                            32.0%
+                            <div className="absolute inset-0 top-1/2 -translate-y-1/2 w-[120%] -left-[10%] border-t-[2.5px] border-red-400 -rotate-[15deg]"></div>
+                          </span>
+                        </div>
+
+                        {/* KORUS Exemption */}
+                        <div className="flex justify-between items-center text-[13px] sm:text-[15px] text-emerald-600 border-b border-neutral-100 pb-3 bg-emerald-50/80 -mx-5 px-5 sm:-mx-6 sm:px-6 py-2.5">
+                          <span className="font-extrabold tracking-wide flex items-center gap-1.5">
+                            <Check className="w-3.5 h-3.5" strokeWidth={4} />
+                            KORUS FTA
+                          </span>
+                          <span className="font-bold">-100% EXEMPT</span>
+                        </div>
+
+                        {/* Final Duty */}
+                        <div className="flex justify-between items-end pt-1">
+                          <span className="text-[10px] sm:text-xs text-neutral-400 font-extrabold uppercase tracking-widest mb-1">Final Duty</span>
+                          <div className="text-4xl sm:text-5xl font-black text-emerald-500 tracking-tighter flex items-start gap-1 drop-shadow-sm">
+                            0<span className="text-xl sm:text-2xl mt-1.5">%</span>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
               {/* Card 4: Global Brands */}
-              <div className="flex-none w-[85vw] sm:w-[80vw] md:w-[750px] lg:w-[900px] snap-center sm:snap-start h-auto">
-                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-12 md:p-10 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 justify-center">
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-6 text-orange-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
-                    <Award className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.5} />
+              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[55vw] lg:w-[45%] snap-center sm:snap-start h-auto">
+                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
+                  
+                  {/* Subtle background glow for the card */}
+                  <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-indigo-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
+
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-6 text-indigo-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
+                    <Globe className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.5} />
                   </div>
                   <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
                     Global brands have sourced here for decades.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed max-w-lg relative z-10">
+                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-10 max-w-lg relative z-10">
                     Quality isn't a promise. It's a track record.
                   </p>
+
+                  {/* Visual Chart: Abstract Global Map Nodes */}
+                  <div className="w-full max-w-[600px] h-[220px] lg:h-[265px] relative mt-auto z-10 bg-indigo-50/40 rounded-3xl border border-indigo-100/50 overflow-hidden shadow-inner">
+                    
+                    {/* SVG Connections */}
+                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 400" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#4F46E5" stopOpacity="0.8" />
+                          <stop offset="100%" stopColor="#4F46E5" stopOpacity="0" />
+                        </linearGradient>
+                        <style>
+                          {`
+                            .dash-anim { stroke-dasharray: 6 6; animation: dash 20s linear infinite; }
+                            @keyframes dash { to { stroke-dashoffset: -1000; } }
+                          `}
+                        </style>
+                      </defs>
+                      
+                      {/* Korea to SE Asia */}
+                      <path d="M200 200 Q 325 350 450 320" stroke="url(#line-grad)" strokeWidth="3" fill="none" className="dash-anim" />
+                      {/* Korea to Europe */}
+                      <path d="M200 200 Q 400 50 600 100" stroke="url(#line-grad)" strokeWidth="3" fill="none" className="dash-anim" />
+                      {/* Korea to Canada */}
+                      <path d="M200 200 Q 475 20 750 60" stroke="url(#line-grad)" strokeWidth="3" fill="none" className="dash-anim" />
+                      {/* Korea to USA */}
+                      <path d="M200 200 Q 525 300 850 220" stroke="url(#line-grad)" strokeWidth="3" fill="none" className="dash-anim" />
+                    </svg>
+
+                    {/* Nodes */}
+                    {/* KOREA */}
+                    <div className="absolute left-[20%] top-[50%] z-20">
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-3 w-3 sm:h-4 sm:w-4">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 sm:h-4 sm:w-4 bg-indigo-600 border-2 border-white shadow-sm"></span>
+                      </div>
+                      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 mt-3 sm:mt-4 text-[9px] sm:text-[11px] font-black text-indigo-900 bg-white/90 px-1.5 sm:px-2 py-0.5 rounded shadow-sm whitespace-nowrap">KOREA</span>
+                    </div>
+
+                    {/* SE ASIA */}
+                    <div className="absolute left-[45%] top-[80%] z-10 hover:scale-110 transition-transform cursor-default">
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-indigo-400 border border-white shadow-sm"></div>
+                      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 mt-2 sm:mt-3 text-[8px] sm:text-[10px] font-bold text-indigo-700 opacity-80 whitespace-nowrap">SE ASIA</span>
+                    </div>
+
+                    {/* EUROPE */}
+                    <div className="absolute left-[60%] top-[25%] z-10 hover:scale-110 transition-transform cursor-default">
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-indigo-400 border border-white shadow-sm"></div>
+                      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 mt-2 sm:mt-3 text-[8px] sm:text-[10px] font-bold text-indigo-700 opacity-80 whitespace-nowrap">EUROPE</span>
+                    </div>
+
+                    {/* CANADA */}
+                    <div className="absolute left-[75%] top-[15%] z-10 hover:scale-110 transition-transform cursor-default">
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-indigo-400 border border-white shadow-sm"></div>
+                      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 mt-2 sm:mt-3 text-[8px] sm:text-[10px] font-bold text-indigo-700 opacity-80 whitespace-nowrap">CANADA</span>
+                    </div>
+
+                    {/* USA */}
+                    <div className="absolute left-[85%] top-[55%] z-10 hover:scale-110 transition-transform cursor-default">
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-indigo-400 border border-white shadow-sm"></div>
+                      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 mt-2 sm:mt-3 text-[8px] sm:text-[10px] font-bold text-indigo-700 opacity-80 whitespace-nowrap">USA</span>
+                    </div>
+
+                  </div>
+
                 </div>
               </div>
 
@@ -517,14 +654,14 @@ export default function StartLanding() {
 
 
         {/* Capabilities Section */}
-        <section className="w-full py-12 md:py-16 px-6">
-          <div className="max-w-[770px] mx-auto w-full">
+        <section ref={capabilitiesRef} className={`w-full pt-12 md:pt-16 pb-6 md:pb-8 px-6 transition-all duration-1000 ease-out ${capabilitiesIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+          <div className="max-w-[1200px] mx-auto w-full">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight">
                 Why Korea Apparel Works?
               </h2>
             </div>
-            <div className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 gap-4 md:gap-8 snap-x snap-mandatory scrollbar-hide">
+            <div className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 snap-x snap-mandatory scrollbar-hide">
               {/* Card 1 */}
               <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
@@ -574,44 +711,32 @@ export default function StartLanding() {
         </section>
         </div>
 
-          {/* Atelier Image Gallery */}
-          <div className="w-full mt-20 md:mt-[250px] overflow-hidden relative bg-white py-12 md:py-16">
-            {/* Gradient overlays removed as requested */}
-            
-            <style dangerouslySetInnerHTML={{__html: `
-              @keyframes scrollLeft {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(-50%); }
-              }
-              .animate-marquee {
-                animation: scrollLeft 40s linear infinite;
-              }
-            `}} />
-            <div className="flex gap-4 w-max animate-marquee pb-8">
-              {[...Array(2)].map((_, groupIdx) => (
-                <React.Fragment key={groupIdx}>
-                  {['b1.jpg', 'b2-2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
-                    const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-                    const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
-                    return (
-                    <div key={`${groupIdx}-${idx}`} className="flex-none w-[50vw] sm:w-[320px] md:w-[400px] aspect-[4/3] rounded-xl overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-sm">
+        {/* Atelier Image Gallery */}
+        <div ref={atelierRef} className={`w-full overflow-hidden relative bg-white pt-6 md:pt-8 pb-12 md:pb-16 px-4 md:px-6 transition-all duration-1000 ease-out ${atelierIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+          <div className="max-w-[1200px] mx-auto">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 md:gap-6 w-full">
+                {['b1.jpg', 'b2-2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
+                  const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
+                  const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
+                  return (
+                    <div key={idx} className="w-full aspect-[4/3] rounded-lg md:rounded-xl overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-xl transition-all duration-500 hover:-translate-y-1 hover:scale-[1.02]">
                       <img 
                         src={optimizedUrl} 
-                        alt={`Atelier gallery ${idx + 1}`} 
-                        loading="lazy"
+                        alt="Factory" 
                         className="w-full h-full object-cover" 
+                        loading="lazy" 
                       />
                     </div>
-                    );
-                  })}
-                </React.Fragment>
-              ))}
+                  );
+                })}
+              </div>
             </div>
           </div>
 
         {/* AI Workflow Section */}
         <section className="mt-20 py-24 px-6 w-full bg-neutral-950 text-white border-t border-neutral-900">
-          <div className="max-w-[770px] mx-auto w-full">
+          <div ref={aiWorkflowRef} className={`w-full transition-all duration-1000 ease-out ${aiWorkflowIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+            <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 text-white">
                 AI-powered from inquiry to delivery
@@ -725,6 +850,7 @@ export default function StartLanding() {
 
           {/* Global Export Map Section placed inside the black area */}
           <ExportMap />
+          </div>
         </section>
 
         {/* Final CTA Section */}
