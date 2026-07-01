@@ -12,7 +12,9 @@ export default function StartLanding() {
   const [isWomensExpanded, setIsWomensExpanded] = useState(false);
 
   // Hero image slideshow (auto-rotates every 2s)
-  const heroImages = ['/s1.jpg', '/s2.jpg', '/s3.jpg', '/s4.jpg'];
+  const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
+  const optimizedS1Url = `${supabaseUrl}/storage/v1/render/image/public/factory/s1.jpg?format=webp&quality=80`;
+  const heroImages = [optimizedS1Url, '/s2.jpg', '/s3.jpg', '/s4.jpg'];
   const [heroSlide, setHeroSlide] = useState(0);
   useEffect(() => {
     const id = setInterval(() => {
@@ -29,8 +31,8 @@ export default function StartLanding() {
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
-  const metricsRef = useRef<HTMLDivElement>(null);
-  const [metricsIn, setMetricsIn] = useState(false);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const [galleryIn, setGalleryIn] = useState(false);
   const whyKoreaRef = useRef<HTMLDivElement>(null);
   const [whyKoreaIn, setWhyKoreaIn] = useState(false);
 
@@ -43,13 +45,16 @@ export default function StartLanding() {
   const aiWorkflowRef = useRef<HTMLDivElement>(null);
   const [aiWorkflowIn, setAiWorkflowIn] = useState(false);
 
+  const exportMapRef = useRef<HTMLDivElement>(null);
+  const [exportMapIn, setExportMapIn] = useState(false);
+
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
-    const el = metricsRef.current;
+    const el = galleryRef.current;
     if (el) {
       const obs = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) { setMetricsIn(true); obs.disconnect(); }
-      }, { threshold: 0.25 });
+        if (entries[0].isIntersecting) { setGalleryIn(true); obs.disconnect(); }
+      }, { threshold: 0.1 });
       obs.observe(el);
       observers.push(obs);
     }
@@ -79,6 +84,15 @@ export default function StartLanding() {
       }, { threshold: 0.1 });
       obsAi.observe(aiEl);
       observers.push(obsAi);
+    }
+    
+    const emEl = exportMapRef.current;
+    if (emEl) {
+      const obsEm = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { setExportMapIn(true); obsEm.disconnect(); }
+      }, { threshold: 0.1 });
+      obsEm.observe(emEl);
+      observers.push(obsEm);
     }
     
     const wkEl = whyKoreaRef.current;
@@ -173,7 +187,7 @@ export default function StartLanding() {
                 {/* User message: uploaded photo */}
                 <div className={`flex justify-end transition-all duration-700 ease-out ${chatReveal >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
                   <div className="bg-white/95 backdrop-blur-md border border-neutral-100 rounded-2xl rounded-tr-md p-2 max-w-[78%] shadow-sm">
-                    <img src="/s1.jpg" alt="Uploaded design" className="rounded-xl w-full max-h-36 object-cover" />
+                    <img src={optimizedS1Url} alt="Uploaded design" className="rounded-xl w-full max-h-36 object-cover" />
                     <div className="flex items-center gap-1.5 px-1 pt-2 pb-0.5">
                       <FileCheck size={13} className="text-neutral-600 shrink-0" />
                       <span className="text-[12px] text-neutral-600 truncate">your-design.jpg</span>
@@ -213,10 +227,10 @@ export default function StartLanding() {
         </section>
 
         {/* Metrics */}
-        <section className="px-6 pb-[150px]">
-          <div ref={metricsRef} className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-4xl mx-auto">
+        <section className="px-6 pb-12 md:pb-[150px]">
+          <div className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-4xl mx-auto">
             {/* Item 1 */}
-            <div className={`flex flex-col items-center gap-3 sm:gap-5 transition-all duration-700 ease-out ${metricsIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: metricsIn ? '0ms' : '0ms' }}>
+            <div className="flex flex-col items-center gap-3 sm:gap-5">
               <div className="w-full flex items-center justify-center py-6 sm:py-10 md:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
                 <div className="text-[7vw] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
                   1<span className="text-[4vw] sm:text-2xl md:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">pcs~</span>
@@ -225,7 +239,7 @@ export default function StartLanding() {
               <div className="text-[11px] sm:text-sm md:text-sm md:text-base text-neutral-600 font-medium text-center leading-tight">Minimum Order<br className="sm:hidden"/> (MOQ)</div>
             </div>
             {/* Item 2 */}
-            <div className={`flex flex-col items-center gap-3 sm:gap-5 transition-all duration-700 ease-out ${metricsIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: metricsIn ? '120ms' : '0ms' }}>
+            <div className="flex flex-col items-center gap-3 sm:gap-5">
               <div className="w-full flex items-center justify-center py-6 sm:py-10 md:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
                 <div className="text-[7vw] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
                   3~14<span className="text-[4vw] sm:text-2xl md:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">days</span>
@@ -234,7 +248,7 @@ export default function StartLanding() {
               <div className="text-[11px] sm:text-sm md:text-sm md:text-base text-neutral-600 font-medium text-center leading-tight">Sample<br className="sm:hidden"/> Lead Time</div>
             </div>
             {/* Item 3 */}
-            <div className={`flex flex-col items-center gap-3 sm:gap-5 transition-all duration-700 ease-out ${metricsIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: metricsIn ? '240ms' : '0ms' }}>
+            <div className="flex flex-col items-center gap-3 sm:gap-5">
               <div className="w-full flex items-center justify-center py-6 sm:py-10 md:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
                 <div className="text-[7vw] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
                   100<span className="text-[4vw] sm:text-2xl md:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">+</span>
@@ -247,31 +261,41 @@ export default function StartLanding() {
 
         {/* Combined Image Grid */}
         <section className="w-full px-4 md:px-6 pb-12 md:pb-20">
-          <div className="max-w-[1200px] mx-auto w-full grid grid-cols-3 md:grid-cols-4 gap-[1px] sm:gap-[2px] border border-neutral-200/60 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-transparent">
-            {[
-              { type: "remote", name: "-29 001.png" },
-              { type: "remote", name: "-30 003.png" },
-              { type: "remote", name: "-33 008.png" },
-              { type: "remote", name: "-33 009.png" },
-              { type: "remote", name: "-33 010.png" },
-              { type: "remote", name: "-34 011.png" },
-              { type: "remote", name: "-31 005.png" },
-              { type: "remote", name: "-35 013.png" },
-              { type: "local", name: "w1.png" },
-              { type: "local", name: "w2.png" },
-              { type: "local", name: "w3.png" },
-              { type: "local", name: "w4.png" }
-            ].map((img, idx) => {
-              const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-              const optimizedUrl = img.type === "remote" 
-                ? `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(img.name)}?format=webp&quality=80`
-                : `/${img.name}`;
-              return (
-                <div key={idx} className="relative aspect-[4/5] sm:aspect-square bg-black/5 group overflow-hidden">
-                  <img src={optimizedUrl} alt={`Product ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                </div>
-              );
-            })}
+          <div ref={galleryRef} className={`w-full transition-all duration-1000 ease-out ${galleryIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+            <div className="max-w-[1200px] mx-auto w-full grid grid-cols-3 md:grid-cols-4 gap-[1px] sm:gap-[2px] border border-neutral-200/60 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-transparent">
+              {[
+                { type: "remote", name: "-29 001.png" },
+                { type: "remote", name: "-30 003.png" },
+                { type: "remote", name: "-33 008.png" },
+                { type: "remote", name: "-33 009.png" },
+                { type: "remote", name: "-33 010.png" },
+                { type: "remote", name: "-34 011.png" },
+                { type: "remote", name: "-31 005.png" },
+                { type: "remote", name: "-35 013.png" },
+                { type: "remote", name: "w1.png" },
+                { type: "remote", name: "w2.png" },
+                { type: "remote", name: "w3.png" },
+                { type: "remote", name: "w4.png" }
+              ].map((img, i) => {
+                const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
+                const imgUrl = `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(img.name)}`;
+                  
+                return (
+                  <div 
+                    key={i} 
+                    className="relative w-full overflow-hidden bg-neutral-100 group aspect-square"
+                  >
+                    <img 
+                      src={`${imgUrl}?format=webp&quality=80`}
+                      alt={`Gallery ${i}`}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </section>
 
@@ -294,7 +318,7 @@ export default function StartLanding() {
         </div>
 
         {/* Hero to Custom Apparel Gradient Transition */}
-        <div className="h-[500px] w-full" style={{ background: "linear-gradient(to bottom, #BFDBFE 0%, #dbeafe 20%, #eff6ff 45%, #ffffff 100%)" }}></div>
+        <div className="h-[300px] md:h-[500px] w-full" style={{ background: "linear-gradient(to bottom, #BFDBFE 0%, #dbeafe 20%, #eff6ff 45%, #ffffff 100%)" }}></div>
 
 
         {/* Why Korea + Capabilities Wrapper */}
@@ -305,8 +329,9 @@ export default function StartLanding() {
         <div ref={whyKoreaRef} className={`w-full pt-24 md:pt-40 pb-16 md:pb-32 px-6 transition-all duration-1000 ease-out ${whyKoreaIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
           
           <div className="max-w-[1200px] mx-auto w-full text-center mb-12 md:mb-20">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight">
-              Why Korea?
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-8 flex items-center justify-center gap-3 md:gap-5 z-10">
+              <CheckCircle2 className="w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500" strokeWidth={2.5} />
+              <span>Why Korea?</span>
             </h2>
           </div>
 
@@ -656,40 +681,41 @@ export default function StartLanding() {
         {/* Capabilities Section */}
         <section ref={capabilitiesRef} className={`w-full pt-12 md:pt-16 pb-6 md:pb-8 px-6 transition-all duration-1000 ease-out ${capabilitiesIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
           <div className="max-w-[1200px] mx-auto w-full">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight">
-                Why Korea Apparel Works?
+            <div className="text-center mb-[90px]">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight flex items-center justify-center gap-3 md:gap-5">
+                <CheckCircle2 className="w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0" strokeWidth={2.5} />
+                <span>Why Korea Apparel Works?</span>
               </h2>
             </div>
-            <div className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 snap-x snap-mandatory scrollbar-hide">
+            <div className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 lg:grid-cols-4 gap-[25px] snap-x snap-mandatory scrollbar-hide">
               {/* Card 1 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
                   <Factory className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   Family-owned factory with direct production and transparent processes.
                 </p>
               </div>
 
               {/* Card 2 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-3 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
                   <Package className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   From design to finished product, we manage every production stage.
                 </p>
               </div>
 
               {/* Card 3 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
+              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
                   <ShieldCheck className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">Premium Quality Control</div>
+                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
                 <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
                   High-end craftsmanship and technical expertise for performance apparel.
                 </p>
@@ -713,33 +739,32 @@ export default function StartLanding() {
 
         {/* Atelier Image Gallery */}
         <div ref={atelierRef} className={`w-full overflow-hidden relative bg-white pt-6 md:pt-8 pb-12 md:pb-16 px-4 md:px-6 transition-all duration-1000 ease-out ${atelierIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-          <div className="max-w-[1200px] mx-auto">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 md:gap-6 w-full">
-                {['b1.jpg', 'b2-2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
-                  const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-                  const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
-                  return (
-                    <div key={idx} className="w-full aspect-[4/3] rounded-lg md:rounded-xl overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-xl transition-all duration-500 hover:-translate-y-1 hover:scale-[1.02]">
-                      <img 
-                        src={optimizedUrl} 
-                        alt="Factory" 
-                        className="w-full h-full object-cover" 
-                        loading="lazy" 
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+          <div className="max-w-[1200px] mx-auto w-full grid grid-cols-3 gap-[1px] sm:gap-[2px] border border-neutral-200/60 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-neutral-100">
+            {['b1.jpg', 'b2-2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
+              const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
+              const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
+              return (
+                <div key={idx} className="relative aspect-square md:aspect-[4/3] bg-white group overflow-hidden">
+                  <img 
+                    src={optimizedUrl} 
+                    alt="Factory" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                    loading="lazy" 
+                  />
+                </div>
+              );
+            })}
           </div>
+        </div>
 
         {/* AI Workflow Section */}
         <section className="mt-20 py-24 px-6 w-full bg-neutral-950 text-white border-t border-neutral-900">
           <div ref={aiWorkflowRef} className={`w-full transition-all duration-1000 ease-out ${aiWorkflowIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
             <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 text-white">
-                AI-powered from inquiry to delivery
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-6 tracking-tight leading-tight flex items-start justify-center gap-3 md:gap-5 z-10">
+                <CheckCircle2 className="w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 md:mt-2" strokeWidth={2.5} />
+                <span className="text-left md:text-center">AI-powered from<br className="hidden md:block" /> inquiry to delivery</span>
               </h2>
               <p className="text-[15px] sm:text-lg md:text-[20px] text-neutral-400 font-light leading-relaxed px-6 sm:px-0">
                 We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.
@@ -845,11 +870,13 @@ export default function StartLanding() {
                   </div>
                 </div>
               </div>
+              </div>
             </div>
           </div>
 
           {/* Global Export Map Section placed inside the black area */}
-          <ExportMap />
+          <div ref={exportMapRef} className={`w-full transition-all duration-1000 ease-out ${exportMapIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+            <ExportMap />
           </div>
         </section>
 

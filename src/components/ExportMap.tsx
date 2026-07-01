@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography, Marker, Line } from "react-simple-maps";
+import { CheckCircle2 } from "lucide-react";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
@@ -32,8 +33,9 @@ const ExportMap = ({ className }: { className?: string }) => {
   return (
     <div className={`w-full max-w-[900px] mx-auto pb-20 pt-0 px-2 md:px-6 relative ${className || 'mt-[250px]'}`}>
       <div className="text-center mb-8 md:mb-12">
-        <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-4">
-          Global Export Reach
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4 flex items-center justify-center gap-3 md:gap-5 z-10">
+          <CheckCircle2 className="w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0" strokeWidth={2.5} />
+          <span>Global Export Reach</span>
         </h2>
         <p className="text-[15px] sm:text-lg md:text-[20px] text-neutral-400 font-light max-w-lg mx-auto leading-relaxed">
           This is how we supply worldwide.
