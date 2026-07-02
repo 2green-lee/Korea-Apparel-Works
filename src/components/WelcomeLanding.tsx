@@ -12,7 +12,10 @@ export default function WelcomeLanding() {
   const [isWomensExpanded, setIsWomensExpanded] = useState(false);
 
   // Hero image slideshow (auto-rotates every 2s)
-  const heroImages = ['/welcome1.jpg', '/welcome2.jpg', '/welcome3.jpg', '/welcome4.jpg', '/welcome5.jpg', '/welcome6.jpg'];
+  const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
+  const heroImages = ['welcome1.jpg', 'welcome2.jpg', 'welcome3.jpg', 'welcome4.jpg', 'welcome5.jpg', 'welcome6.jpg'].map(
+    (name) => `${supabaseUrl}/storage/v1/render/image/public/factory/${name}?format=webp&quality=80`
+  );
   const [heroSlide, setHeroSlide] = useState(0);
   useEffect(() => {
     const id = setInterval(() => {
@@ -150,7 +153,7 @@ export default function WelcomeLanding() {
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row items-center gap-4 lg:items-center lg:mt-auto">
-                <a id="gtm-start-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-4 bg-neutral-900 text-white rounded-xl font-medium text-[clamp(13px,1.7vw,18px)] whitespace-nowrap hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
+                <a id="gtm-welcome-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-4 bg-neutral-900 text-white rounded-xl font-medium text-[clamp(13px,1.7vw,18px)] whitespace-nowrap hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
                   Upload a Photo &amp; Chat with Mark
                 </a>
               </div>
@@ -836,7 +839,7 @@ export default function WelcomeLanding() {
           <p className="text-lg md:text-xl text-neutral-400 font-light mb-10">
             Start your journey with us today.
           </p>
-          <a id="gtm-start-footer-request-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">
+          <a id="gtm-welcome-footer-request-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">
             Request Production
           </a>
         </section>
