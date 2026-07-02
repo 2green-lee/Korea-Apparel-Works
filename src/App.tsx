@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 import StartLanding from "./components/StartLanding";
+import WelcomeLanding from "./components/WelcomeLanding";
 import MobileChatView from "./components/mobile/MobileChatView";
 const PreOrderModal = lazy(() => import("./components/PreOrderModal"));
 const AdminDashboard = lazy(() => import("./components/AdminDashboard"));
@@ -15,10 +16,12 @@ import { User } from "@supabase/supabase-js";
 const bgImage = "https://tznhtceeqozjndfllknm.supabase.co/storage/v1/object/public/public-assets/white-fabric-texture-bg-optimized2.jpg";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<"client" | "admin" | "start">(() => {
+  const [currentView, setCurrentView] = useState<"client" | "admin" | "start" | "welcome">(() => {
     if (typeof window !== "undefined") {
-      if (window.location.pathname === "/admin") return "admin";
-      if (window.location.pathname === "/start") return "start";
+      const path = window.location.pathname.toLowerCase();
+      if (path === "/admin") return "admin";
+      if (path === "/start") return "start";
+      if (path === "/welcome") return "welcome";
     }
     return "client";
   });
@@ -75,8 +78,13 @@ export default function App() {
 
   useEffect(() => {
     const handlePopState = () => {
-      if (window.location.pathname === "/admin") {
+      const path = window.location.pathname.toLowerCase();
+      if (path === "/admin") {
         setCurrentView("admin");
+      } else if (path === "/start") {
+        setCurrentView("start");
+      } else if (path === "/welcome") {
+        setCurrentView("welcome");
       } else {
         setCurrentView("client");
       }
@@ -237,6 +245,8 @@ export default function App() {
         <Suspense fallback={null}><AdminDashboard onExit={() => handleSetView("client")} /></Suspense>
       ) : currentView === "start" ? (
         <StartLanding />
+      ) : currentView === "welcome" ? (
+        <WelcomeLanding />
       ) : isMobile && currentSlide === 0 ? (
         <MobileChatView
           messages={messages}

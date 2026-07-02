@@ -3,7 +3,7 @@ import ExportMap from './ExportMap';
 import { fabricsData, getFabricPatternSvg } from '../lib/fabricData';
 import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCheck, Zap, Bot, LineChart, MessageSquare, FileText, Scissors, CheckCircle2, Check, Truck, MapPin, FileCheck, Award, ChevronLeft, ChevronRight, Ship, Layers, Globe } from 'lucide-react';
 
-export default function StartLanding() {
+export default function WelcomeLanding() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const mensScrollRef = useRef<HTMLDivElement>(null);
   const womensScrollRef = useRef<HTMLDivElement>(null);
@@ -12,23 +12,13 @@ export default function StartLanding() {
   const [isWomensExpanded, setIsWomensExpanded] = useState(false);
 
   // Hero image slideshow (auto-rotates every 2s)
-  const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-  const optimizedS1Url = `${supabaseUrl}/storage/v1/render/image/public/factory/s1.jpg?format=webp&quality=80`;
-  const heroImages = [optimizedS1Url, '/s2.jpg', '/s3.jpg', '/s4.jpg'];
+  const heroImages = ['/welcome1.jpg', '/welcome2.jpg', '/welcome3.jpg', '/welcome4.jpg', '/welcome5.jpg', '/welcome6.jpg'];
   const [heroSlide, setHeroSlide] = useState(0);
   useEffect(() => {
     const id = setInterval(() => {
       setHeroSlide((prev) => (prev + 1) % heroImages.length);
-    }, 2000);
+    }, 3500);
     return () => clearInterval(id);
-  }, []);
-
-  // Sequential reveal of the chat thread: photo bubble first, then Mark's reply
-  const [chatReveal, setChatReveal] = useState(0);
-  useEffect(() => {
-    const t1 = setTimeout(() => setChatReveal(1), 1000);
-    const t2 = setTimeout(() => setChatReveal(2), 3000);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -145,15 +135,17 @@ export default function StartLanding() {
 
               {/* Headline */}
               <h1 className="text-[9vw] sm:text-5xl md:text-6xl lg:text-[3.4rem] xl:text-6xl font-bold tracking-tight mb-6 leading-[1.1] text-neutral-900">
-                The apparel you want,<br />
+                You know the brand you want to build.<br />
                 <span className="text-blue-600">
-                  from a single photo.
+                  We know how to make it.
                 </span>
               </h1>
 
               {/* Description */}
               <p className="max-w-xl text-lg md:text-xl text-neutral-600 font-light mb-8 leading-relaxed">
-                Upload a photo and chat with Mark, our AI agent — and we'll send you a tailored quote within 24 hours. Made in Korea, so there are no Section 301 tariffs.
+                Every brand you admire started smaller than you think.<br />
+                Start yours with one sample.<br />
+                The fit, the feel, the identity. Made together, from day one.
               </p>
 
               {/* Buttons */}
@@ -164,62 +156,18 @@ export default function StartLanding() {
               </div>
             </div>
 
-            {/* Right: Hero image + Mark chat overlay */}
-            <div className="relative mt-4 lg:mt-0 max-w-[614px] mx-auto w-full flex flex-col">
-              <div className="relative hidden overflow-hidden shadow-2xl shadow-blue-900/10 border border-white/60 aspect-[4/3] sm:aspect-[3/2] lg:aspect-[4/3]">
+            {/* Right: Auto-sliding Image Carousel */}
+            <div className="relative mt-8 lg:mt-[64px] max-w-[614px] mx-auto w-full flex flex-col">
+              <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-2xl shadow-neutral-900/10 border border-neutral-200/50 aspect-[5/4] bg-neutral-100">
                 {heroImages.map((src, idx) => (
                   <img
                     key={src}
                     src={src}
-                    alt="Premium apparel manufacturing in Korea"
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${idx === heroSlide ? 'opacity-100' : 'opacity-0'}`}
+                    alt={`Lookbook ${idx + 1}`}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${idx === heroSlide ? 'opacity-100' : 'opacity-0'}`}
                     loading={idx === 0 ? 'eager' : 'lazy'}
                   />
                 ))}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
-              </div>
-
-              {/* Desktop spacer: aligns the chat card top with the headline (below the badge) */}
-              <div className="hidden lg:block lg:h-[64px] shrink-0" aria-hidden="true" />
-
-              {/* Chat window: stretches from headline top to button bottom on desktop */}
-              <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/80 bg-white/70 shadow-sm p-4 sm:p-5 lg:flex-1">
-                {/* User message: uploaded photo */}
-                <div className={`flex justify-end transition-all duration-700 ease-out ${chatReveal >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
-                  <div className="bg-white/95 backdrop-blur-md border border-neutral-100 rounded-2xl rounded-tr-md p-2 max-w-[78%] shadow-sm">
-                    <img src={optimizedS1Url} alt="Uploaded design" className="rounded-xl w-full max-h-36 object-cover" />
-                    <div className="flex items-center gap-1.5 px-1 pt-2 pb-0.5">
-                      <FileCheck size={13} className="text-neutral-600 shrink-0" />
-                      <span className="text-[12px] text-neutral-600 truncate">your-design.jpg</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Mark reply */}
-                <div className={`flex items-start gap-2.5 transition-all duration-700 ease-out ${chatReveal >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
-                  <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <Bot size={16} />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-xs font-semibold text-neutral-900 mb-1">Mark · AI Agent</div>
-                    <div className="inline-block bg-white/95 backdrop-blur-md border border-neutral-100 shadow-sm rounded-2xl rounded-tl-md px-4 py-3 max-w-[280px]">
-                      <p className="text-[13px] text-neutral-600 leading-snug">
-                        Got it! MOQ from <b className="text-neutral-900">1&nbsp;pc</b>, sample in <b className="text-neutral-900">3–14 days</b>.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Chat composer (design only) */}
-                <div className="mt-1 lg:mt-auto self-center w-[94%] flex items-center gap-2 bg-white border border-neutral-200 rounded-full pl-2 pr-2 py-1.5 shadow-sm">
-                  <button type="button" aria-label="Upload a photo" className="w-9 h-9 rounded-full flex items-center justify-center text-neutral-500 hover:bg-neutral-100 transition-colors shrink-0">
-                    <ImagePlus size={18} />
-                  </button>
-                  <span className="flex-1 text-[14px] text-neutral-400 truncate select-none">Message Mark…</span>
-                  <button type="button" aria-label="Send" className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 hover:bg-blue-700 transition-colors">
-                    <ArrowUp size={18} />
-                  </button>
-                </div>
               </div>
             </div>
 

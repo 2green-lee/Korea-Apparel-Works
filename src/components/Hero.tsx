@@ -686,7 +686,7 @@ export default function Hero({
                           const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
                           const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
                           return (
-                          <div key={`${groupIdx}-${idx}`} className={`flex-none w-[50vw] sm:w-[320px] md:w-[400px] aspect-[4/3] rounded-xl overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-sm transition-all duration-300 ${idx === 3 ? 'hidden md:block' : ''}`}>
+                          <div key={`${groupIdx}-${idx}`} className={`flex-none w-[50vw] sm:w-[320px] md:w-[400px] aspect-[4/3] rounded-none overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-sm transition-all duration-300 ${idx === 3 ? 'hidden md:block' : ''}`}>
                             <img 
                               src={optimizedUrl} 
                               alt={`Atelier gallery ${idx + 1}`} 
@@ -953,7 +953,7 @@ export default function Hero({
                       </div>
                     </div>
                     <div className="max-w-[1200px] mx-auto px-6 w-full relative">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 pb-8">
                         {[
                           "-29 001.png", "-30 003.png", "-34 012.png", "-33 008.png",
                           "-33 009.png", "-33 010.png", "-34 011.png", "-31 005.png",
@@ -962,13 +962,15 @@ export default function Hero({
                           const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
                           const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(img)}?format=webp&quality=80`;
                           return (
-                          <div key={idx} className="bg-white rounded-2xl border border-neutral-200 overflow-hidden shadow-sm">
+                          <div key={idx} className="bg-white border border-neutral-200 overflow-hidden shadow-sm">
                             <div className="aspect-[3/4] w-full bg-neutral-100 relative overflow-hidden">
                               <img src={optimizedUrl} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
                             </div>
                           </div>
                         )})}
                       </div>
+                      {/* Fade-out effect at the bottom */}
+                      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none" style={{ background: 'linear-gradient(to top, var(--color-luxury-cream, #fcfbf9) 0%, transparent 100%)' }}></div>
                     </div>
                   </section>
 
