@@ -138,17 +138,14 @@ export default function WelcomeLanding() {
 
               {/* Headline */}
               <h1 className="text-[9vw] sm:text-5xl md:text-6xl lg:text-[3.4rem] xl:text-6xl font-bold tracking-tight mb-6 leading-[1.1] text-neutral-900">
-                You know the brand you want to build.<br />
-                <span className="text-blue-600">
-                  We know how to make it.
-                </span>
+                Sportswear, made the way<br />
+                <span className="text-blue-600">you imagined it.</span>
               </h1>
 
               {/* Description */}
               <p className="max-w-xl text-lg md:text-xl text-neutral-600 font-light mb-8 leading-relaxed">
-                Every brand you admire started smaller than you think.<br />
-                Start yours with one sample.<br />
-                The fit, the feel, the identity. Made together, from day one.
+                Every brand starts smaller than you think. Start yours with one sample.<br />
+                Pickleball, tennis, golf and more. The fit, the feel, the identity. Made together, from day one.
               </p>
 
               {/* Buttons */}
