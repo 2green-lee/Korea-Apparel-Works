@@ -8,6 +8,7 @@ export default function StartLanding() {
   const mensScrollRef = useRef<HTMLDivElement>(null);
   const womensScrollRef = useRef<HTMLDivElement>(null);
   const whyKoreaScrollRef = useRef<HTMLDivElement>(null);
+  const whyKawScrollRef = useRef<HTMLDivElement>(null);
   const [openFabric, setOpenFabric] = useState<string | null>(null);
   const [isWomensExpanded, setIsWomensExpanded] = useState(false);
 
@@ -262,20 +263,20 @@ export default function StartLanding() {
         {/* Combined Image Grid */}
         <section className="w-full px-4 md:px-6 pb-12 md:pb-20 relative">
           <div ref={galleryRef} className={`w-full max-w-[1200px] mx-auto relative transition-all duration-1000 ease-out ${galleryIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-            <div className="w-full grid grid-cols-3 md:grid-cols-4 gap-[1px] sm:gap-[2px] border border-neutral-200/60 rounded-none overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-transparent">
+            <div className="w-full grid grid-cols-3 md:grid-cols-4 gap-[1px] sm:gap-[2px] border border-neutral-300 rounded-none overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-transparent">
               {[
-                { type: "remote", name: "-29 001.png" },
-                { type: "remote", name: "-30 003.png" },
-                { type: "remote", name: "-33 008.png" },
-                { type: "remote", name: "-33 009.png" },
-                { type: "remote", name: "-33 010.png" },
-                { type: "remote", name: "-34 011.png" },
-                { type: "remote", name: "-31 005.png" },
-                { type: "remote", name: "-35 013.png" },
                 { type: "remote", name: "w1.png" },
                 { type: "remote", name: "w2.png" },
                 { type: "remote", name: "w3.png" },
-                { type: "remote", name: "w4.png" }
+                { type: "remote", name: "w4.png" },
+                { type: "remote", name: "w5.png" },
+                { type: "remote", name: "w6.png" },
+                { type: "remote", name: "m1.png" },
+                { type: "remote", name: "m2.png" },
+                { type: "remote", name: "m3.png" },
+                { type: "remote", name: "m4.png" },
+                { type: "remote", name: "m5.png" },
+                { type: "remote", name: "m6.png" }
               ].map((img, i) => {
                 const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
                 const imgUrl = `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(img.name)}`;
@@ -666,12 +667,12 @@ export default function StartLanding() {
 
             </div>
             
-            {/* Scroll Buttons for desktop */}
-            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'left')} className="absolute left-0 top-1/2 -translate-y-1/2 -ml-6 hidden md:flex items-center justify-center w-14 h-14 rounded-full bg-white border border-neutral-200 shadow-md text-neutral-600 hover:text-blue-600 hover:border-blue-200 opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
-              <ChevronLeft className="w-6 h-6 md:w-7 md:h-7" />
+            {/* Scroll Buttons */}
+            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'left')} className="absolute -left-4 md:left-0 md:-ml-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 md:w-14 md:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 md:opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+              <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
             </button>
-            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'right')} className="absolute right-0 top-1/2 -translate-y-1/2 -mr-6 hidden md:flex items-center justify-center w-14 h-14 rounded-full bg-white border border-neutral-200 shadow-md text-neutral-600 hover:text-blue-600 hover:border-blue-200 opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
-              <ChevronRight className="w-6 h-6 md:w-7 md:h-7" />
+            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'right')} className="absolute -right-4 md:right-0 md:-mr-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 md:w-14 md:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 md:opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+              <ChevronRight className="w-8 h-8 md:w-10 md:h-10" />
             </button>
 
           </div>
@@ -680,14 +681,15 @@ export default function StartLanding() {
 
         {/* Capabilities Section */}
         <section ref={capabilitiesRef} className={`w-full pt-12 md:pt-16 pb-6 md:pb-8 px-6 transition-all duration-1000 ease-out ${capabilitiesIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-          <div className="max-w-[1200px] mx-auto w-full">
+          <div className="max-w-[1200px] mx-auto w-full group/kawcarousel">
             <div className="text-center mb-[90px]">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 md:gap-5">
                 <CheckCircle2 className="hidden md:block w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 md:mt-2" strokeWidth={2.5} />
                 <span className="text-center">Why Korea Apparel Works?</span>
               </h2>
             </div>
-            <div className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 lg:grid-cols-4 gap-[25px] snap-x snap-mandatory scrollbar-hide">
+            <div className="relative w-full">
+              <div ref={whyKawScrollRef} className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 lg:grid-cols-4 gap-[25px] snap-x snap-mandatory scrollbar-hide">
               {/* Card 1 */}
               <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
@@ -732,6 +734,15 @@ export default function StartLanding() {
                 </p>
               </div>
 
+              </div>
+
+              {/* Scroll Buttons for Mobile KAW Section */}
+              <button onClick={() => scrollGallery(whyKawScrollRef, 'left')} className="absolute -left-4 top-1/2 -translate-y-1/2 md:hidden flex items-center justify-center w-10 h-10 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+                <ChevronLeft className="w-8 h-8" />
+              </button>
+              <button onClick={() => scrollGallery(whyKawScrollRef, 'right')} className="absolute -right-4 top-1/2 -translate-y-1/2 md:hidden flex items-center justify-center w-10 h-10 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+                <ChevronRight className="w-8 h-8" />
+              </button>
             </div>
           </div>
         </section>

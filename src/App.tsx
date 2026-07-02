@@ -26,6 +26,17 @@ export default function App() {
     return "client";
   });
 
+  // Force lowercase URL in browser address bar
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname;
+      const lowerPath = currentPath.toLowerCase();
+      if (currentPath !== lowerPath) {
+        window.history.replaceState(null, "", lowerPath + window.location.search + window.location.hash);
+      }
+    }
+  }, []);
+
   const [isPreOrderOpen, setIsPreOrderOpen] = useState(false);
   const [customFinish, setCustomFinish] = useState<StreamColorFinish>("titanium-silver");
   const [customSize, setCustomSize] = useState<number>(9);

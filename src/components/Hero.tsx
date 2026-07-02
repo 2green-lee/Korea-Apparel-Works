@@ -682,9 +682,9 @@ export default function Hero({
                   <div className="flex gap-4 w-max animate-marquee pb-8">
                     {[...Array(2)].map((_, groupIdx) => (
                       <React.Fragment key={groupIdx}>
-                        {['b1.jpg', 'b2-2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
+                        {['w1.png', 'w2.png', 'w3.png', 'w4.png', 'w5.png', 'w6.png', 'm1.png', 'm2.png', 'm3.png', 'm4.png', 'm5.png', 'm6.png'].map((imgName, idx) => {
                           const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-                          const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
+                          const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(imgName)}?format=webp&quality=80`;
                           return (
                           <div key={`${groupIdx}-${idx}`} className={`flex-none w-[50vw] sm:w-[320px] md:w-[400px] aspect-[4/3] rounded-none overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-sm transition-all duration-300 ${idx === 3 ? 'hidden md:block' : ''}`}>
                             <img 
