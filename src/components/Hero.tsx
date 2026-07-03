@@ -637,9 +637,9 @@ export default function Hero({
               <div id="about-us-section" className="w-full flex flex-col font-sans text-left relative select-text bg-transparent border border-transparent rounded-none overflow-hidden scroll-mt-24 mt-16 md:mt-0">
                 <div className="py-10 md:py-12 px-4 md:px-0 border-none w-full bg-transparent">
                   <div className="w-full flex flex-col gap-8 md:gap-10 rounded-2xl md:rounded-3xl bg-transparent md:bg-white border border-neutral-200/60 md:border-[#e9ecef]/80 p-6 md:p-10 lg:p-12 transition-all duration-300 md:hover:border-[#dee2e6] md:hover:shadow-md group">
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-neutral-900 leading-[1.2] tracking-tight text-center md:text-left group-hover:text-black transition-colors w-full">
+                    <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-neutral-900 leading-[1.2] tracking-tight text-center md:text-left group-hover:text-black transition-colors w-full">
                       From one factory floor to a global platform
-                    </h1>
+                    </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 w-full">
                       <div className="flex flex-col justify-start">
                         <div className="space-y-4 text-[15px] md:text-base text-neutral-600 leading-relaxed font-light text-center md:text-left">

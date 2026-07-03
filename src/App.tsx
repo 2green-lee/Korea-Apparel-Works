@@ -107,6 +107,74 @@ export default function App() {
     };
   }, []);
 
+  // Dynamic SEO Metadata updates based on current view
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    let title = "Korea Apparel Works | Custom Apparel Solutions & Manufacturing";
+    let description = "Korea Apparel Works is the ultimate apparel production partner. From design pattern drafting to veteran sewing ateliers and low-MOQ premium custom apparel solutions.";
+    let robots = "index, follow";
+    let canonical = "https://k-apparel.works";
+
+    switch (currentView) {
+      case "admin":
+        title = "Admin Dashboard | Korea Apparel Works";
+        description = "Administrative control panel for Korea Apparel Works.";
+        robots = "noindex, nofollow";
+        canonical = "https://k-apparel.works/admin";
+        break;
+      case "start":
+        title = "Start Custom Apparel Production | Korea Apparel Works";
+        description = "Launch your custom apparel production. Get instant quotes, fabric consultations, and custom pattern design from Korean atelier veterans.";
+        robots = "index, follow";
+        canonical = "https://k-apparel.works/start";
+        break;
+      case "welcome":
+        title = "Welcome to Korea Apparel Works | Premium Manufacturing Partner";
+        description = "Learn how Korea Apparel Works delivers premium custom apparel solutions with flawless details, low-MOQ, and 30-year veteran ateliers.";
+        robots = "index, follow";
+        canonical = "https://k-apparel.works/welcome";
+        break;
+      case "client":
+      default:
+        title = "Korea Apparel Works | Custom Apparel Solutions & Manufacturing";
+        description = "Korea Apparel Works is the ultimate apparel production partner. From design pattern drafting to veteran sewing ateliers and low-MOQ premium custom apparel solutions.";
+        robots = "index, follow";
+        canonical = "https://k-apparel.works";
+        break;
+    }
+
+    // Update title
+    document.title = title;
+
+    // Update meta description
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement("meta");
+      metaDescription.setAttribute("name", "description");
+      document.head.appendChild(metaDescription);
+    }
+    metaDescription.setAttribute("content", description);
+
+    // Update meta robots
+    let metaRobots = document.querySelector('meta[name="robots"]');
+    if (!metaRobots) {
+      metaRobots = document.createElement("meta");
+      metaRobots.setAttribute("name", "robots");
+      document.head.appendChild(metaRobots);
+    }
+    metaRobots.setAttribute("content", robots);
+
+    // Update canonical link
+    let linkCanonical = document.querySelector('link[rel="canonical"]');
+    if (!linkCanonical) {
+      linkCanonical = document.createElement("link");
+      linkCanonical.setAttribute("rel", "canonical");
+      document.head.appendChild(linkCanonical);
+    }
+    linkCanonical.setAttribute("href", canonical);
+  }, [currentView]);
+
   // Slide Change Scroll Reset
   useEffect(() => {
     window.scrollTo(0, 0);
