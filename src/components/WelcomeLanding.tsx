@@ -126,7 +126,7 @@ export default function WelcomeLanding() {
       <main className="flex-1 flex flex-col">
         <div className="w-full bg-gradient-to-b from-white via-blue-50 to-blue-200">
           {/* Hero Section */}
-          <section className="relative pt-12 pb-16 md:pt-16 md:pb-24 px-6 overflow-hidden flex-1 flex items-center">
+          <section className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 px-6 overflow-hidden flex-1 flex items-center">
           <div className="max-w-[1200px] mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-[49px] items-stretch">
 
             {/* Left: Copy */}
@@ -138,13 +138,13 @@ export default function WelcomeLanding() {
               </a>
 
               {/* Headline */}
-              <h1 className="text-[9vw] sm:text-5xl md:text-6xl lg:text-[3.4rem] xl:text-6xl font-bold tracking-tight mb-6 leading-[1.1] text-neutral-900">
+              <h1 className="text-[9vw] sm:text-5xl lg:text-6xl lg:text-[3.4rem] xl:text-6xl font-bold tracking-tight mb-6 leading-[1.1] text-neutral-900">
                 Sportswear, made the way<br />
                 <span className="text-blue-600">you imagined it.</span>
               </h1>
 
               {/* Description */}
-              <p className="max-w-xl text-lg md:text-xl text-neutral-600 font-light mb-8 leading-relaxed">
+              <p className="max-w-xl text-lg lg:text-xl text-neutral-600 font-light mb-8 leading-relaxed">
                 Every brand starts smaller than you think. Start yours with one sample.<br />
                 Pickleball, tennis, golf and more. The fit, the feel, the identity. Made together, from day one.
               </p>
@@ -177,42 +177,42 @@ export default function WelcomeLanding() {
         </section>
 
         {/* Metrics */}
-        <section className="px-6 pb-12 md:pb-[150px]">
+        <section className="px-6 pb-12 lg:pb-[150px]">
           <div className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-4xl mx-auto">
             {/* Item 1 */}
             <div className="flex flex-col items-center gap-3 sm:gap-5">
-              <div className="w-full flex items-center justify-center py-6 sm:py-10 md:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
-                <div className="text-[7vw] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
-                  1<span className="text-[4vw] sm:text-2xl md:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">pcs~</span>
+              <div className="w-full flex items-center justify-center py-6 sm:py-10 lg:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
+                <div className="text-[7vw] sm:text-4xl lg:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
+                  1<span className="text-[4vw] sm:text-2xl lg:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">pcs~</span>
                 </div>
               </div>
-              <div className="text-[11px] sm:text-sm md:text-sm md:text-base text-neutral-600 font-medium text-center leading-tight">Minimum Order<br className="sm:hidden"/> (MOQ)</div>
+              <div className="text-[11px] sm:text-sm lg:text-sm lg:text-base text-neutral-600 font-medium text-center leading-tight">Minimum Order<br className="sm:hidden"/> (MOQ)</div>
             </div>
             {/* Item 2 */}
             <div className="flex flex-col items-center gap-3 sm:gap-5">
-              <div className="w-full flex items-center justify-center py-6 sm:py-10 md:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
-                <div className="text-[7vw] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
-                  3~14<span className="text-[4vw] sm:text-2xl md:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">days</span>
+              <div className="w-full flex items-center justify-center py-6 sm:py-10 lg:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
+                <div className="text-[7vw] sm:text-4xl lg:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
+                  3~14<span className="text-[4vw] sm:text-2xl lg:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">days</span>
                 </div>
               </div>
-              <div className="text-[11px] sm:text-sm md:text-sm md:text-base text-neutral-600 font-medium text-center leading-tight">Sample<br className="sm:hidden"/> Lead Time</div>
+              <div className="text-[11px] sm:text-sm lg:text-sm lg:text-base text-neutral-600 font-medium text-center leading-tight">Sample<br className="sm:hidden"/> Lead Time</div>
             </div>
             {/* Item 3 */}
             <div className="flex flex-col items-center gap-3 sm:gap-5">
-              <div className="w-full flex items-center justify-center py-6 sm:py-10 md:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
-                <div className="text-[7vw] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
-                  100<span className="text-[4vw] sm:text-2xl md:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">+</span>
+              <div className="w-full flex items-center justify-center py-6 sm:py-10 lg:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
+                <div className="text-[7vw] sm:text-4xl lg:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
+                  100<span className="text-[4vw] sm:text-2xl lg:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">+</span>
                 </div>
               </div>
-              <div className="text-[11px] sm:text-sm md:text-sm md:text-base text-neutral-600 font-medium text-center leading-tight">Partner<br className="sm:hidden"/> Brands</div>
+              <div className="text-[11px] sm:text-sm lg:text-sm lg:text-base text-neutral-600 font-medium text-center leading-tight">Partner<br className="sm:hidden"/> Brands</div>
             </div>
           </div>
         </section>
 
         {/* Combined Image Grid */}
-        <section className="w-full px-4 md:px-6 pb-12 md:pb-20 relative">
+        <section className="w-full px-4 lg:px-6 pb-12 lg:pb-20 relative">
           <div ref={galleryRef} className={`w-full max-w-[1200px] mx-auto relative transition-all duration-1000 ease-out ${galleryIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-            <div className="w-full grid grid-cols-3 md:grid-cols-4 gap-[1px] sm:gap-[2px] border border-neutral-300 rounded-none overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-transparent">
+            <div className="w-full grid grid-cols-3 lg:grid-cols-4 gap-[1px] sm:gap-[2px] border border-neutral-300 rounded-none overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-transparent">
               {[
                 { type: "remote", name: "w1.png" },
                 { type: "remote", name: "w2.png" },
@@ -250,12 +250,12 @@ export default function WelcomeLanding() {
         </section>
 
         {/* Story Section - Temporarily hidden */}
-        <section className="hidden w-full bg-transparent py-16 md:py-24 px-6 flex flex-col items-center text-center">
-          <div className="max-w-4xl w-full flex flex-col items-center bg-white/70 backdrop-blur-xl border border-white/80 shadow-xl rounded-3xl p-10 md:p-16 hover:-translate-y-2 hover:shadow-2xl hover:bg-white/80 transition-all duration-500">
-            <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-10">
+        <section className="hidden w-full bg-transparent py-16 lg:py-24 px-6 flex flex-col items-center text-center">
+          <div className="max-w-4xl w-full flex flex-col items-center bg-white/70 backdrop-blur-xl border border-white/80 shadow-xl rounded-3xl p-10 lg:p-16 hover:-translate-y-2 hover:shadow-2xl hover:bg-white/80 transition-all duration-500">
+            <h2 className="text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-10">
               From one factory floor to a global platform
             </h2>
-            <div className="space-y-6 text-[15px] sm:text-lg md:text-xl text-neutral-800 font-light leading-relaxed max-w-3xl">
+            <div className="space-y-6 text-[15px] sm:text-lg lg:text-xl text-neutral-800 font-light leading-relaxed max-w-3xl">
               <p>
                 For over 30 years, he ran an apparel factory in Korea, crafting premium polo shirts and golf wear with true craftsmanship.
               </p>
@@ -268,7 +268,7 @@ export default function WelcomeLanding() {
         </div>
 
         {/* Hero to Custom Apparel Gradient Transition */}
-        <div className="h-[300px] md:h-[500px] w-full" style={{ background: "linear-gradient(to bottom, #BFDBFE 0%, #dbeafe 20%, #eff6ff 45%, #ffffff 100%)" }}></div>
+        <div className="h-[300px] lg:h-[500px] w-full" style={{ background: "linear-gradient(to bottom, #BFDBFE 0%, #dbeafe 20%, #eff6ff 45%, #ffffff 100%)" }}></div>
 
 
         {/* Why Korea + Capabilities Wrapper */}
@@ -276,11 +276,11 @@ export default function WelcomeLanding() {
 
         {/* Expanded Why Korea Sections */}
         {/* Expanded Why Korea Sections */}
-        <div ref={whyKoreaRef} className={`w-full pt-24 md:pt-40 pb-16 md:pb-32 px-6 transition-all duration-1000 ease-out ${whyKoreaIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+        <div ref={whyKoreaRef} className={`w-full pt-24 lg:pt-40 pb-16 lg:pb-32 px-6 transition-all duration-1000 ease-out ${whyKoreaIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
           
-          <div className="max-w-[1200px] mx-auto w-full text-center mb-12 md:mb-20">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-8 flex items-start justify-center gap-3 md:gap-5 z-10">
-              <CheckCircle2 className="hidden md:block w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 md:mt-2" strokeWidth={2.5} />
+          <div className="max-w-[1200px] mx-auto w-full text-center mb-12 lg:mb-20">
+            <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-8 flex items-start justify-center gap-3 lg:gap-5 z-10">
+              <CheckCircle2 className="hidden lg:block w-[34px] h-[34px] lg:w-[42px] lg:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 lg:mt-2" strokeWidth={2.5} />
               <span className="text-center">Why Korea?</span>
             </h2>
           </div>
@@ -289,39 +289,39 @@ export default function WelcomeLanding() {
             <div ref={whyKoreaScrollRef} className="flex overflow-x-auto pb-12 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-12 gap-6 snap-x snap-mandatory scrollbar-hide">
               
               {/* Card 1: Tariffs */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px] lg:h-auto">
-                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
+              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
                   <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-orange-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
 
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white border border-orange-100 flex items-center justify-center mb-6 text-orange-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
-                    <FileCheck className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.5} />
+                  <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-white border border-orange-100 flex items-center justify-center mb-6 text-orange-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
+                    <FileCheck className="w-7 h-7 lg:w-8 lg:h-8" strokeWidth={1.5} />
                   </div>
-                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
+                  <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 lg:mb-6 leading-[1.1] relative z-10">
                     No Section 301 tariffs.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-4 lg:mb-10 max-w-lg relative z-10">
+                  <p className="text-base lg:text-lg text-neutral-600 font-light leading-relaxed mb-6 lg:mb-4 lg:mb-10 max-w-lg relative z-10">
                     None of the punitive surcharges that hit Chinese goods.
                   </p>
 
                   {/* Visual Chart: Horizontal Bar Comparison */}
-                  <div className="w-full flex flex-col justify-center gap-6 md:gap-4 lg:gap-8 items-center mt-auto relative px-2 md:px-0 z-10">
+                  <div className="w-full flex flex-col justify-center gap-6 lg:gap-4 lg:gap-8 items-center mt-auto relative px-2 lg:px-0 z-10">
                     
                     {/* Others Row */}
                     <div className="flex flex-col items-center w-full group/row">
-                      <div className="text-neutral-400 font-extrabold mb-3 tracking-wider text-xs md:text-sm uppercase">
+                      <div className="text-neutral-400 font-extrabold mb-3 tracking-wider text-xs lg:text-sm uppercase">
                         CHINA
                       </div>
-                      <div className="flex w-full h-[72px] sm:h-[90px] md:h-[70px] lg:h-[100px] rounded-xl overflow-hidden shadow-sm border border-neutral-200">
+                      <div className="flex w-full h-[72px] sm:h-[90px] lg:h-[70px] lg:h-[100px] rounded-xl overflow-hidden shadow-sm border border-neutral-200">
                         <div className="w-[50%] bg-[#8F908C] flex items-center justify-center px-2">
-                          <span className="text-white font-extrabold text-[9px] sm:text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Product Cost</span>
+                          <span className="text-white font-extrabold text-[9px] sm:text-xs lg:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Product Cost</span>
                         </div>
                         <div className="w-[15%] bg-[#A8A9A6] flex items-center justify-center border-l border-white/20">
-                          <span className="text-white font-extrabold text-[9px] sm:text-xs md:text-sm whitespace-nowrap">Duty</span>
+                          <span className="text-white font-extrabold text-[9px] sm:text-xs lg:text-sm whitespace-nowrap">Duty</span>
                         </div>
                         <div className="w-[35%] bg-[#E84E4E] flex items-center justify-center border-l border-white/20 shadow-[inset_2px_0_10px_rgba(0,0,0,0.1)] px-1">
-                          <span className="text-white font-extrabold text-[9px] sm:text-xs md:text-sm flex items-center gap-1 drop-shadow-sm whitespace-nowrap">
+                          <span className="text-white font-extrabold text-[9px] sm:text-xs lg:text-sm flex items-center gap-1 drop-shadow-sm whitespace-nowrap">
                             <Plus className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" strokeWidth={3} />
                             <span className="truncate">Tariff</span>
                           </span>
@@ -331,23 +331,23 @@ export default function WelcomeLanding() {
 
                     {/* Korea Row */}
                     <div className="flex flex-col items-center w-full group/row">
-                      <div className="text-blue-600 font-extrabold mb-3 tracking-wider text-xs md:text-sm flex items-center gap-2 uppercase">
+                      <div className="text-blue-600 font-extrabold mb-3 tracking-wider text-xs lg:text-sm flex items-center gap-2 uppercase">
                         <span className="relative flex h-2 w-2 shrink-0">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                         </span>
                         KOREA
                       </div>
-                      <div className="flex w-full h-[72px] sm:h-[90px] md:h-[70px] lg:h-[100px] rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg border-2 border-blue-200">
+                      <div className="flex w-full h-[72px] sm:h-[90px] lg:h-[70px] lg:h-[100px] rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg border-2 border-blue-200">
                         <div className="w-[50%] bg-blue-600 flex items-center justify-center px-2">
-                          <span className="text-white font-extrabold text-[9px] sm:text-xs md:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Product Cost</span>
+                          <span className="text-white font-extrabold text-[9px] sm:text-xs lg:text-sm whitespace-nowrap overflow-hidden text-ellipsis">Product Cost</span>
                         </div>
                         <div className="w-[15%] bg-blue-400 flex items-center justify-center border-l border-white/20">
-                          <span className="text-white font-extrabold text-[9px] sm:text-xs md:text-sm whitespace-nowrap">Duty</span>
+                          <span className="text-white font-extrabold text-[9px] sm:text-xs lg:text-sm whitespace-nowrap">Duty</span>
                         </div>
                         <div className="w-[35%] bg-[#1E1E1E] flex items-center justify-center border-l border-white/10 relative overflow-hidden group/saved hover:bg-black transition-colors px-1">
                           <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover/saved:animate-[shimmer_1.5s_infinite]"></div>
-                          <span className="text-white font-extrabold text-[8px] sm:text-[10px] md:text-xs flex items-center gap-1 relative z-10 whitespace-nowrap">
+                          <span className="text-white font-extrabold text-[8px] sm:text-[10px] lg:text-xs flex items-center gap-1 relative z-10 whitespace-nowrap">
                             <Check className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-400 shrink-0" strokeWidth={4} />
                             <span className="truncate">You Keep this!</span>
                           </span>
@@ -359,107 +359,107 @@ export default function WelcomeLanding() {
               </div>
 
               {/* Card 2: Supply Chain */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px] lg:h-auto">
-                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
+              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
                   <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-blue-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
 
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white border border-blue-100 flex items-center justify-center mb-6 text-blue-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
-                    <MapPin className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.5} />
+                  <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-white border border-blue-100 flex items-center justify-center mb-6 text-blue-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
+                    <MapPin className="w-7 h-7 lg:w-8 lg:h-8" strokeWidth={1.5} />
                   </div>
-                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
-                    One Supply Chain.<br className="hidden md:block"/> One Country.
+                  <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 lg:mb-6 leading-[1.1] relative z-10">
+                    One Supply Chain.<br className="hidden lg:block"/> One Country.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-4 lg:mb-10 max-w-lg relative z-10">
+                  <p className="text-base lg:text-lg text-neutral-600 font-light leading-relaxed mb-6 lg:mb-4 lg:mb-10 max-w-lg relative z-10">
                     Yarn to finish, all in one country. Not one ocean away.
                   </p>
 
                   {/* Visual Chart: Supply Chain Comparison */}
-                  <div className="w-full flex flex-col justify-center gap-6 md:gap-4 lg:gap-8 items-center mt-auto relative z-10">
+                  <div className="w-full flex flex-col justify-center gap-6 lg:gap-4 lg:gap-8 items-center mt-auto relative z-10">
                     
                     {/* Traditional Offshore Sourcing */}
                     <div className="flex flex-col items-center w-full group/row">
-                      <div className="text-neutral-400 font-extrabold mb-3 tracking-wider text-xs md:text-sm uppercase">OTHERS</div>
-                      <div className="flex items-center gap-1 w-full justify-between bg-white/60 p-2 sm:p-3 md:p-4 rounded-xl border border-neutral-200 shadow-sm h-[72px] sm:h-[90px] md:h-[70px] lg:h-[100px]">
+                      <div className="text-neutral-400 font-extrabold mb-3 tracking-wider text-xs lg:text-sm uppercase">OTHERS</div>
+                      <div className="flex items-center gap-1 w-full justify-between bg-white/60 p-2 sm:p-3 lg:p-4 rounded-xl border border-neutral-200 shadow-sm h-[72px] sm:h-[90px] lg:h-[70px] lg:h-[100px]">
                         {/* Stage 1 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-neutral-400 border border-neutral-100 shrink-0">
                             <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-xs sm:text-[13px] md:text-[15px] text-neutral-500 font-bold text-center leading-tight">Yarn</span>
+                          <span className="text-xs sm:text-[13px] lg:text-[15px] text-neutral-500 font-bold text-center leading-tight">Yarn</span>
                         </div>
                         {/* Route 1 */}
                         <div className="flex-1 flex flex-col items-center relative min-w-[20px]">
                           <div className="w-full border-t-2 border-dashed border-neutral-300 absolute top-1/2 -translate-y-1/2"></div>
                           <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400 relative z-10" />
-                          <span className="text-[10px] sm:text-[11px] md:text-[13px] text-neutral-400 font-black mt-1.5 whitespace-nowrap tracking-tighter">BORDERS</span>
+                          <span className="text-[10px] sm:text-[11px] lg:text-[13px] text-neutral-400 font-black mt-1.5 whitespace-nowrap tracking-tighter">BORDERS</span>
                         </div>
                         {/* Stage 2 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-neutral-400 border border-neutral-100 shrink-0">
                             <Factory className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-xs sm:text-[13px] md:text-[15px] text-neutral-500 font-bold text-center leading-tight">Fabric</span>
+                          <span className="text-xs sm:text-[13px] lg:text-[15px] text-neutral-500 font-bold text-center leading-tight">Fabric</span>
                         </div>
                         {/* Route 2 */}
                         <div className="flex-1 flex flex-col items-center relative min-w-[20px]">
                           <div className="w-full border-t-2 border-dashed border-neutral-300 absolute top-1/2 -translate-y-1/2"></div>
                           <Ship className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400 relative z-10 animate-[bounce_2s_ease-in-out_infinite]" />
-                          <span className="text-[10px] sm:text-[11px] md:text-[13px] text-neutral-400 font-black mt-1.5 whitespace-nowrap tracking-tighter">30+ DAYS</span>
+                          <span className="text-[10px] sm:text-[11px] lg:text-[13px] text-neutral-400 font-black mt-1.5 whitespace-nowrap tracking-tighter">30+ DAYS</span>
                         </div>
                         {/* Stage 3 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-neutral-400 border border-neutral-100 shrink-0">
                             <Scissors className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-xs sm:text-[13px] md:text-[15px] text-neutral-500 font-bold text-center leading-tight">Sewing</span>
+                          <span className="text-xs sm:text-[13px] lg:text-[15px] text-neutral-500 font-bold text-center leading-tight">Sewing</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Korea Sourcing */}
                     <div className="flex flex-col items-center w-full group/row">
-                      <div className="text-blue-600 font-extrabold mb-3 tracking-wider text-xs md:text-sm flex items-center gap-2 uppercase">
+                      <div className="text-blue-600 font-extrabold mb-3 tracking-wider text-xs lg:text-sm flex items-center gap-2 uppercase">
                         <span className="relative flex h-2 w-2 shrink-0">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                         </span>
                         KOREA
                       </div>
-                      <div className="flex items-center gap-1 w-full justify-between bg-blue-50 p-2 sm:p-3 md:p-4 rounded-xl border-2 border-blue-200 relative overflow-hidden shadow-md h-[72px] sm:h-[90px] md:h-[70px] lg:h-[100px]">
+                      <div className="flex items-center gap-1 w-full justify-between bg-blue-50 p-2 sm:p-3 lg:p-4 rounded-xl border-2 border-blue-200 relative overflow-hidden shadow-md h-[72px] sm:h-[90px] lg:h-[70px] lg:h-[100px]">
                         {/* Stage 1 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 z-10 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
                             <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-xs sm:text-[13px] md:text-[15px] text-blue-700 font-extrabold text-center leading-tight">Yarn</span>
+                          <span className="text-xs sm:text-[13px] lg:text-[15px] text-blue-700 font-extrabold text-center leading-tight">Yarn</span>
                         </div>
                         {/* Route 1 */}
                         <div className="flex-1 flex flex-col items-center relative z-10 min-w-[20px]">
                           <div className="w-full border-t-[3px] border-blue-400 absolute top-1/2 -translate-y-1/2"></div>
                           <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 relative z-10" />
-                          <span className="text-[10px] sm:text-[11px] md:text-[13px] text-blue-600 font-black mt-1.5 whitespace-nowrap tracking-tighter">50KM</span>
+                          <span className="text-[10px] sm:text-[11px] lg:text-[13px] text-blue-600 font-black mt-1.5 whitespace-nowrap tracking-tighter">50KM</span>
                         </div>
                         {/* Stage 2 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 z-10 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
                             <Factory className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-xs sm:text-[13px] md:text-[15px] text-blue-700 font-extrabold text-center leading-tight">Fabric</span>
+                          <span className="text-xs sm:text-[13px] lg:text-[15px] text-blue-700 font-extrabold text-center leading-tight">Fabric</span>
                         </div>
                         {/* Route 2 */}
                         <div className="flex-1 flex flex-col items-center relative z-10 min-w-[20px]">
                           <div className="w-full border-t-[3px] border-blue-400 absolute top-1/2 -translate-y-1/2"></div>
                           <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 relative z-10" />
-                          <span className="text-[10px] sm:text-[11px] md:text-[13px] text-blue-600 font-black mt-1.5 whitespace-nowrap tracking-tighter">50KM</span>
+                          <span className="text-[10px] sm:text-[11px] lg:text-[13px] text-blue-600 font-black mt-1.5 whitespace-nowrap tracking-tighter">50KM</span>
                         </div>
                         {/* Stage 3 */}
                         <div className="flex flex-col items-center gap-1 sm:gap-2 z-10 w-[25%]">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full shadow-sm flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
                             <Scissors className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
-                          <span className="text-xs sm:text-[13px] md:text-[15px] text-blue-700 font-extrabold text-center leading-tight">Sewing</span>
+                          <span className="text-xs sm:text-[13px] lg:text-[15px] text-blue-700 font-extrabold text-center leading-tight">Sewing</span>
                         </div>
 
                       </div>
@@ -469,25 +469,25 @@ export default function WelcomeLanding() {
               </div>
 
               {/* Card 3: FTA */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px] lg:h-auto">
-                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
+              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
                   <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-emerald-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
 
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-6 text-emerald-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
-                    <FileText className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.5} />
+                  <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-6 text-emerald-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
+                    <FileText className="w-7 h-7 lg:w-8 lg:h-8" strokeWidth={1.5} />
                   </div>
-                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
+                  <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 lg:mb-6 leading-[1.1] relative z-10">
                     Built for FTA benefit.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-4 lg:mb-10 max-w-lg relative z-10">
+                  <p className="text-base lg:text-lg text-neutral-600 font-light leading-relaxed mb-6 lg:mb-4 lg:mb-10 max-w-lg relative z-10">
                     Korean fabrics can qualify for 0% base duty under KORUS.
                   </p>
 
                   {/* Visual Chart: Price Tag Comparison */}
-                  <div className="w-full flex flex-col justify-center gap-6 md:gap-4 lg:gap-8 items-center mt-auto relative z-10">
-                    <div className="w-full max-w-[260px] sm:max-w-[300px] h-[220px] md:h-[160px] lg:h-[265px] bg-white rounded-2xl border border-neutral-200 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] overflow-hidden relative group/tag hover:-translate-y-1 transition-all duration-500 flex flex-col">
+                  <div className="w-full flex flex-col justify-center gap-6 lg:gap-4 lg:gap-8 items-center mt-auto relative z-10">
+                    <div className="w-full max-w-[260px] sm:max-w-[300px] h-[220px] lg:h-[160px] lg:h-[265px] bg-white rounded-2xl border border-neutral-200 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] overflow-hidden relative group/tag hover:-translate-y-1 transition-all duration-500 flex flex-col">
                       
                       {/* Tag Header (Hole) */}
                       <div className="h-8 shrink-0 bg-neutral-50/50 border-b border-neutral-100 flex justify-center items-center relative">
@@ -531,24 +531,24 @@ export default function WelcomeLanding() {
               </div>
 
               {/* Card 4: Global Brands */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto md:h-[550px] lg:h-auto">
-                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] md:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 md:p-6 md:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
+              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+                <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
                   <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-indigo-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
 
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-6 text-indigo-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
-                    <Globe className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.5} />
+                  <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-6 text-indigo-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
+                    <Globe className="w-7 h-7 lg:w-8 lg:h-8" strokeWidth={1.5} />
                   </div>
-                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 md:mb-6 leading-[1.1] relative z-10">
+                  <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 lg:mb-6 leading-[1.1] relative z-10">
                     Global brands have sourced here for decades.
                   </h2>
-                  <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed mb-6 md:mb-4 lg:mb-10 max-w-lg relative z-10">
+                  <p className="text-base lg:text-lg text-neutral-600 font-light leading-relaxed mb-6 lg:mb-4 lg:mb-10 max-w-lg relative z-10">
                     Quality isn't a promise. It's a track record.
                   </p>
 
                   {/* Visual Chart: Abstract Global Map Nodes */}
-                  <div className="w-full max-w-[600px] h-[220px] md:h-[160px] lg:h-[265px] relative mt-auto z-10 bg-indigo-50/40 rounded-3xl border border-indigo-100/50 overflow-hidden shadow-inner">
+                  <div className="w-full max-w-[600px] h-[220px] lg:h-[160px] lg:h-[265px] relative mt-auto z-10 bg-indigo-50/40 rounded-3xl border border-indigo-100/50 overflow-hidden shadow-inner">
                     
                     {/* SVG Connections */}
                     <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 400" preserveAspectRatio="none">
@@ -617,11 +617,11 @@ export default function WelcomeLanding() {
             </div>
             
             {/* Scroll Buttons */}
-            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'left')} className="absolute -left-4 md:left-0 md:-ml-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 md:w-14 md:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 md:opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
-              <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
+            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'left')} className="absolute -left-4 lg:left-0 lg:-ml-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 lg:opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+              <ChevronLeft className="w-8 h-8 lg:w-10 lg:h-10" />
             </button>
-            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'right')} className="absolute -right-4 md:right-0 md:-mr-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 md:w-14 md:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 md:opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
-              <ChevronRight className="w-8 h-8 md:w-10 md:h-10" />
+            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'right')} className="absolute -right-4 lg:right-0 lg:-mr-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 lg:opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+              <ChevronRight className="w-8 h-8 lg:w-10 lg:h-10" />
             </button>
 
           </div>
@@ -629,56 +629,56 @@ export default function WelcomeLanding() {
 
 
         {/* Capabilities Section */}
-        <section ref={capabilitiesRef} className={`w-full pt-12 md:pt-16 pb-6 md:pb-8 px-6 transition-all duration-1000 ease-out ${capabilitiesIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+        <section ref={capabilitiesRef} className={`w-full pt-12 lg:pt-16 pb-6 lg:pb-8 px-6 transition-all duration-1000 ease-out ${capabilitiesIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
           <div className="max-w-[1200px] mx-auto w-full group/kawcarousel">
             <div className="text-center mb-[90px]">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 md:gap-5">
-                <CheckCircle2 className="hidden md:block w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 md:mt-2" strokeWidth={2.5} />
+              <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5">
+                <CheckCircle2 className="hidden lg:block w-[34px] h-[34px] lg:w-[42px] lg:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 lg:mt-2" strokeWidth={2.5} />
                 <span className="text-center">Why Korea Apparel Works?</span>
               </h2>
             </div>
             <div className="relative w-full">
-              <div ref={whyKawScrollRef} className="flex overflow-x-auto pb-6 -mx-6 px-6 md:mx-0 md:px-0 md:pb-0 md:grid md:grid-cols-2 lg:grid-cols-4 gap-[25px] snap-x snap-mandatory scrollbar-hide">
+              <div ref={whyKawScrollRef} className="flex overflow-x-auto pb-6 -mx-6 px-6 lg:mx-0 lg:px-0 lg:pb-0 lg:grid lg:grid-cols-2 lg:grid-cols-4 gap-[25px] snap-x snap-mandatory scrollbar-hide">
               {/* Card 1 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
-                  <Factory className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
+              <div className="flex-none w-[42vw] sm:w-[320px] lg:w-auto snap-center p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
+                  <Factory className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
-                <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
+                <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-5 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
+                <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                   Family-owned factory with direct production and transparent processes.
                 </p>
               </div>
 
               {/* Card 2 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-3 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
-                  <Package className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
+              <div className="flex-none w-[42vw] sm:w-[320px] lg:w-auto snap-center p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-3 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
+                  <Package className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
-                <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
+                <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-5 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
+                <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                   From design to finished product, we manage every production stage.
                 </p>
               </div>
 
               {/* Card 3 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
-                  <ShieldCheck className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
+              <div className="flex-none w-[42vw] sm:w-[320px] lg:w-auto snap-center p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
+                  <ShieldCheck className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
-                <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
+                <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-5 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
+                <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                   High-end craftsmanship and technical expertise for performance apparel.
                 </p>
               </div>
 
               {/* Card 4 */}
-              <div className="flex-none w-[42vw] sm:w-[320px] md:w-auto snap-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
-                  <Zap className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
+              <div className="flex-none w-[42vw] sm:w-[320px] lg:w-auto snap-center p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
+                  <Zap className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-lg md:text-xl font-bold text-neutral-900 tracking-tight mb-2 md:mb-5 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
-                <p className="text-sm md:text-base text-neutral-600 font-light leading-relaxed">
+                <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-5 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
+                <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                   Prototype from 1 piece and scale production as your brand grows.
                 </p>
               </div>
@@ -686,10 +686,10 @@ export default function WelcomeLanding() {
               </div>
 
               {/* Scroll Buttons for Mobile KAW Section */}
-              <button onClick={() => scrollGallery(whyKawScrollRef, 'left')} className="absolute -left-4 top-1/2 -translate-y-1/2 md:hidden flex items-center justify-center w-10 h-10 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+              <button onClick={() => scrollGallery(whyKawScrollRef, 'left')} className="absolute -left-4 top-1/2 -translate-y-1/2 lg:hidden flex items-center justify-center w-10 h-10 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
                 <ChevronLeft className="w-8 h-8" />
               </button>
-              <button onClick={() => scrollGallery(whyKawScrollRef, 'right')} className="absolute -right-4 top-1/2 -translate-y-1/2 md:hidden flex items-center justify-center w-10 h-10 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+              <button onClick={() => scrollGallery(whyKawScrollRef, 'right')} className="absolute -right-4 top-1/2 -translate-y-1/2 lg:hidden flex items-center justify-center w-10 h-10 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
                 <ChevronRight className="w-8 h-8" />
               </button>
             </div>
@@ -698,13 +698,13 @@ export default function WelcomeLanding() {
         </div>
 
         {/* Atelier Image Gallery */}
-        <div ref={atelierRef} className={`w-full overflow-hidden relative bg-white pt-6 md:pt-8 pb-12 md:pb-16 px-4 md:px-6 transition-all duration-1000 ease-out ${atelierIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+        <div ref={atelierRef} className={`w-full overflow-hidden relative bg-white pt-6 lg:pt-8 pb-12 lg:pb-16 px-4 lg:px-6 transition-all duration-1000 ease-out ${atelierIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
           <div className="max-w-[1200px] mx-auto w-full grid grid-cols-3 gap-[1px] sm:gap-[2px] border border-neutral-200/60 rounded-none overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-neutral-100">
             {['b1.jpg', 'b2-2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
               const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
               const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
               return (
-                <div key={idx} className="relative aspect-square md:aspect-[4/3] bg-white group overflow-hidden">
+                <div key={idx} className="relative aspect-square lg:aspect-[4/3] bg-white group overflow-hidden">
                   <img 
                     src={optimizedUrl} 
                     alt="Factory" 
@@ -722,17 +722,17 @@ export default function WelcomeLanding() {
           <div ref={aiWorkflowRef} className={`w-full transition-all duration-1000 ease-out ${aiWorkflowIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
             <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-6 tracking-tight leading-tight flex items-start justify-center gap-3 md:gap-5 z-10">
-                <CheckCircle2 className="hidden md:block w-[34px] h-[34px] md:w-[42px] md:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 md:mt-2" strokeWidth={2.5} />
-                <span className="text-center">AI-powered from<br className="hidden md:block" /> inquiry to delivery</span>
+              <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black mb-4 lg:mb-6 tracking-tight leading-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
+                <CheckCircle2 className="hidden lg:block w-[34px] h-[34px] lg:w-[42px] lg:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 lg:mt-2" strokeWidth={2.5} />
+                <span className="text-center">AI-powered from<br className="hidden lg:block" /> inquiry to delivery</span>
               </h2>
-              <p className="text-[15px] sm:text-lg md:text-[20px] text-neutral-400 font-light leading-relaxed px-6 sm:px-0">
+              <p className="text-[15px] sm:text-lg lg:text-[20px] text-neutral-400 font-light leading-relaxed px-6 sm:px-0">
                 We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.
               </p>
             </div>
 
             {/* Feature Highlights */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-16 sm:mb-20">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-16 sm:mb-20">
               <div className="bg-white p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-neutral-200 flex flex-col items-center text-center transition-all hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:-translate-y-1">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-3 sm:mb-4 shrink-0">
                   <Bot className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -842,10 +842,10 @@ export default function WelcomeLanding() {
 
         {/* Final CTA Section */}
         <section className="w-full bg-neutral-950 pt-32 pb-40 px-6 flex flex-col items-center text-center">
-          <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4 leading-tight">
+          <h2 className="text-3xl lg:text-5xl font-bold text-white tracking-tight mb-4 leading-tight">
             The Ultimate Apparel<br />Production Partner
           </h2>
-          <p className="text-lg md:text-xl text-neutral-400 font-light mb-10">
+          <p className="text-lg lg:text-xl text-neutral-400 font-light mb-10">
             Start your journey with us today.
           </p>
           <a id="gtm-welcome-footer-request-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">

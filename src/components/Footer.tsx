@@ -28,13 +28,13 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
         id="footer" 
         className="pt-16 pb-12 overflow-hidden relative font-sans bg-transparent text-neutral-400"
       >
-        <div className="max-w-6xl mx-auto px-6 md:px-10 relative z-10 flex flex-col justify-between items-stretch gap-12 select-text">
+        <div className="max-w-6xl mx-auto px-6 lg:px-10 relative z-10 flex flex-col justify-between items-stretch gap-12 select-text">
           
           {/* Upper Column Stack */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Logo & Manifesto Block (5 cols) */}
-            <div className="md:col-span-5 space-y-4">
+            <div className="lg:col-span-5 space-y-4">
               <div className="flex items-center space-x-2.5">
                 <img
                   src="/logo1.png"
@@ -59,7 +59,7 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide }: Foo
             </div>
 
             {/* Links grid (7 cols) */}
-            <div className="md:col-span-7 flex flex-row justify-between w-full font-dm-sans text-[11px] text-neutral-400">
+            <div className="lg:col-span-7 flex flex-row justify-between w-full font-dm-sans text-[11px] text-neutral-400">
               <div className="flex flex-col items-center flex-1">
                 <span className="block text-white font-dm-sans tracking-wider font-bold mb-3 select-none text-center">Home</span>
                 <ul className="space-y-2 font-light flex flex-col items-center">

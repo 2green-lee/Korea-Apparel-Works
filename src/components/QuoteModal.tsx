@@ -123,16 +123,16 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
       <div className="relative w-full max-w-lg bg-white border border-neutral-200/80 shadow-[0_24px_64px_rgba(0,0,0,0.08)] rounded-3xl overflow-hidden transition-all duration-300 pretendard-font">
         
         {/* Header & Description Block */}
-        <div className="flex flex-col items-center bg-white rounded-t-3xl relative select-none pt-10 px-7 md:px-9 pb-6">
+        <div className="flex flex-col items-center bg-white rounded-t-3xl relative select-none pt-10 px-7 lg:px-9 pb-6">
           <img 
             src="/logo1.png" 
             alt="Korea Apparel Works Logo" 
-            className="h-10 md:h-12 object-contain pointer-events-none select-none mb-5" 
+            className="h-10 lg:h-12 object-contain pointer-events-none select-none mb-5" 
           />
           
           {/* Form Description Moved to Header */}
           <div className="text-center">
-            <p className="text-neutral-500 text-sm md:text-[15px] font-light leading-relaxed max-w-sm mx-auto">
+            <p className="text-neutral-500 text-sm lg:text-[15px] font-light leading-relaxed max-w-sm mx-auto">
               {isLoginMode 
                 ? "Welcome back. Log in to track your production quotes and orders."
                 : "Premium 'Made in Korea' manufacturing for your brand. Enter your email to start the consultation and receive our proprietary size charts."}
@@ -150,7 +150,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
         </div>
 
         {/* Body Container */}
-        <div className="px-7 md:px-9 pb-7 md:pb-9 pt-2">
+        <div className="px-7 lg:px-9 pb-7 lg:pb-9 pt-2">
           {!showPrivacyDetail ? (
             /* CORE QUOTE FORM VIEW */
             <form onSubmit={handleSubmit} className="space-y-6 select-text">

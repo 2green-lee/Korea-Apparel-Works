@@ -404,7 +404,7 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
 
   /* AUTHENTICATED REAL-TIME LEADS DASHBOARD */
   return (
-    <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-10 font-sans min-h-[90vh] flex flex-col md:flex-row gap-8 lg:gap-12">
+    <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-10 font-sans min-h-[90vh] flex flex-col lg:flex-row gap-8 lg:gap-12">
       
       {/* Sidebar Navigation */}
       <aside className="w-[170px] flex-shrink-0 flex flex-col space-y-8 select-text">

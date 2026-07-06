@@ -64,7 +64,7 @@ export default function CookieBanner() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.96 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-5 left-5 right-5 md:left-auto md:right-8 md:w-[460px] z-50 bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-6 font-sans select-none overflow-hidden"
+            className="fixed bottom-5 left-5 right-5 lg:left-auto lg:right-8 lg:w-[460px] z-50 bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-6 font-sans select-none overflow-hidden"
           >
             <div className="space-y-4">
               {/* Header Area */}

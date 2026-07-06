@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler, ChevronLeft, ChevronRight, ChevronDown, Shirt, Award, Layers, Sparkles, Check, History, MessageSquare, FileText, Truck, User, Factory, Package, ShieldCheck, Zap, LineChart, Scissors, CheckCircle2, Plus, Minus } from "lucide-react";
+import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler, ChevronLeft, ChevronRight, ChevronDown, Shirt, Award, Layers, Sparkles, Check, History, MessageSquare, FileText, Truck, User, Factory, Package, ShieldCheck, Zap, LineChart, Scissors, CheckCircle2, Plus, Minus, Bot } from "lucide-react";
 import ExportMap from "./ExportMap";
 import { AnimatePresence, motion } from "motion/react";
 import tshirtIcon from "./free-icon-clothes-7640468.png";
@@ -409,13 +409,13 @@ export default function Hero({
   }, [setCurrentSlide]);
 
   return (
-    <section className={`relative w-full flex flex-col justify-center items-center overflow-x-hidden overflow-y-visible z-10 px-0 md:px-8 transition-all duration-500 min-h-[100vh] pt-20 pb-0`}>
+    <section className={`relative w-full flex flex-col justify-center items-center overflow-x-clip overflow-y-visible z-10 px-0 lg:px-8 transition-all duration-500 min-h-[100vh] pt-20 pb-0 ${currentSlide === 0 ? '' : 'bg-white'}`}>
       
 
 
       <button
         onClick={handlePrevSlide}
-        className="hidden md:flex fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
+        className="hidden lg:flex fixed left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
         aria-label="Previous Slide"
       >
         <ChevronLeft className="w-[28px] h-[28px] group-hover:-translate-x-0.5 transition-transform" />
@@ -423,14 +423,14 @@ export default function Hero({
 
       <button
         onClick={handleNextSlide}
-        className="hidden md:flex fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
+        className="hidden lg:flex fixed right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
         aria-label="Next Slide"
       >
         <ChevronRight className="w-[28px] h-[28px] group-hover:translate-x-0.5 transition-transform" />
       </button>
 
-      <div className={`relative z-10 w-full flex flex-col items-center justify-center text-center px-0 md:px-4 select-none transition-all duration-500 ${
-        (currentSlide === 0 && messages.length > 1) ? "max-w-[1400px] my-auto" : "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-16"
+      <div className={`relative z-10 w-full flex flex-col items-center justify-center text-center px-0 lg:px-4 select-none transition-all duration-500 ${
+        (currentSlide === 0 && messages.length > 1) ? "max-w-[1400px] my-auto" : currentSlide === 1 ? "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-0" : "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-16"
       }`}>
         
         <AnimatePresence mode="popLayout" custom={direction}>
@@ -480,7 +480,7 @@ export default function Hero({
 
               <div className={`w-full backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.06)] flex flex-col font-sans transition-all duration-500 overflow-hidden relative group/card select-text ${
                 messages.length > 1 
-                  ? "fixed top-16 bottom-0 left-0 right-0 z-40 bg-white/95 rounded-none border-none p-4 pb-[max(env(safe-area-inset-bottom),16px)] md:relative md:top-auto md:bottom-auto md:left-auto md:right-auto md:bg-white/85 md:rounded-[28px] md:border md:border-neutral-200/80 md:p-6 md:max-w-[1000px] md:h-[80vh] md:max-h-[800px]" 
+                  ? "fixed top-16 bottom-0 left-0 right-0 z-40 bg-white/95 rounded-none border-none p-4 pb-[max(env(safe-area-inset-bottom),16px)] lg:relative lg:top-auto lg:bottom-auto lg:left-auto lg:right-auto lg:bg-white/85 lg:rounded-[28px] lg:border lg:border-neutral-200/80 lg:p-6 lg:max-w-[1000px] lg:h-[80vh] lg:max-h-[800px]" 
                   : "relative max-w-[700px] h-[200px] bg-white/85 rounded-[28px] border border-neutral-200/80 p-6"
               }`}>
                 {messages.length > 1 && (
@@ -621,7 +621,7 @@ export default function Hero({
               transition={slideTransition}
               className="w-full flex flex-col items-center justify-center relative mt-[-200px]"
             >
-              <div className="hidden md:flex space-x-2.5 mb-5 mt-24">
+              <div className="hidden lg:flex space-x-2.5 mb-5 mt-24">
                 {SLIDES.map((_, index) => (
                   <button
                     key={index}
@@ -634,15 +634,15 @@ export default function Hero({
                 ))}
               </div>
 
-              <div id="about-us-section" className="w-full flex flex-col font-sans text-left relative select-text bg-transparent border border-transparent rounded-none overflow-hidden scroll-mt-24 mt-16 md:mt-0">
-                <div className="py-10 md:py-12 px-4 md:px-0 border-none w-full bg-transparent">
-                  <div className="w-full flex flex-col gap-8 md:gap-10 rounded-2xl md:rounded-3xl bg-transparent md:bg-white border border-neutral-200/60 md:border-[#e9ecef]/80 p-6 md:p-10 lg:p-12 transition-all duration-300 md:hover:border-[#dee2e6] md:hover:shadow-md group">
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-neutral-900 leading-[1.2] tracking-tight text-center md:text-left group-hover:text-black transition-colors w-full">
+              <div id="about-us-section" className="w-full flex flex-col font-sans text-left relative select-text bg-transparent rounded-none overflow-visible scroll-mt-24 mt-16 lg:mt-0">
+                <div className="py-10 lg:py-12 px-4 lg:px-0 border-none w-full bg-transparent">
+                  <div className="w-full flex flex-col gap-8 lg:gap-10 rounded-2xl lg:rounded-3xl bg-transparent lg:bg-white border border-neutral-200/60 lg:border-[#e9ecef]/80 p-6 lg:p-10 lg:p-12 transition-all duration-300 lg:hover:border-[#dee2e6] lg:hover:shadow-md group">
+                    <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black text-neutral-900 leading-tight tracking-tight text-center lg:text-left group-hover:text-black transition-colors w-full mb-4 lg:mb-6">
                       From one factory floor to a global platform
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 w-full">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 w-full">
                       <div className="flex flex-col justify-start">
-                        <div className="space-y-4 text-[15px] md:text-base text-neutral-600 leading-relaxed font-light text-center md:text-left">
+                        <div className="space-y-4 text-[15px] sm:text-lg lg:text-[20px] text-neutral-600 font-light leading-relaxed text-center lg:text-left px-0 sm:px-0">
                           <p>
                             Our story begins with my father.<br />
                             For over 30 years, he ran an apparel factory in Korea, manufacturing premium shirts, polos, sportswear, and golf wear.
@@ -655,8 +655,8 @@ export default function Hero({
                           </p>
                         </div>
                       </div>
-                      <div className="hidden md:block w-full relative h-full min-h-[300px]">
-                        <div className="w-full aspect-[16/9] md:aspect-auto md:absolute md:inset-0 rounded-2xl overflow-hidden border border-neutral-200/60 relative group/img bg-neutral-100">
+                      <div className="hidden lg:block w-full relative h-full min-h-[300px]">
+                        <div className="w-full aspect-[16/9] lg:aspect-auto lg:absolute lg:inset-0 rounded-2xl overflow-hidden border border-neutral-200/60 relative group/img bg-neutral-100">
                           <img 
                             src="/a2.jpg" 
                             alt="Korea Apparel Works Sewing Facility" 
@@ -669,247 +669,197 @@ export default function Hero({
                   </div>
                 </div>
 
-                <div className="w-full mt-10 md:mt-16 overflow-hidden relative">
-                  <style dangerouslySetInnerHTML={{__html: `
-                    @keyframes scrollLeft {
-                      0% { transform: translateX(0); }
-                      100% { transform: translateX(-50%); }
-                    }
-                    .animate-marquee {
-                      animation: scrollLeft 40s linear infinite;
-                    }
-                  `}} />
-                  <div className="flex gap-4 w-max animate-marquee pb-8">
-                    {[...Array(2)].map((_, groupIdx) => (
-                      <React.Fragment key={groupIdx}>
-                        {['w1.png', 'w2.png', 'w3.png', 'w4.png', 'w5.png', 'w6.png', 'm1.png', 'm2.png', 'm3.png', 'm4.png', 'm5.png', 'm6.png'].map((imgName, idx) => {
-                          const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-                          const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(imgName)}?format=webp&quality=80`;
-                          return (
-                          <div key={`${groupIdx}-${idx}`} className={`flex-none w-[50vw] sm:w-[320px] md:w-[400px] aspect-[4/3] rounded-none overflow-hidden border border-neutral-200/80 bg-neutral-100 shadow-sm transition-all duration-300 ${idx === 3 ? 'hidden md:block' : ''}`}>
-                            <img 
-                              src={optimizedUrl} 
-                              alt={`Atelier gallery ${idx + 1}`} 
-                              loading="lazy"
-                              className="w-full h-full object-cover" 
-                            />
-                          </div>
-                        )})}
-                      </React.Fragment>
-                    ))}
+                <div className="w-full mt-10 lg:mt-16 relative lg:px-0">
+                  <div className="max-w-[1200px] mx-auto w-full relative">
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-[2px] pb-8">
+                      {['b1.jpg', 'b2-2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
+                        const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
+                        const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
+                        return (
+                        <div key={idx} className="w-full aspect-[4/3] overflow-hidden bg-neutral-100 shadow-sm group/gridimg">
+                          <img 
+                            src={optimizedUrl} 
+                            alt={`Factory gallery ${idx + 1}`} 
+                            loading="lazy"
+                            className="w-full h-full object-cover opacity-90 group-hover/gridimg:opacity-100 transition-all duration-500 hover:scale-[1.05]" 
+                          />
+                        </div>
+                      )})}
+                    </div>
                   </div>
                 </div>
 
-                <div id="core-capabilities-section" className="grid grid-cols-1 md:grid-cols-2 gap-[20px] w-full pt-12 scroll-mt-20 px-4 md:px-0">
-                  <div className="p-8 md:p-10 rounded-2xl bg-[#f0f4f8] border border-[#e2e8f0]/60 flex flex-col transition-all duration-300 hover:border-[#cbd5e1] hover:shadow-md hover:-translate-y-1 group">
-                    <div className="grid grid-cols-[1fr_auto_1fr] md:flex md:flex-col items-center md:items-start mb-4 md:mb-0 w-full">
-                      <div className="flex justify-end pr-3 md:pr-0 md:mb-6 w-full">
-                        <div className="flex w-12 h-12 md:w-12 md:h-12 rounded-full bg-white items-center justify-center shadow-sm text-blue-600 group-hover:scale-110 transition-transform duration-300 shrink-0">
-                          <Factory className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
-                        </div>
-                      </div>
-                      <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight text-center md:text-left md:mb-4 group-hover:text-black transition-colors whitespace-nowrap">30 Years of Expertise</div>
-                      <div className="md:hidden w-full"></div>
+                <div id="core-capabilities-section" className="flex overflow-x-auto pb-6 -mx-4 px-4 lg:mx-0 lg:px-0 lg:pb-0 lg:grid lg:grid-cols-2 lg:grid-cols-4 gap-[25px] snap-x snap-mandatory scrollbar-hide pt-12 w-full scroll-mt-20">
+                  {/* Card 1 */}
+                  <div className="flex-none w-[85vw] sm:w-[320px] lg:w-auto snap-center p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
+                      <Factory className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                     </div>
-                    <p className="text-[15px] md:text-base text-neutral-600 font-light leading-relaxed text-center md:text-left">
-                      <span className="hidden md:inline">Family-owned factory with direct production and transparent processes.</span>
-                      <span className="md:hidden">Family-owned factory with direct production and transparent processes.</span>
+                    <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
+                    <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                      Family-owned factory with direct production and transparent processes.
                     </p>
                   </div>
 
-                  <div className="p-8 md:p-10 rounded-2xl bg-[#f8f5f2] border border-[#eee8e3]/60 flex flex-col transition-all duration-300 hover:border-[#dfd8d0] hover:shadow-md hover:-translate-y-1 group">
-                    <div className="grid grid-cols-[1fr_auto_1fr] md:flex md:flex-col items-center md:items-start mb-4 md:mb-0 w-full">
-                      <div className="flex justify-end pr-3 md:pr-0 md:mb-6 w-full">
-                        <div className="flex w-12 h-12 md:w-12 md:h-12 rounded-full bg-white items-center justify-center shadow-sm text-orange-500 group-hover:scale-110 transition-transform duration-300 shrink-0">
-                          <Package className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
-                        </div>
-                      </div>
-                      <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight text-center md:text-left md:mb-4 group-hover:text-black transition-colors whitespace-nowrap">Full-Package OEM/ODM</div>
-                      <div className="md:hidden w-full"></div>
+                  {/* Card 2 */}
+                  <div className="flex-none w-[85vw] sm:w-[320px] lg:w-auto snap-center p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-4 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
+                      <Package className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                     </div>
-                    <p className="text-[15px] md:text-base text-neutral-600 font-light leading-relaxed text-center md:text-left">
+                    <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
+                    <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                       From design to finished product, we manage every production stage.
                     </p>
                   </div>
 
-                  <div className="p-8 md:p-10 rounded-2xl bg-[#f3f6f4] border border-[#e2eae5]/60 flex flex-col transition-all duration-300 hover:border-[#c5d6cc] hover:shadow-md hover:-translate-y-1 group">
-                    <div className="grid grid-cols-[1fr_auto_1fr] md:flex md:flex-col items-center md:items-start mb-4 md:mb-0 w-full">
-                      <div className="flex justify-end pr-3 md:pr-0 md:mb-6 w-full">
-                        <div className="flex w-12 h-12 md:w-12 md:h-12 rounded-full bg-white items-center justify-center shadow-sm text-emerald-600 group-hover:scale-110 transition-transform duration-300 shrink-0">
-                          <ShieldCheck className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
-                        </div>
-                      </div>
-                      <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight text-center md:text-left md:mb-4 group-hover:text-black transition-colors whitespace-nowrap">Premium QC</div>
-                      <div className="md:hidden w-full"></div>
+                  {/* Card 3 */}
+                  <div className="flex-none w-[85vw] sm:w-[320px] lg:w-auto snap-center p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-4 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
+                      <ShieldCheck className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                     </div>
-                    <p className="text-[15px] md:text-base text-neutral-600 font-light leading-relaxed text-center md:text-left">
-                      Premium Quality Control and technical expertise for high-end performance apparel
+                    <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
+                    <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                      High-end craftsmanship and technical expertise for performance apparel.
                     </p>
                   </div>
 
-                  <div className="p-8 md:p-10 rounded-2xl bg-[#f5f3f7] border border-[#e8e4ec]/60 flex flex-col transition-all duration-300 hover:border-[#d4cddc] hover:shadow-md hover:-translate-y-1 group">
-                    <div className="grid grid-cols-[1fr_auto_1fr] md:flex md:flex-col items-center md:items-start mb-4 md:mb-0 w-full">
-                      <div className="flex justify-end pr-3 md:pr-0 md:mb-6 w-full">
-                        <div className="flex w-12 h-12 md:w-12 md:h-12 rounded-full bg-white items-center justify-center shadow-sm text-purple-600 group-hover:scale-110 transition-transform duration-300 shrink-0">
-                          <Zap className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
-                        </div>
-                      </div>
-                      <div className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight text-center md:text-left md:mb-4 group-hover:text-black transition-colors whitespace-nowrap">Flexible MOQ</div>
-                      <div className="md:hidden w-full"></div>
+                  {/* Card 4 */}
+                  <div className="flex-none w-[85vw] sm:w-[320px] lg:w-auto snap-center p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-4 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
+                      <Zap className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                     </div>
-                    <p className="text-[15px] md:text-base text-neutral-600 font-light leading-relaxed text-center md:text-left">
+                    <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
+                    <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                       Prototype from 1 piece and scale production as your brand grows.
                     </p>
                   </div>
                 </div>
 
                 {/* 200px pure white gap + 500px Gradient Transition for Mobile */}
-                <div className="w-full h-[500px] bg-gradient-to-b from-transparent to-[#0a0a0a] md:hidden mt-[200px]"></div>
+                <div className="w-full h-[500px] bg-gradient-to-b from-transparent to-[#0a0a0a] lg:hidden mt-[200px]"></div>
 
-                <div id="ai-tech-section" className="w-full px-4 py-12 md:px-10 bg-[#0a0a0a] md:bg-[#fef2f2] md:border md:border-[#fecaca] md:rounded-2xl md:mt-[200px] md:shadow-[0_8px_30px_rgba(239,68,68,0.04)]">
-                  <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.8fr] gap-6 md:gap-10 items-center md:items-start mb-10 text-center md:text-left">
-                    <div className="max-w-xs mx-auto md:max-w-none md:mx-0">
-                      <h2 className="text-2xl font-bold text-white md:text-neutral-950 mb-3 leading-snug">AI-powered from inquiry to delivery</h2>
-                      <p className="text-[15px] md:text-base text-neutral-400 md:text-neutral-800 leading-relaxed font-light">With AI integrated across production, international buyers can place orders in any language and get accurate quotes instantly</p>
+                {/* AI Workflow Section */}
+        <section className="relative mt-20 py-24 px-6 text-white border-t border-neutral-900 bg-neutral-950 mb-[-1px]" style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
+          <div className="relative z-10 w-full">
+            <div className="max-w-[770px] mx-auto w-full">
+            <div className="text-center mb-16">
+              <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black mb-4 lg:mb-6 tracking-tight leading-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
+                <span className="text-center">AI-powered from<br className="hidden lg:block" /> inquiry to delivery</span>
+              </h2>
+              <p className="text-[15px] sm:text-lg lg:text-[20px] text-neutral-400 font-light leading-relaxed px-6 sm:px-0">
+                We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.
+              </p>
+            </div>
+
+            {/* Feature Highlights */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-16 sm:mb-20">
+              <div className="bg-neutral-900 p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-neutral-800 flex flex-col items-center text-center transition-all hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:-translate-y-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-900/20 border border-blue-800/30 flex items-center justify-center text-blue-400 mb-3 sm:mb-4 shrink-0">
+                  <Bot className="w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+                <h3 className="text-[20px] font-bold text-white mb-1 sm:mb-4 leading-tight">AI inquiry</h3>
+                <p className="text-[16px] text-neutral-400 font-light leading-relaxed">Describe what you need in natural language. Our assistant extracts specs automatically.</p>
+              </div>
+              <div className="bg-neutral-900 p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-neutral-800 flex flex-col items-center text-center transition-all hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:-translate-y-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-900/20 border border-blue-800/30 flex items-center justify-center text-blue-400 mb-3 sm:mb-4 shrink-0">
+                  <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+                <h3 className="text-[20px] font-bold text-white mb-1 sm:mb-4 leading-tight">Smart quoting</h3>
+                <p className="text-[16px] text-neutral-400 font-light leading-relaxed">Receive a detailed proposal within 24 hours based on your exact requirements.</p>
+              </div>
+              <div className="bg-neutral-900 p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-neutral-800 flex flex-col items-center text-center transition-all hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:-translate-y-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-900/20 border border-blue-800/30 flex items-center justify-center text-blue-400 mb-3 sm:mb-4 shrink-0">
+                  <LineChart className="w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+                <h3 className="text-[20px] font-bold text-white mb-1 sm:mb-4 leading-tight">Production tracking</h3>
+                <p className="text-[16px] text-neutral-400 font-light leading-relaxed">Real-time updates from sample approval through to shipment confirmation.</p>
+              </div>
+            </div>
+
+            {/* 5-Step Process (2 Rows Layout) */}
+            <div className="relative pt-2 sm:pt-0 flex flex-col gap-12 sm:gap-16 items-center">
+              
+              {/* Top Row (01 to 03) */}
+              <div className="relative w-full max-w-[770px]">
+                {/* Connecting lines for Row 1 */}
+                <div className="hidden sm:block absolute top-[66px] left-[16%] right-[16%] h-[2px] bg-neutral-800 z-0"></div>
+                <div className="sm:hidden absolute top-[60px] left-[15%] right-[15%] h-[2px] bg-neutral-800 z-0"></div>
+
+                <div className="flex flex-wrap justify-center sm:grid sm:grid-cols-3 gap-y-10 sm:gap-8 relative z-10">
+                  {/* Step 1 */}
+                  <div className="flex flex-col items-center text-center group cursor-default w-[33%] sm:w-auto">
+                    <div className="text-sm sm:text-[13px] font-bold text-blue-400 mb-2 transition-colors group-hover:text-blue-300">01</div>
+                    <div className="w-[65px] h-[65px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-neutral-900 border border-blue-800 flex items-center justify-center shadow-sm mb-3 text-blue-400 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:border-blue-400">
+                      <MessageSquare className="w-8 h-8 sm:w-[30px] sm:h-[30px]" strokeWidth={1.5} />
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 w-full">
-                      <div className="p-5 md:p-6 border-none md:border md:border-[#fecaca] bg-white rounded-xl md:rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] md:shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow flex flex-col items-center md:items-start text-center md:text-left">
-                        <div className="w-10 h-10 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 md:bg-[#ef4444]/10 flex items-center justify-center text-blue-500 md:text-[#ef4444] mb-3 md:mb-4 shrink-0">
-                           <MessageSquare className="w-5 h-5 md:w-5 md:h-5 text-blue-500 md:text-[#ef4444]" strokeWidth={1.5} />
-                        </div>
-                        <h3 className="text-xl md:text-base font-bold text-neutral-950 mb-1 md:mb-2 whitespace-nowrap">AI inquiry</h3>
-                        <p className="text-[15px] md:text-sm text-neutral-600 leading-relaxed font-light mt-1 md:mt-0">Describe what you need in natural language. Our assistant extracts specs automatically.</p>
-                      </div>
-                      <div className="p-5 md:p-6 border-none md:border md:border-[#fecaca] bg-white rounded-xl md:rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] md:shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow flex flex-col items-center md:items-start text-center md:text-left">
-                        <div className="w-10 h-10 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 md:bg-[#ef4444]/10 flex items-center justify-center text-blue-500 md:text-[#ef4444] mb-3 md:mb-4 shrink-0">
-                           <FileText className="w-5 h-5 md:w-5 md:h-5 text-blue-500 md:text-[#ef4444]" strokeWidth={1.5} />
-                        </div>
-                        <h3 className="text-xl md:text-base font-bold text-neutral-950 mb-1 md:mb-2 whitespace-nowrap">Smart quoting</h3>
-                        <p className="text-[15px] md:text-sm text-neutral-600 leading-relaxed font-light mt-1 md:mt-0">Receive a detailed proposal within 24 hours based on your exact requirements.</p>
-                      </div>
-                      <div className="p-5 md:p-6 border-none md:border md:border-[#fecaca] bg-white rounded-xl md:rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] md:shadow-[0_4px_20px_rgba(239,68,68,0.03)] hover:shadow-md transition-shadow flex flex-col items-center md:items-start text-center md:text-left">
-                        <div className="w-10 h-10 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 md:bg-[#ef4444]/10 flex items-center justify-center text-blue-500 md:text-[#ef4444] mb-3 md:mb-4 shrink-0">
-                           <LineChart className="w-5 h-5 md:w-5 md:h-5 text-blue-500 md:text-[#ef4444]" strokeWidth={1.5} />
-                        </div>
-                        <h3 className="text-xl md:text-base font-bold text-neutral-950 mb-1 md:mb-2 leading-tight">Production tracking</h3>
-                        <p className="text-[15px] md:text-sm text-neutral-600 leading-relaxed font-light mt-1 md:mt-0">Real-time updates from sample approval through to shipment confirmation.</p>
-                      </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Inquiry</h4>
+                    <p className="text-xs sm:text-[13px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">Chat with AI</p>
+                    <span className="px-3 py-1 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
+                  </div>
+                  
+                  {/* Step 2 */}
+                  <div className="flex flex-col items-center text-center group cursor-default w-[33%] sm:w-auto">
+                    <div className="text-sm sm:text-[13px] font-bold text-blue-400 mb-2 transition-colors group-hover:text-blue-300">02</div>
+                    <div className="w-[65px] h-[65px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-neutral-900 border border-blue-800 flex items-center justify-center shadow-sm mb-3 text-blue-400 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:border-blue-400">
+                      <FileText className="w-8 h-8 sm:w-[30px] sm:h-[30px]" strokeWidth={1.5} />
                     </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Proposal</h4>
+                    <p className="text-xs sm:text-[13px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">Within 24h</p>
+                    <span className="px-3 py-1 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
                   </div>
 
-                  <div className="hidden md:flex flex-col md:flex-row items-stretch border border-[#fecaca] bg-white rounded-2xl overflow-hidden shadow-sm">
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#fef2f2] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">01</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Inquiry</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Chat with AI</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 px-2.5 py-0.5 rounded-full">AI</div>
+                  {/* Step 3 */}
+                  <div className="flex flex-col items-center text-center group cursor-default w-[33%] sm:w-auto">
+                    <div className="text-sm sm:text-[13px] font-bold text-white mb-2 transition-colors group-hover:text-neutral-200">03</div>
+                    <div className="w-[65px] h-[65px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-neutral-900 border border-amber-800 flex items-center justify-center shadow-sm mb-3 text-amber-400 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] group-hover:border-amber-400">
+                      <Scissors className="w-8 h-8 sm:w-[30px] sm:h-[30px]" strokeWidth={1.5} />
                     </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#fef2f2] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">02</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Proposal</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Within 24h</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 px-2.5 py-0.5 rounded-full">AI</div>
-                    </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#fef2f2] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">03</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Sample</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">14 day turnaround</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
-                    </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center border-b md:border-b-0 md:border-r border-[#fef2f2] flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">04</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Production</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Full QC inspection</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-neutral-950/5 text-neutral-700 border border-neutral-950/10 px-2.5 py-0.5 rounded-full">Handcraft</div>
-                    </div>
-                    <div className="flex-1 w-full md:w-auto p-6 text-center flex flex-col items-center justify-center">
-                      <div className="text-xs md:text-sm font-mono text-[#ef4444] font-bold tracking-widest mb-2">05</div>
-                      <div className="text-sm md:text-base font-bold text-neutral-950 mb-1">Shipment</div>
-                      <div className="text-xs md:text-sm text-neutral-500 mb-2.5 font-light">Tracked delivery</div>
-                      <div className="mt-auto inline-block text-[11px] font-semibold tracking-wider uppercase bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 px-2.5 py-0.5 rounded-full">AI</div>
-                    </div>
-                  </div>
-                
-
-                {/* Mobile only 2-row flowchart from StartLanding */}
-                <div className="flex md:hidden relative pt-8 flex-col gap-12 items-center mt-4 pb-8">
-                  {/* Top Row (01 to 03) */}
-                  <div className="relative w-full">
-                    {/* Connecting lines for Row 1 */}
-                    <div className="absolute top-[60px] left-[15%] right-[15%] h-[2px] bg-neutral-800 z-0"></div>
-
-                    <div className="grid grid-cols-3 gap-2 relative z-10">
-                      {/* Step 1 */}
-                      <div className="flex flex-col items-center text-center group cursor-default">
-                        <div className="text-sm font-bold text-blue-400 mb-2 transition-colors group-hover:text-blue-300">01</div>
-                        <div className="w-[65px] h-[65px] rounded-2xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-3 text-blue-600">
-                          <MessageSquare className="w-8 h-8" strokeWidth={1.5} />
-                        </div>
-                        <h4 className="text-[15px] font-bold text-white mb-1 leading-tight">Inquiry</h4>
-                        <p className="text-xs text-neutral-400 mb-2">Chat with AI</p>
-                        <span className="px-3 py-1 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
-                      </div>
-                      
-                      {/* Step 2 */}
-                      <div className="flex flex-col items-center text-center group cursor-default">
-                        <div className="text-sm font-bold text-blue-400 mb-2 transition-colors group-hover:text-blue-300">02</div>
-                        <div className="w-[65px] h-[65px] rounded-2xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-3 text-blue-600">
-                          <FileText className="w-8 h-8" strokeWidth={1.5} />
-                        </div>
-                        <h4 className="text-[15px] font-bold text-white mb-1 leading-tight">Proposal</h4>
-                        <p className="text-xs text-neutral-400 mb-2">Within 24h</p>
-                        <span className="px-3 py-1 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
-                      </div>
-
-                      {/* Step 3 */}
-                      <div className="flex flex-col items-center text-center group cursor-default">
-                        <div className="text-sm font-bold text-white mb-2 transition-colors group-hover:text-neutral-200">03</div>
-                        <div className="w-[65px] h-[65px] rounded-2xl bg-white border border-amber-200 flex items-center justify-center shadow-sm mb-3 text-amber-600">
-                          <Scissors className="w-8 h-8" strokeWidth={1.5} />
-                        </div>
-                        <h4 className="text-[15px] font-bold text-white mb-1 leading-tight">Sample</h4>
-                        <p className="text-xs text-neutral-400 mb-2">14 days</p>
-                        <span className="px-3 py-1 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[10px] font-bold rounded-full tracking-wide">Handcraft</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bottom Row (04 to 05) */}
-                  <div className="relative w-[70%] max-w-[300px]">
-                    {/* Connecting lines for Row 2 */}
-                    <div className="absolute top-[60px] left-[25%] right-[25%] h-[2px] bg-neutral-800 z-0"></div>
-
-                    <div className="grid grid-cols-2 gap-4 relative z-10">
-                      {/* Step 4 */}
-                      <div className="flex flex-col items-center text-center group cursor-default">
-                        <div className="text-sm font-bold text-white mb-2 transition-colors group-hover:text-neutral-200">04</div>
-                        <div className="w-[65px] h-[65px] rounded-2xl bg-white border border-amber-200 flex items-center justify-center shadow-sm mb-3 text-amber-600">
-                          <CheckCircle2 className="w-8 h-8" strokeWidth={1.5} />
-                        </div>
-                        <h4 className="text-[15px] font-bold text-white mb-1 leading-tight">Production</h4>
-                        <p className="text-xs text-neutral-400 mb-2">Full QC</p>
-                        <span className="px-3 py-1 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[10px] font-bold rounded-full tracking-wide">Handcraft</span>
-                      </div>
-
-                      {/* Step 5 */}
-                      <div className="flex flex-col items-center text-center group cursor-default">
-                        <div className="text-sm font-bold text-blue-400 mb-2 transition-colors group-hover:text-blue-300">05</div>
-                        <div className="w-[65px] h-[65px] rounded-2xl bg-white border border-blue-200 flex items-center justify-center shadow-sm mb-3 text-blue-600">
-                          <Truck className="w-8 h-8" strokeWidth={1.5} />
-                        </div>
-                        <h4 className="text-[15px] font-bold text-white mb-1 leading-tight">Shipment</h4>
-                        <p className="text-xs text-neutral-400 mb-2">Tracked</p>
-                        <span className="px-3 py-1 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
-                      </div>
-                    </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Sample</h4>
+                    <p className="text-xs sm:text-[13px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">14 days</p>
+                    <span className="px-3 py-1 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[10px] font-bold rounded-full tracking-wide">Handcraft</span>
                   </div>
                 </div>
+              </div>
 
+              {/* Bottom Row (04 to 05) */}
+              <div className="relative w-full max-w-[480px]">
+                {/* Connecting lines for Row 2 */}
+                <div className="absolute top-[60px] sm:top-[66px] left-[25%] right-[25%] h-[2px] bg-neutral-800 z-0"></div>
+
+                <div className="grid grid-cols-2 gap-y-10 sm:gap-8 relative z-10">
+                  {/* Step 4 */}
+                  <div className="flex flex-col items-center text-center group cursor-default">
+                    <div className="text-sm sm:text-[13px] font-bold text-white mb-2 transition-colors group-hover:text-neutral-200">04</div>
+                    <div className="w-[65px] h-[65px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-neutral-900 border border-amber-800 flex items-center justify-center shadow-sm mb-3 text-amber-400 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] group-hover:border-amber-400">
+                      <CheckCircle2 className="w-8 h-8 sm:w-[30px] sm:h-[30px]" strokeWidth={1.5} />
+                    </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Production</h4>
+                    <p className="text-xs sm:text-[13px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">Full QC</p>
+                    <span className="px-3 py-1 bg-amber-900/40 text-amber-300 border border-amber-700/50 text-[10px] font-bold rounded-full tracking-wide">Handcraft</span>
+                  </div>
+
+                  {/* Step 5 */}
+                  <div className="flex flex-col items-center text-center group cursor-default">
+                    <div className="text-sm sm:text-[13px] font-bold text-blue-400 mb-2 transition-colors group-hover:text-blue-300">05</div>
+                    <div className="w-[65px] h-[65px] sm:w-[76px] sm:h-[76px] rounded-2xl bg-neutral-900 border border-blue-800 flex items-center justify-center shadow-sm mb-3 text-blue-400 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:border-blue-400">
+                      <Truck className="w-8 h-8 sm:w-[30px] sm:h-[30px]" strokeWidth={1.5} />
+                    </div>
+                    <h4 className="text-[15px] sm:text-[17px] font-bold text-white mb-1">Shipment</h4>
+                    <p className="text-xs sm:text-[13px] text-neutral-400 mb-2 transition-colors group-hover:text-neutral-300">Tracked</p>
+                    <span className="px-3 py-1 bg-blue-900/50 text-blue-300 text-[10px] font-bold rounded-full tracking-wide border border-blue-800">AI</span>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          
                 {/* Export Map for Mobile inside the dark section */}
-                <div className="flex md:hidden w-full mt-[150px]">
+                <div className="flex lg:hidden w-full mt-[150px]">
                   <ExportMap className="mt-0 pb-10 pt-4" />
                 </div>
-                </div>
+                </section>
               </div>
         </motion.div>
       )}
@@ -925,7 +875,7 @@ export default function Hero({
               transition={slideTransition}
               className="w-full flex flex-col items-center justify-center relative mt-[-200px]"
             >
-              <div className="hidden md:flex space-x-2.5 mb-5 mt-24">
+              <div className="hidden lg:flex space-x-2.5 mb-5 mt-24">
                 {SLIDES.map((_, index) => (
                   <button
                     key={index}
@@ -938,53 +888,51 @@ export default function Hero({
                 ))}
               </div>
 
-              <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent border border-transparent rounded-none p-4 md:p-0 overflow-hidden">
+              <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent rounded-none p-4 lg:p-0 overflow-hidden">
                 {/* Unified View */}
                 <div className="flex flex-col w-full">
                   <section className="pt-[120px] pb-0 w-full overflow-hidden bg-transparent">
                     <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-8">
                       <div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-3">
+                        <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black tracking-tight text-neutral-900 leading-tight mb-4 lg:mb-6 flex items-start justify-center gap-3 lg:gap-5 z-10">
                           Custom Apparel Solutions
                         </h2>
-                        <p className="text-[15px] text-neutral-600 font-light leading-relaxed max-w-2xl mx-auto">
+                        <p className="text-[15px] sm:text-lg lg:text-[20px] text-neutral-600 font-light leading-relaxed max-w-2xl mx-auto px-6 sm:px-0">
                           Discover KAW's signature production lineup featuring perfect fits and flawless details.
                         </p>
                       </div>
                     </div>
                     <div className="max-w-[1200px] mx-auto px-6 w-full relative">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 pb-8">
+                      {/* 전체 그리드의 외곽선(추가 의견 대기 중) */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[2px] pb-8">
                         {[
-                          "-29 001.png", "-30 003.png", "-34 012.png", "-33 008.png",
-                          "-33 009.png", "-33 010.png", "-34 011.png", "-31 005.png",
-                          "-35 013.png", "-35 014.png"
+                          'w1.png', 'w2.png', 'w3.png', 'w4.png', 'w5.png', 'w6.png',
+                          'm1.png', 'm2.png', 'm3.png', 'm4.png', 'm5.png', 'm6.png'
                         ].map((img, idx) => {
                           const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
                           const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(img)}?format=webp&quality=80`;
                           return (
-                          <div key={idx} className="bg-white border border-neutral-200 overflow-hidden shadow-sm">
-                            <div className="aspect-[3/4] w-full bg-neutral-100 relative overflow-hidden">
-                              <img src={optimizedUrl} alt={`Product ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                          <div key={idx} className="bg-white overflow-hidden shadow-sm">
+                            <div className="aspect-[3/4] w-full bg-neutral-100 relative overflow-hidden group/item">
+                              <img src={optimizedUrl} alt={`Product ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-700 group-hover/item:scale-105" loading="lazy" />
                             </div>
                           </div>
                         )})}
                       </div>
-                      {/* Fade-out effect at the bottom */}
-                      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none" style={{ background: 'linear-gradient(to top, var(--color-luxury-cream, #fcfbf9) 0%, transparent 100%)' }}></div>
                     </div>
                   </section>
 
                   <section className="mt-[200px] pt-0 pb-12 px-6 w-full max-w-[770px] mx-auto">
                     <div className="text-center mb-16">
-                      <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-4">
+                      <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black tracking-tight text-neutral-900 leading-tight flex items-start justify-center gap-3 lg:gap-5 z-10 mb-4 lg:mb-6">
                         Premium Fabrics
                       </h2>
-                      <p className="text-[15px] text-neutral-500 font-light leading-relaxed max-w-lg mx-auto">
+                      <p className="text-[15px] sm:text-lg lg:text-[20px] text-neutral-500 font-light leading-relaxed max-w-lg mx-auto px-6 sm:px-0">
                         Our garments start with the best raw materials. From high-stretch performance knits to classic heritage weaves.
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 md:gap-4 max-w-[1000px] mx-auto items-start">
+                    <div className="grid grid-cols-2 gap-3 lg:gap-4 max-w-[1000px] mx-auto items-start">
                       {PREMIUM_FABRICS.map((fabric) => {
                         const isOpen = openFabric === fabric.id;
                         return (

@@ -53,10 +53,10 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
             : "bg-transparent h-16"
       }`}
     >
-      <div className="w-full h-full px-6 md:px-12 flex items-center justify-between">
+      <div className="w-full h-full px-6 lg:px-12 flex items-center justify-between">
         
         {/* 데스크톱 왼쪽 네비게이션 메뉴 (토글 캡슐 형태) */}
-        <div className="hidden md:flex items-center bg-neutral-100/60 backdrop-blur-md p-1 rounded-full relative">
+        <div className="hidden min-[930px]:flex items-center bg-neutral-100/60 backdrop-blur-md p-1 rounded-full relative">
           {["Home", "Manufacturing", "Product"].map((tab, index) => (
             <button
               key={tab}
@@ -79,7 +79,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
         </div>
 
         {/* Left Side: Mobile Menu Trigger */}
-        <div className="flex md:hidden mr-4">
+        <div className="flex min-[930px]:hidden mr-4">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="transition-colors duration-300 focus:outline-hidden text-neutral-700 hover:text-black"
@@ -140,14 +140,14 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
       {/* Mobile Navigation Drawer Overlay */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-black/40 z-40 transition-opacity md:hidden"
+          className="fixed inset-0 bg-black/40 z-40 transition-opacity min-[930px]:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* Mobile Menu Drawer */}
       <div 
-        className={`fixed inset-y-0 left-0 w-[85%] max-w-[285px] bg-[#1e1e1e] text-white z-50 transform transition-transform duration-300 ease-in-out flex flex-col shadow-2xl md:hidden ${
+        className={`fixed inset-y-0 left-0 w-[85%] max-w-[285px] bg-[#1e1e1e] text-white z-50 transform transition-transform duration-300 ease-in-out flex flex-col shadow-2xl min-[930px]:hidden ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

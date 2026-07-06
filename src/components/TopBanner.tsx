@@ -32,7 +32,7 @@ export default function TopBanner() {
           <span className="font-semibold text-black uppercase text-[11px] mb-0.5 sm:mb-0">
             Stay Updated
           </span>
-          <span className="text-black/50 font-light text-[11px] hidden md:inline">
+          <span className="text-black/50 font-light text-[11px] hidden lg:inline">
             |
           </span>
           <span className="text-black/60 font-light text-[11px]">
