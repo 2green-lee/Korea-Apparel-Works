@@ -280,7 +280,6 @@ export default function WelcomeLanding() {
           
           <div className="max-w-[1200px] mx-auto w-full text-center mb-12 lg:mb-20">
             <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-8 flex items-start justify-center gap-3 lg:gap-5 z-10">
-              <CheckCircle2 className="hidden lg:block w-[34px] h-[34px] lg:w-[42px] lg:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 lg:mt-2" strokeWidth={2.5} />
               <span className="text-center">Why Korea?</span>
             </h2>
           </div>
@@ -633,7 +632,6 @@ export default function WelcomeLanding() {
           <div className="max-w-[1200px] mx-auto w-full group/kawcarousel">
             <div className="text-center mb-[90px]">
               <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5">
-                <CheckCircle2 className="hidden lg:block w-[34px] h-[34px] lg:w-[42px] lg:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 lg:mt-2" strokeWidth={2.5} />
                 <span className="text-center">Why Korea Apparel Works?</span>
               </h2>
             </div>
@@ -723,7 +721,6 @@ export default function WelcomeLanding() {
             <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-16">
               <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black mb-4 lg:mb-6 tracking-tight leading-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
-                <CheckCircle2 className="hidden lg:block w-[34px] h-[34px] lg:w-[42px] lg:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 lg:mt-2" strokeWidth={2.5} />
                 <span className="text-center">AI-powered from<br className="hidden lg:block" /> inquiry to delivery</span>
               </h2>
               <p className="text-[15px] sm:text-lg lg:text-[20px] text-neutral-400 font-light leading-relaxed px-6 sm:px-0">

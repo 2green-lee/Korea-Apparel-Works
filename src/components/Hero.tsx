@@ -490,7 +490,7 @@ export default function Hero({
                       className="flex-1 overflow-y-auto overscroll-contain touch-pan-y space-y-4 pr-1 text-[15px] text-left scrollbar-thin pb-2"
                     >
                       {messages.map((msg, index) => (
-                        <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                        <div key={index} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                           <div className={`max-w-[85%] sm:max-w-[75%] rounded-[18px] px-4 py-3 leading-relaxed font-light ${
                             msg.role === "user"
                               ? "bg-neutral-950 text-white rounded-tr-none font-light"
@@ -669,9 +669,9 @@ export default function Hero({
                   </div>
                 </div>
 
-                <div className="w-full mt-10 lg:mt-16 relative lg:px-0">
+                <div className="w-full mt-10 lg:mt-16 relative px-4 lg:px-0">
                   <div className="max-w-[1200px] mx-auto w-full relative">
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-[2px] pb-8">
+                    <div className="grid grid-cols-3 gap-[2px] pb-8">
                       {['b1.jpg', 'b2-2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
                         const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
                         const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
@@ -689,54 +689,51 @@ export default function Hero({
                   </div>
                 </div>
 
-                <div id="core-capabilities-section" className="flex overflow-x-auto pb-6 -mx-4 px-4 lg:mx-0 lg:px-0 lg:pb-0 lg:grid lg:grid-cols-2 lg:grid-cols-4 gap-[25px] snap-x snap-mandatory scrollbar-hide pt-12 w-full scroll-mt-20">
+                <div id="core-capabilities-section" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-[25px] pt-8 lg:pt-12 w-full px-4 lg:px-0 scroll-mt-20">
                   {/* Card 1 */}
-                  <div className="flex-none w-[85vw] sm:w-[320px] lg:w-auto snap-center p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-4 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
+                  <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
                       <Factory className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                     </div>
-                    <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
-                    <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                    <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
+                    <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                       Family-owned factory with direct production and transparent processes.
                     </p>
                   </div>
 
                   {/* Card 2 */}
-                  <div className="flex-none w-[85vw] sm:w-[320px] lg:w-auto snap-center p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-4 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
+                  <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-3 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
                       <Package className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                     </div>
-                    <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
-                    <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                    <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
+                    <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                       From design to finished product, we manage every production stage.
                     </p>
                   </div>
 
                   {/* Card 3 */}
-                  <div className="flex-none w-[85vw] sm:w-[320px] lg:w-auto snap-center p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-4 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
+                  <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
                       <ShieldCheck className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                     </div>
-                    <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
-                    <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                    <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
+                    <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                       High-end craftsmanship and technical expertise for performance apparel.
                     </p>
                   </div>
 
                   {/* Card 4 */}
-                  <div className="flex-none w-[85vw] sm:w-[320px] lg:w-auto snap-center p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-4 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
+                  <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                       <Zap className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                     </div>
-                    <div className="text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
-                    <p className="text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                    <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
+                    <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                       Prototype from 1 piece and scale production as your brand grows.
                     </p>
                   </div>
                 </div>
-
-                {/* 200px pure white gap + 500px Gradient Transition for Mobile */}
-                <div className="w-full h-[500px] bg-gradient-to-b from-transparent to-[#0a0a0a] lg:hidden mt-[200px]"></div>
 
                 {/* AI Workflow Section */}
         <section className="relative mt-20 py-24 px-6 text-white border-t border-neutral-900 bg-neutral-950 mb-[-1px]" style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
@@ -855,9 +852,9 @@ export default function Hero({
           </div>
 
           
-                {/* Export Map for Mobile inside the dark section */}
-                <div className="flex lg:hidden w-full mt-[150px]">
-                  <ExportMap className="mt-0 pb-10 pt-4" />
+                {/* Export Map inside the dark section */}
+                <div className="flex w-full mt-[100px] lg:mt-[150px] max-w-[1200px] mx-auto justify-center">
+                  <ExportMap className="mt-0 pb-10 pt-4 w-full" />
                 </div>
                 </section>
               </div>
@@ -904,7 +901,7 @@ export default function Hero({
                     </div>
                     <div className="max-w-[1200px] mx-auto px-6 w-full relative">
                       {/* 전체 그리드의 외곽선(추가 의견 대기 중) */}
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[2px] pb-8">
+                      <div className="grid grid-cols-3 lg:grid-cols-4 gap-[2px] pb-8">
                         {[
                           'w1.png', 'w2.png', 'w3.png', 'w4.png', 'w5.png', 'w6.png',
                           'm1.png', 'm2.png', 'm3.png', 'm4.png', 'm5.png', 'm6.png'

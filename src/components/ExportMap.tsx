@@ -34,7 +34,6 @@ const ExportMap = ({ className }: { className?: string }) => {
     <div className={`w-full max-w-[900px] mx-auto pb-20 pt-0 px-2 lg:px-6 relative ${className || 'mt-[250px]'}`}>
       <div className="text-center mb-8 lg:mb-12">
         <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4 flex items-start justify-center gap-3 lg:gap-5 z-10">
-          <CheckCircle2 className="hidden lg:block w-[34px] h-[34px] lg:w-[42px] lg:h-[42px] lg:w-[50px] lg:h-[50px] text-emerald-500 shrink-0 mt-1 lg:mt-2" strokeWidth={2.5} />
           <span className="text-center">Global Export Reach</span>
         </h2>
         <p className="text-[15px] sm:text-lg lg:text-[20px] text-neutral-400 font-light max-w-lg mx-auto leading-relaxed">
