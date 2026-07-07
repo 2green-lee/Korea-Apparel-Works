@@ -855,6 +855,75 @@ app.use("/api/", limiter); // Apply to all API routes
     });
   });
 
+  // ─── Analytics Drilldown ───────────────────────────────────────
+  app.get("/api/admin/analytics/today-by-page", async (req, res) => {
+    try {
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
+      const { data, error } = await supabase
+        .from("page_views")
+        .select("path")
+        .gte("created_at", todayStart.toISOString());
+      
+      if (error) throw error;
+      
+      const counts: Record<string, number> = {};
+      data?.forEach((row: any) => {
+        counts[row.path] = (counts[row.path] || 0) + 1;
+      });
+
+      const result = Object.entries(counts).map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count);
+      res.json(result);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  app.get("/api/admin/analytics/historical", async (req, res) => {
+    try {
+      const { path, range } = req.query;
+      if (!path || typeof path !== "string") return res.status(400).json({ error: "path is required" });
+
+      const rangeType = typeof range === "string" ? range : "month";
+      const now = new Date();
+      const startDate = new Date();
+      
+      if (rangeType === "week") startDate.setDate(now.getDate() - 7);
+      else if (rangeType === "year") startDate.setFullYear(now.getFullYear() - 1);
+      else startDate.setMonth(now.getMonth() - 1);
+      
+      startDate.setHours(0, 0, 0, 0);
+
+      const { data, error } = await supabase
+        .from("page_views")
+        .select("created_at")
+        .eq("path", path)
+        .gte("created_at", startDate.toISOString())
+        .order("created_at", { ascending: true });
+
+      if (error) throw error;
+
+      const counts: Record<string, number> = {};
+      data?.forEach((row: any) => {
+        const dateStr = row.created_at.split("T")[0];
+        counts[dateStr] = (counts[dateStr] || 0) + 1;
+      });
+
+      const result = [];
+      const current = new Date(startDate);
+      while (current <= now) {
+        const dStr = current.toISOString().split("T")[0];
+        result.push({ date: dStr, count: counts[dStr] || 0 });
+        current.setDate(current.getDate() + 1);
+      }
+
+      res.json(result);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
   // ─── Chat Translation (Gemini) ──────────────────────────────────
   app.post("/api/translate", async (req, res) => {
     try {

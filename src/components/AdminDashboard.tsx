@@ -25,6 +25,7 @@ import {
   RotateCcw,
   XCircle
 } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 interface SubmissionItem {
   id: string;
@@ -75,6 +76,13 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
     poCount: number | null;
     submissionCount: number | null;
   } | null>(null);
+
+  // Analytics Drilldown State
+  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+  const [todayPageStats, setTodayPageStats] = useState<{path: string, count: number}[] | null>(null);
+  const [selectedAnalyticsPath, setSelectedAnalyticsPath] = useState<string | null>(null);
+  const [historicalStats, setHistoricalStats] = useState<{date: string, count: number}[] | null>(null);
+  const [analyticsRange, setAnalyticsRange] = useState<"week" | "month" | "year">("week");
 
   // Chat Translation State
   const [translations, setTranslations] = useState<Record<string, string>>({});
@@ -169,6 +177,26 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
       if (res.ok) setStats(await res.json());
     } catch (err) { console.error("Failed to load stats:", err); }
   };
+
+  const fetchTodayAnalytics = async () => {
+    try {
+      const res = await fetch("/api/admin/analytics/today-by-page");
+      if (res.ok) setTodayPageStats(await res.json());
+    } catch (err) { console.error("Failed to load today's analytics:", err); }
+  };
+
+  const fetchHistoricalAnalytics = async (path: string, range: string) => {
+    try {
+      const res = await fetch(`/api/admin/analytics/historical?path=${encodeURIComponent(path)}&range=${range}`);
+      if (res.ok) setHistoricalStats(await res.json());
+    } catch (err) { console.error("Failed to load historical analytics:", err); }
+  };
+
+  useEffect(() => {
+    if (selectedAnalyticsPath) {
+      fetchHistoricalAnalytics(selectedAnalyticsPath, analyticsRange);
+    }
+  }, [selectedAnalyticsPath, analyticsRange]);
 
   const fetchTrash = async () => {
     setIsTrashLoading(true);
@@ -718,20 +746,27 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
           {/* KPI Stats Cards - Bento Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8 select-text">
             {/* Card 1: Page Views */}
-            <div className="bg-neutral-900 rounded-2xl p-6 border border-white/5 relative overflow-hidden flex flex-col justify-between">
+            <div 
+              className={`bg-neutral-900 rounded-2xl p-6 border transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${isAnalyticsOpen ? 'border-white/30 shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'border-white/5 hover:bg-neutral-800'}`}
+              onClick={() => {
+                if (!isAnalyticsOpen) fetchTodayAnalytics();
+                setIsAnalyticsOpen(!isAnalyticsOpen);
+                setSelectedAnalyticsPath(null);
+              }}
+            >
               <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider font-sans">사이트 조회수</span>
+                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider font-sans">오늘 사이트 접속수</span>
                 <Eye className="w-5 h-5 text-white" />
               </div>
               <div className="mt-4">
                 <span className="text-3xl font-extralight text-white font-sans">
-                  {stats?.totalViews ?? "—"}
+                  {stats?.todayViews ?? "—"}
                 </span>
                 <span className="block text-[10px] text-neutral-500 font-light mt-1 font-sans">
-                  {stats?.totalViews === null
+                  {stats?.todayViews === null
                     ? "page_views 테이블 생성 필요 (SQL 실행)"
-                    : `오늘 ${stats?.todayViews ?? 0}회 · 순 방문자 ${stats?.uniqueVisitors ?? 0}명`}
+                    : `전체 누적 ${stats?.totalViews ?? 0}회 · 순 방문자 ${stats?.uniqueVisitors ?? 0}명`}
                 </span>
               </div>
             </div>
@@ -781,6 +816,79 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
               </div>
             </div>
           </div>
+
+          {/* Analytics Drilldown Section */}
+          {isAnalyticsOpen && (
+            <div className="bg-neutral-900 rounded-3xl border border-white/10 overflow-hidden shadow-xl mb-6 p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-semibold text-white">상세 접속 통계</h3>
+                <button onClick={() => setIsAnalyticsOpen(false)} className="text-neutral-400 hover:text-white cursor-pointer transition">
+                  <XCircle className="w-5 h-5" />
+                </button>
+              </div>
+
+              {!selectedAnalyticsPath ? (
+                <div>
+                  <h4 className="text-sm text-neutral-400 mb-4 font-semibold">오늘 페이지별 접속수 (클릭하여 추이 확인)</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {todayPageStats?.map((stat, idx) => (
+                      <div 
+                        key={idx} 
+                        onClick={() => setSelectedAnalyticsPath(stat.path)}
+                        className="p-4 bg-neutral-950 border border-white/5 rounded-xl cursor-pointer hover:border-white/20 transition flex justify-between items-center"
+                      >
+                        <span className="text-sm font-medium text-neutral-300 truncate mr-3">{stat.path || '/'}</span>
+                        <span className="text-lg font-semibold text-white">{stat.count}</span>
+                      </div>
+                    ))}
+                    {!todayPageStats && <div className="text-neutral-500 text-sm">데이터를 불러오는 중...</div>}
+                    {todayPageStats && todayPageStats.length === 0 && <div className="text-neutral-500 text-sm">오늘 방문 기록이 없습니다.</div>}
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="flex items-center space-x-3">
+                      <button onClick={() => setSelectedAnalyticsPath(null)} className="text-neutral-400 hover:text-white cursor-pointer p-1 rounded hover:bg-neutral-800 transition">
+                        <ArrowLeft className="w-4 h-4" />
+                      </button>
+                      <h4 className="text-sm text-neutral-300 font-semibold">{selectedAnalyticsPath || '/'} <span className="text-neutral-500 font-normal ml-2">접속 추이</span></h4>
+                    </div>
+                    <div className="flex bg-neutral-950 rounded-lg p-1 border border-white/5">
+                      {(['week', 'month', 'year'] as const).map(range => (
+                        <button
+                          key={range}
+                          onClick={() => setAnalyticsRange(range)}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-md transition cursor-pointer ${analyticsRange === range ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}
+                        >
+                          {range === 'week' ? '1주일' : range === 'month' ? '1개월' : '1년'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="h-64 w-full">
+                    {!historicalStats ? (
+                      <div className="w-full h-full flex items-center justify-center text-neutral-500">데이터를 불러오는 중...</div>
+                    ) : (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={historicalStats} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                          <XAxis dataKey="date" stroke="#666" fontSize={10} tickMargin={10} />
+                          <YAxis stroke="#666" fontSize={10} tickLine={false} axisLine={false} />
+                          <Tooltip 
+                            contentStyle={{ backgroundColor: '#171717', borderColor: '#333', borderRadius: '8px', color: '#fff', fontSize: '12px' }}
+                            itemStyle={{ color: '#fff' }}
+                          />
+                          <Line type="monotone" dataKey="count" name="접속수" stroke="#fff" strokeWidth={2} dot={{ r: 3, fill: '#fff' }} activeDot={{ r: 5 }} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Interactive Controls & Filters */}
           <div className="bg-neutral-900 rounded-3xl border border-white/10 overflow-hidden shadow-xl mb-6">

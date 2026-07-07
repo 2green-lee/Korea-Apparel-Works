@@ -40,6 +40,9 @@ export default function App() {
       localStorage.setItem("kaw_visitor_id", visitorId);
     }
 
+    // 개발 환경(로컬) 접속은 통계에서 제외
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") return;
+
     fetch("/api/track-view", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
