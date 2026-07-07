@@ -26,6 +26,27 @@ export default function App() {
     return "client";
   });
 
+  // Page view tracking for the admin dashboard stats (once per browser session)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.pathname.toLowerCase() === "/admin") return;
+    if (sessionStorage.getItem("kaw_view_tracked")) return;
+    sessionStorage.setItem("kaw_view_tracked", "1");
+
+    // 순 방문자 집계용 익명 ID (개인정보 아님)
+    let visitorId = localStorage.getItem("kaw_visitor_id");
+    if (!visitorId) {
+      visitorId = `v-${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
+      localStorage.setItem("kaw_visitor_id", visitorId);
+    }
+
+    fetch("/api/track-view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: window.location.pathname, visitorId })
+    }).catch(() => {});
+  }, []);
+
   // Force lowercase URL in browser address bar
   useEffect(() => {
     if (typeof window !== "undefined") {

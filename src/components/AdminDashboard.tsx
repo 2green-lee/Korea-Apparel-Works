@@ -19,7 +19,11 @@ import {
   MessageCircle,
   ShoppingCart,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Eye,
+  Languages,
+  RotateCcw,
+  XCircle
 } from "lucide-react";
 
 interface SubmissionItem {
@@ -51,16 +55,35 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"all" | "quote" | "preorder">("all");
 
-  const [activeMainTab, setActiveMainTab] = useState<"dashboard" | "pageEdit" | "adminManagement" | "chats" | "orders">("dashboard");
-  
+  const [activeMainTab, setActiveMainTab] = useState<"dashboard" | "pageEdit" | "adminManagement" | "chats" | "orders" | "trash">("dashboard");
+
   // Chats & Orders State
   const [chatData, setChatData] = useState<{ sessions: any[], messages: any[] }>({ sessions: [], messages: [] });
-  const [selectedCustomerForChat, setSelectedCustomerForChat] = useState<string | null>(null);
+  const [expandedCustomers, setExpandedCustomers] = useState<Record<string, boolean>>({});
   const [expandedSessions, setExpandedSessions] = useState<Record<string, boolean>>({});
-  const [showPoSummary, setShowPoSummary] = useState(false);
+  const [showPoSummaryFor, setShowPoSummaryFor] = useState<Record<string, boolean>>({});
   const [pos, setPos] = useState<any[]>([]);
   const [isChatsLoading, setIsChatsLoading] = useState(false);
   const [isPosLoading, setIsPosLoading] = useState(false);
+
+  // Dashboard Stats (견적수, 조회수 등)
+  const [stats, setStats] = useState<{
+    totalViews: number | null;
+    todayViews: number | null;
+    uniqueVisitors: number | null;
+    chatSessions: number | null;
+    poCount: number | null;
+    submissionCount: number | null;
+  } | null>(null);
+
+  // Chat Translation State
+  const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [showTranslated, setShowTranslated] = useState<Record<string, boolean>>({});
+  const [translatingKey, setTranslatingKey] = useState<string | null>(null);
+
+  // Trash (휴지통) State
+  const [trashData, setTrashData] = useState<{ sessions: any[]; submissions: any[]; pos: any[] }>({ sessions: [], submissions: [], pos: [] });
+  const [isTrashLoading, setIsTrashLoading] = useState(false);
   
   // Admin management state
   const [allAdmins, setAllAdmins] = useState<{ email: string; name: string; role: "master" | "admin"; createdAt: string }[]>([]);
@@ -140,12 +163,152 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
     finally { setIsPosLoading(false); }
   };
 
+  const fetchStats = async () => {
+    try {
+      const res = await fetch("/api/admin/stats");
+      if (res.ok) setStats(await res.json());
+    } catch (err) { console.error("Failed to load stats:", err); }
+  };
+
+  const fetchTrash = async () => {
+    setIsTrashLoading(true);
+    try {
+      const res = await fetch("/api/admin/trash");
+      if (res.ok) setTrashData(await res.json());
+    } catch (err) { console.error(err); }
+    finally { setIsTrashLoading(false); }
+  };
+
+  // 채팅 세션을 휴지통으로 이동 / 복원 / 영구삭제
+  const handleTrashItem = async (kind: "session" | "submission" | "po", id: string, label: string) => {
+    if (!window.confirm(`"${label}" 항목을 휴지통으로 이동하시겠습니까?\n(휴지통에서 복원하거나 영구 삭제할 수 있습니다.)`)) return;
+    try {
+      const res = await fetch("/api/admin/trash", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind, id })
+      });
+      if (res.ok) {
+        if (kind === "session") fetchChats();
+        if (kind === "po") fetchPos();
+        if (kind === "submission") fetchSubmissions();
+      } else {
+        const errData = await res.json();
+        alert(
+          "휴지통 이동에 실패했습니다.\n\n" +
+          "Supabase SQL Editor에서 supabase_admin_upgrade.sql 파일의 내용을 실행했는지 확인해 주세요.\n\n" +
+          `상세: ${errData.error || "알 수 없는 오류"}`
+        );
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  // 고객 단위(세션 여러 개)를 한 번에 휴지통으로 이동
+  const handleTrashCustomer = async (customerKey: string, sessions: any[]) => {
+    if (!window.confirm(`"${customerKey}" 고객의 채팅 세션 ${sessions.length}개를 모두 휴지통으로 이동하시겠습니까?\n(휴지통에서 복원하거나 영구 삭제할 수 있습니다.)`)) return;
+    try {
+      let failed = 0;
+      for (const s of sessions) {
+        const res = await fetch("/api/admin/trash", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ kind: "session", id: s.session_id })
+        });
+        if (!res.ok) failed++;
+      }
+      if (failed > 0) {
+        alert(
+          "일부 세션의 휴지통 이동에 실패했습니다.\n\n" +
+          "Supabase SQL Editor에서 supabase_admin_upgrade.sql 파일의 내용을 실행했는지 확인해 주세요."
+        );
+      }
+      fetchChats();
+    } catch (err) { console.error(err); }
+  };
+
+  const handleRestoreItem = async (kind: "session" | "submission" | "po", id: string) => {
+    try {
+      const res = await fetch("/api/admin/restore", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind, id })
+      });
+      if (res.ok) fetchTrash();
+    } catch (err) { console.error(err); }
+  };
+
+  const handlePurgeItem = async (kind: "session" | "submission" | "po", id: string) => {
+    if (!window.confirm("이 항목을 영구적으로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) return;
+    try {
+      const res = await fetch("/api/admin/purge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind, id })
+      });
+      if (res.ok) fetchTrash();
+    } catch (err) { console.error(err); }
+  };
+
+  const handleEmptyTrash = async () => {
+    if (!window.confirm("휴지통을 완전히 비우시겠습니까? 모든 항목이 영구 삭제되며 되돌릴 수 없습니다.")) return;
+    try {
+      const res = await fetch("/api/admin/purge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ all: true })
+      });
+      if (res.ok) fetchTrash();
+    } catch (err) { console.error(err); }
+  };
+
+  // 세션 단위 채팅 한국어 번역 (Gemini)
+  const handleTranslateSession = async (sessionId: string) => {
+    // 이미 번역돼 있으면 토글만
+    const msgs = chatData.messages.filter((m: any) => m.session_id === sessionId);
+    if (msgs.length === 0) return;
+
+    const untranslated = msgs.filter((m: any) => !translations[m.message_id]);
+    if (untranslated.length === 0) {
+      setShowTranslated(prev => ({ ...prev, [sessionId]: !prev[sessionId] }));
+      return;
+    }
+
+    setTranslatingKey(sessionId);
+    try {
+      const texts = untranslated.map((m: any) =>
+        String(m.content).replace(/\[Image Attached:[^\]]*\]/g, "[이미지 첨부]")
+      );
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ texts })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTranslations(prev => {
+          const next = { ...prev };
+          untranslated.forEach((m: any, i: number) => { next[m.message_id] = data.translations[i]; });
+          return next;
+        });
+        setShowTranslated(prev => ({ ...prev, [sessionId]: true }));
+      } else {
+        alert("번역에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("번역 서버와의 통신에 실패했습니다.");
+    } finally {
+      setTranslatingKey(null);
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
-      if (activeMainTab === "dashboard") fetchSubmissions();
+      if (activeMainTab === "dashboard") { fetchSubmissions(); fetchStats(); }
       if (activeMainTab === "adminManagement" && currentAdmin?.role === "master") fetchAdmins();
       if (activeMainTab === "chats") { fetchChats(); fetchPos(); }
-      if (activeMainTab === "orders") fetchPos();
+      if (activeMainTab === "orders") { fetchPos(); fetchChats(); }
+      if (activeMainTab === "trash") fetchTrash();
     }
   }, [isAuthenticated, activeMainTab, currentAdmin?.role]);
 
@@ -234,7 +397,7 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("해당 고객의 리드 문의 내역 데이터를 아카이브에서 영구적으로 완전히 삭제하시겠습니까?")) return;
+    if (!window.confirm("해당 고객의 리드 문의 내역을 휴지통으로 이동하시겠습니까?\n(휴지통에서 복원하거나 영구 삭제할 수 있습니다.)")) return;
     try {
       const res = await fetch("/api/submissions/delete", {
         method: "POST",
@@ -250,7 +413,7 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
   };
 
   const handleClearAll = async () => {
-    if (!window.confirm("경고: 데이터베이스 내 모든 고객 문의 및 전송 내역이 영구히 삭제됩니다! 정말 계속 진행하시겠습니까?")) return;
+    if (!window.confirm("모든 고객 문의 내역을 휴지통으로 이동합니다. 계속 진행하시겠습니까?\n(휴지통에서 복원하거나 영구 삭제할 수 있습니다.)")) return;
     try {
       const res = await fetch("/api/submissions/clear", {
         method: "POST"
@@ -455,7 +618,19 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
             <ShoppingCart className="w-4 h-4" />
             <span>발주서 목록(PO)</span>
           </button>
-          
+
+          <button
+            onClick={() => setActiveMainTab("trash")}
+            className={`text-left px-4 py-3 rounded-xl transition duration-200 cursor-pointer text-sm font-semibold flex items-center space-x-3.5 border border-transparent ${
+              activeMainTab === "trash"
+                ? "bg-white text-black border-white/10"
+                : "text-neutral-400 hover:text-white hover:bg-neutral-900 border-transparent"
+            }`}
+          >
+            <Trash2 className="w-4 h-4" />
+            <span>휴지통</span>
+          </button>
+
           {currentAdmin?.role === "master" && (
             <button
               onClick={() => setActiveMainTab("adminManagement")}
@@ -541,48 +716,67 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
           </div>
 
           {/* KPI Stats Cards - Bento Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8 select-text">
-            {/* Card 1: Total Leads */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8 select-text">
+            {/* Card 1: Page Views */}
             <div className="bg-neutral-900 rounded-2xl p-6 border border-white/5 relative overflow-hidden flex flex-col justify-between">
               <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider font-sans">전체 누적 접수</span>
+                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider font-sans">사이트 조회수</span>
+                <Eye className="w-5 h-5 text-white" />
+              </div>
+              <div className="mt-4">
+                <span className="text-3xl font-extralight text-white font-sans">
+                  {stats?.totalViews ?? "—"}
+                </span>
+                <span className="block text-[10px] text-neutral-500 font-light mt-1 font-sans">
+                  {stats?.totalViews === null
+                    ? "page_views 테이블 생성 필요 (SQL 실행)"
+                    : `오늘 ${stats?.todayViews ?? 0}회 · 순 방문자 ${stats?.uniqueVisitors ?? 0}명`}
+                </span>
+              </div>
+            </div>
+
+            {/* Card 2: AI Chat Sessions */}
+            <div className="bg-neutral-900 rounded-2xl p-6 border border-white/5 relative overflow-hidden flex flex-col justify-between">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider font-sans">AI 채팅 세션</span>
+                <MessageCircle className="w-5 h-5 text-white" />
+              </div>
+              <div className="mt-4">
+                <span className="text-3xl font-extralight text-white font-sans">{stats?.chatSessions ?? "—"}</span>
+                <span className="block text-[10px] text-neutral-500 font-light mt-1 font-sans">
+                  고객이 AI 상담원과 진행한 채팅 세션 수입니다.
+                </span>
+              </div>
+            </div>
+
+            {/* Card 3: Quotes / POs */}
+            <div className="bg-neutral-900 rounded-2xl p-6 border border-white/5 relative overflow-hidden flex flex-col justify-between">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider font-sans">견적·발주서 (PO)</span>
+                <ShoppingCart className="w-5 h-5 text-white" />
+              </div>
+              <div className="mt-4">
+                <span className="text-3xl font-extralight text-white font-sans">{stats?.poCount ?? "—"}</span>
+                <span className="block text-[10px] text-neutral-500 font-light mt-1 font-sans">
+                  AI 상담을 통해 자동 생성된 견적(발주서) 건수입니다.
+                </span>
+              </div>
+            </div>
+
+            {/* Card 4: Total Leads */}
+            <div className="bg-neutral-900 rounded-2xl p-6 border border-white/5 relative overflow-hidden flex flex-col justify-between">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider font-sans">문의 접수 (리드)</span>
                 <Users className="w-5 h-5 text-white" />
               </div>
               <div className="mt-4">
                 <span className="text-3xl font-extralight text-white font-sans">{totalLeads}</span>
                 <span className="block text-[10px] text-neutral-500 font-light mt-1 font-sans">
-                  합산된 온디맨드 비스포크 상담 신청 건수입니다.
-                </span>
-              </div>
-            </div>
-
-            {/* Card 2: Free Quote Requests */}
-            <div className="bg-neutral-900 rounded-2xl p-6 border border-white/5 relative overflow-hidden flex flex-col justify-between">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider font-sans">1:1 가봉 견적 요청</span>
-                <FileText className="w-5 h-5 text-neutral-400" />
-              </div>
-              <div className="mt-4">
-                <span className="text-3xl font-extralight text-white font-sans">{quoteCount}</span>
-                <span className="block text-[10px] text-neutral-500 font-light mt-1 font-sans">
-                  마스터 테일러 맞춤 가봉 및 견적 접수 건수입니다.
-                </span>
-              </div>
-            </div>
-
-            {/* Card 3: Priority Pre-Orders */}
-            <div className="bg-neutral-900 rounded-2xl p-6 border border-white/5 relative overflow-hidden flex flex-col justify-between">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider font-sans">리미티드 라운치 사전 예약</span>
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div className="mt-4">
-                <span className="text-3xl font-extralight text-white font-sans">{preorderCount}</span>
-                <span className="block text-[10px] text-neutral-500 font-light mt-1 text-neutral-400 font-sans">
-                  2027년 1분기 리미티드 패키지 대기열 예약 수량입니다.
+                  견적 요청 {quoteCount}건 · 사전 예약 {preorderCount}건
                 </span>
               </div>
             </div>
@@ -843,128 +1037,93 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
                 grouped[key].push(session);
               });
 
-              if (!selectedCustomerForChat) {
-                // Funnel Level 1: List of customers
+              const entries = Object.entries(grouped);
+
+              if (entries.length === 0) {
                 return (
-                  <div className="bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden">
-                    <table className="w-full text-left">
-                      <thead>
-                        <tr className="bg-neutral-950 border-b border-white/5 font-sans text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
-                          <th className="py-4 px-6">고객 계정 (가입 이메일 및 AI 연락처 정보)</th>
-                          <th className="py-4 px-6 text-center">진행된 세션 수</th>
-                          <th className="py-4 px-6 text-right">상세 기록</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-white/5">
-                        {Object.entries(grouped).map(([customerKey, sessions]) => (
-                          <tr key={customerKey} className="hover:bg-white/[0.02] transition cursor-pointer" onClick={() => setSelectedCustomerForChat(customerKey)}>
-                            <td className="py-4 px-6 font-sans text-xs text-white flex items-center space-x-3">
-                              <div className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center">
-                                <Users className="w-4 h-4 text-amber-400" />
-                              </div>
-                              <span className="font-semibold">{customerKey}</span>
-                            </td>
-                            <td className="py-4 px-6 font-sans text-xs text-neutral-400 text-center">
-                              {sessions.length} 개 세션
-                            </td>
-                            <td className="py-4 px-6 text-right">
-                              <button
-                                className="text-xs px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition"
-                              >
-                                채팅 열람
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                        {Object.keys(grouped).length === 0 && (
-                          <tr>
-                            <td colSpan={3} className="py-12 text-center text-xs text-neutral-500 font-sans">
-                              채팅 내역이 존재하지 않습니다.
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
+                  <div className="py-16 flex flex-col items-center justify-center space-y-4 bg-neutral-900 border border-white/10 rounded-2xl">
+                    <div className="w-12 h-12 rounded-full bg-neutral-950 border border-white/5 flex items-center justify-center text-neutral-600">
+                      <MessageCircle className="w-5 h-5" />
+                    </div>
+                    <span className="text-xs text-neutral-500 font-sans">채팅 내역이 존재하지 않습니다.</span>
                   </div>
                 );
               }
 
-              // Funnel Level 2: Detailed chat for selected customer
-              const sessions = grouped[selectedCustomerForChat] || [];
+              // 고객별 아코디언 목록 — 클릭 시 그 자리에서 바로 펼쳐짐
+              return entries.map(([customerKey, sessions]) => {
+                const isCustomerOpen = !!expandedCustomers[customerKey];
+                const showSummary = !!showPoSummaryFor[customerKey];
 
-              // Extract all data from all messages for PO summary
-              const allCustomerMsgs = sessions.flatMap(s => chatData.messages.filter(m => m.session_id === s.session_id));
-              const allImages: string[] = [];
-              const allPdfs: string[] = [];
-              const allUserTexts: string[] = [];
+                // Extract all data from all messages for PO summary
+                const allCustomerMsgs = sessions.flatMap(s => chatData.messages.filter(m => m.session_id === s.session_id));
+                const allImages: string[] = [];
+                const allPdfs: string[] = [];
+                const allUserTexts: string[] = [];
 
-              allCustomerMsgs.forEach(msg => {
-                const imgRegex = /\[Image Attached:\s*(https?:\/\/[^\]]+)\]/g;
-                let m;
-                while ((m = imgRegex.exec(msg.content)) !== null) {
-                  const url = m[1];
-                  if (url.match(/\.(pdf)$/i) || url.includes('/tech-packs/')) {
-                    allPdfs.push(url);
-                  } else {
-                    allImages.push(url);
+                allCustomerMsgs.forEach(msg => {
+                  const imgRegex = /\[Image Attached:\s*(https?:\/\/[^\]]+)\]/g;
+                  let m;
+                  while ((m = imgRegex.exec(msg.content)) !== null) {
+                    const url = m[1];
+                    if (url.match(/\.(pdf)$/i) || url.includes('/tech-packs/')) {
+                      allPdfs.push(url);
+                    } else {
+                      allImages.push(url);
+                    }
                   }
-                }
-                if (msg.sender_role === 'user') {
-                  allUserTexts.push(msg.content.replace(/\[Image Attached:[^\]]*\]/g, '').trim());
-                }
-              });
-
-              // Try to extract structured info from user messages
-              const allText = allUserTexts.join(' ').toLowerCase();
-              const detectField = (keywords: string[]): string => {
-                for (const msg of allUserTexts) {
-                  for (const kw of keywords) {
-                    if (msg.toLowerCase().includes(kw)) return msg;
+                  if (msg.sender_role === 'user') {
+                    allUserTexts.push(msg.content.replace(/\[Image Attached:[^\]]*\]/g, '').trim());
                   }
-                }
-                return '—';
-              };
+                });
 
-              const customerEmail = selectedCustomerForChat.split(' / ')[0];
-              const customerCountry = selectedCustomerForChat.split(' / ')[1] || '—';
+                const customerEmail = customerKey.split(' / ')[0];
+                const customerCountry = customerKey.split(' / ')[1] || '—';
 
-              return (
-                <div className="flex flex-col gap-6">
-                  {/* Header */}
-                  <div className="bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden">
-                    <div className="bg-neutral-800/80 px-6 py-4 border-b border-white/5 flex justify-between items-center sticky top-0 z-10 backdrop-blur-md">
-                      <div className="flex items-center space-x-4">
-                        <button 
-                          onClick={() => { setSelectedCustomerForChat(null); setShowPoSummary(false); }}
-                          className="p-2 bg-neutral-950 rounded-lg hover:bg-black text-neutral-400 hover:text-white transition"
-                        >
-                          <ArrowLeft className="w-4 h-4" />
-                        </button>
-                        <h3 className="font-semibold text-white font-sans text-sm flex items-center space-x-2">
-                          <Users className="w-4 h-4 text-amber-400" />
-                          <span>{selectedCustomerForChat} 님의 대화 기록</span>
-                        </h3>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <span className="text-xs text-neutral-400 font-sans">{sessions.length} 개 세션</span>
+                return (
+                  <div key={customerKey} className="bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden shadow-lg">
+                    {/* 고객 아코디언 헤더 */}
+                    <div className="flex items-center bg-neutral-800/50 hover:bg-white/5 transition">
+                      <button
+                        onClick={() => setExpandedCustomers(prev => ({ ...prev, [customerKey]: !prev[customerKey] }))}
+                        className="flex-1 min-w-0 text-left px-5 py-4 flex justify-between items-center cursor-pointer"
+                      >
+                        <div className="flex items-center space-x-3 min-w-0">
+                          <div className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center shrink-0">
+                            <Users className="w-4 h-4 text-amber-400" />
+                          </div>
+                          <span className="font-semibold text-xs text-white font-sans truncate">{customerKey}</span>
+                          <span className="text-[10px] text-neutral-500 whitespace-nowrap shrink-0 hidden sm:inline">{sessions.length}개 세션 · {allCustomerMsgs.length}개 메시지</span>
+                        </div>
+                        <div className="text-neutral-500 shrink-0 pl-3">
+                          {isCustomerOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        </div>
+                      </button>
+                      <div className="flex items-center space-x-1.5 px-3 shrink-0">
                         <button
-                          onClick={() => setShowPoSummary(!showPoSummary)}
-                          className={`px-4 py-2 text-xs font-semibold rounded-lg transition flex items-center space-x-2 ${
-                            showPoSummary
+                          onClick={() => setShowPoSummaryFor(prev => ({ ...prev, [customerKey]: !prev[customerKey] }))}
+                          className={`px-3 py-2 text-[11px] font-semibold rounded-lg transition cursor-pointer flex items-center space-x-1.5 ${
+                            showSummary
                               ? 'bg-amber-500 text-black hover:bg-amber-400'
                               : 'bg-neutral-700 text-white hover:bg-neutral-600'
                           }`}
                         >
                           <FileText className="w-3.5 h-3.5" />
-                          <span>{showPoSummary ? '발주서 닫기' : '발주서 추출'}</span>
+                          <span className="hidden sm:inline">{showSummary ? '발주서 닫기' : '발주서 추출'}</span>
+                        </button>
+                        <button
+                          onClick={() => handleTrashCustomer(customerKey, sessions)}
+                          className="p-2 rounded-lg text-neutral-500 hover:text-red-400 hover:bg-red-950/20 border border-transparent hover:border-red-500/20 transition cursor-pointer"
+                          title="이 고객의 채팅 전체를 휴지통으로 이동"
+                        >
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
-                  </div>
 
                   {/* PO Summary Table */}
-                  {showPoSummary && (
-                    <div className="bg-neutral-900 border border-amber-500/30 rounded-2xl overflow-hidden shadow-xl">
+                  {showSummary && (
+                    <div className="border-t border-amber-500/30 overflow-hidden">
                       <div className="bg-amber-500/10 px-6 py-4 border-b border-amber-500/20 flex items-center space-x-2">
                         <FileText className="w-5 h-5 text-amber-400" />
                         <h4 className="text-sm font-semibold text-amber-300 font-sans">발주서 요약 (PO Summary)</h4>
@@ -1040,9 +1199,9 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
                     </div>
                   )}
 
-                  {/* Chat Sessions */}
-                  <div className="bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden">
-                    <div className="p-6 flex flex-col gap-6 bg-neutral-950/20">
+                  {/* Chat Sessions - 고객 아코디언을 펼쳤을 때만 표시 */}
+                  {isCustomerOpen && (
+                    <div className="border-t border-white/5 p-5 flex flex-col gap-5 bg-neutral-950/20">
                       {sessions.map(session => {
                         const sessionMsgs = chatData.messages.filter(m => m.session_id === session.session_id);
                         if (sessionMsgs.length === 0) return null;
@@ -1050,18 +1209,44 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
 
                         return (
                           <div key={session.session_id} className="border border-white/10 rounded-2xl bg-neutral-900/50 shadow-lg overflow-hidden">
-                            <button 
-                              onClick={() => setExpandedSessions(prev => ({...prev, [session.session_id]: !prev[session.session_id]}))}
-                              className="w-full text-left px-5 py-4 flex justify-between items-center hover:bg-white/5 transition"
-                            >
-                              <div className="flex items-center space-x-3">
-                                <span className="font-mono bg-black/50 px-2 py-1 rounded text-neutral-400 text-[10px]">ID: {session.session_id.substring(0,8)}</span>
-                                <span className="font-medium text-xs text-white">{new Date(session.created_at).toLocaleString()}</span>
+                            <div className="flex items-center hover:bg-white/5 transition">
+                              <button
+                                onClick={() => setExpandedSessions(prev => ({...prev, [session.session_id]: !prev[session.session_id]}))}
+                                className="flex-1 text-left px-5 py-4 flex justify-between items-center cursor-pointer"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <span className="font-mono bg-black/50 px-2 py-1 rounded text-neutral-400 text-[10px]">ID: {session.session_id.substring(0,8)}</span>
+                                  <span className="font-medium text-xs text-white">{new Date(session.created_at).toLocaleString()}</span>
+                                  <span className="text-[10px] text-neutral-500">{sessionMsgs.length}개 메시지</span>
+                                </div>
+                                <div className="text-neutral-500">
+                                  {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                </div>
+                              </button>
+                              <div className="flex items-center space-x-1 px-3">
+                                <button
+                                  onClick={() => handleTranslateSession(session.session_id)}
+                                  disabled={translatingKey === session.session_id}
+                                  className={`p-2 rounded-lg border border-transparent transition cursor-pointer disabled:opacity-50 ${
+                                    showTranslated[session.session_id]
+                                      ? "text-blue-300 bg-blue-950/40 border-blue-500/30"
+                                      : "text-neutral-400 hover:text-blue-300 hover:bg-blue-950/20"
+                                  }`}
+                                  title={showTranslated[session.session_id] ? "원문 보기" : "한국어로 번역"}
+                                >
+                                  {translatingKey === session.session_id
+                                    ? <RefreshCw className="w-4 h-4 animate-spin" />
+                                    : <Languages className="w-4 h-4" />}
+                                </button>
+                                <button
+                                  onClick={() => handleTrashItem("session", session.session_id, `채팅 세션 ${session.session_id.substring(0,8)}`)}
+                                  className="p-2 rounded-lg text-neutral-500 hover:text-red-400 hover:bg-red-950/20 border border-transparent hover:border-red-500/20 transition cursor-pointer"
+                                  title="휴지통으로 이동"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
                               </div>
-                              <div className="text-neutral-500">
-                                {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                              </div>
-                            </button>
+                            </div>
                             
                             {isExpanded && (
                               <div className="p-5 pt-0 space-y-4 border-t border-white/5 mt-2 pt-4">
@@ -1079,11 +1264,19 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
                                     contentText = contentText.replace(/\[Image Attached:\s*https?:\/\/[^\]]+\]/g, "").trim();
                                   }
 
+                                  const isTranslatedView = showTranslated[session.session_id] && translations[msg.message_id];
+                                  const displayText = isTranslatedView
+                                    ? translations[msg.message_id].replace(/\[이미지 첨부\]/g, "").trim()
+                                    : contentText;
+
                                   return (
                                     <div key={msg.message_id} className={`p-4 rounded-xl text-xs font-sans shadow-sm ${msg.sender_role === 'user' ? 'bg-neutral-800 text-white ml-8 sm:ml-16 border border-white/5' : 'bg-white/10 text-neutral-200 mr-8 sm:mr-16 border border-white/10'}`}>
                                       <div className="flex items-center mb-2 space-x-2">
                                         <div className={`w-2 h-2 rounded-full ${msg.sender_role === 'user' ? 'bg-amber-400' : 'bg-blue-400'}`}></div>
                                         <span className="font-bold text-[10px] uppercase text-neutral-400">{msg.sender_role === 'user' ? 'Client' : 'AI Advisor'}</span>
+                                        {isTranslatedView && (
+                                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-950/40 border border-blue-500/30 text-blue-300 font-semibold">번역됨</span>
+                                        )}
                                       </div>
                                       {images.length > 0 && (
                                         <div className="mb-3 flex flex-wrap gap-2">
@@ -1094,7 +1287,7 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
                                           ))}
                                         </div>
                                       )}
-                                      <div className="whitespace-pre-wrap leading-relaxed text-[13px]">{contentText}</div>
+                                      <div className="whitespace-pre-wrap leading-relaxed text-[13px]">{displayText}</div>
                                     </div>
                                   );
                                 })}
@@ -1104,9 +1297,10 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
                         )
                       })}
                     </div>
+                  )}
                   </div>
-                </div>
-              );
+                );
+              });
             })()}
           </div>
         </>
@@ -1168,30 +1362,39 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
                 return (
                   <div key={po.order_id} className="bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden shadow-lg">
                     {/* PO Header - clickable accordion */}
-                    <button
-                      onClick={() => setExpandedSessions(prev => ({...prev, [`po-${po.order_id}`]: !prev[`po-${po.order_id}`]}))}
-                      className="w-full text-left px-6 py-4 flex justify-between items-center hover:bg-white/5 transition bg-neutral-800/50"
-                    >
-                      <div className="flex items-center space-x-4">
-                        <div className="w-9 h-9 rounded-full bg-amber-500/20 flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-amber-400" />
-                        </div>
-                        <div>
-                          <div className="text-sm font-semibold text-white font-sans">{po.customer_name || '미지정'}</div>
-                          <div className="text-[10px] text-neutral-400 font-sans mt-0.5">
-                            {po.item_category || '품목 미정'} • {new Date(po.created_at).toLocaleString()}
+                    <div className="flex items-center bg-neutral-800/50 hover:bg-white/5 transition">
+                      <button
+                        onClick={() => setExpandedSessions(prev => ({...prev, [`po-${po.order_id}`]: !prev[`po-${po.order_id}`]}))}
+                        className="flex-1 text-left px-6 py-4 flex justify-between items-center cursor-pointer"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className="w-9 h-9 rounded-full bg-amber-500/20 flex items-center justify-center">
+                            <FileText className="w-4 h-4 text-amber-400" />
+                          </div>
+                          <div>
+                            <div className="text-sm font-semibold text-white font-sans">{po.customer_name || '미지정'}</div>
+                            <div className="text-[10px] text-neutral-400 font-sans mt-0.5">
+                              {po.item_category || '품목 미정'} • {new Date(po.created_at).toLocaleString()}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <span className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[10px] font-semibold rounded-lg uppercase">
-                          {po.status}
-                        </span>
-                        <div className="text-neutral-500">
-                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        <div className="flex items-center space-x-3">
+                          <span className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[10px] font-semibold rounded-lg uppercase">
+                            {po.status}
+                          </span>
+                          <div className="text-neutral-500">
+                            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          </div>
                         </div>
-                      </div>
-                    </button>
+                      </button>
+                      <button
+                        onClick={() => handleTrashItem("po", po.order_id, `${po.customer_name || '미지정'} 발주서`)}
+                        className="p-2 mx-3 rounded-lg text-neutral-500 hover:text-red-400 hover:bg-red-950/20 border border-transparent hover:border-red-500/20 transition cursor-pointer"
+                        title="휴지통으로 이동"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
 
                     {/* PO Detail - expanded */}
                     {isExpanded && (
@@ -1318,55 +1521,91 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
                           </table>
                         </div>
 
-                        {/* Inline chat for this session */}
+                        {/* Inline chat for this session - accordion */}
                         {po.session_id && (
                           <div className="px-6 pb-5">
-                            <button
-                              onClick={() => {
-                                if (poSessionMsgs.length === 0) fetchChats();
-                                setExpandedSessions(prev => ({...prev, [`po-chat-${po.order_id}`]: !prev[`po-chat-${po.order_id}`]}));
-                              }}
-                              className="w-full flex items-center justify-center space-x-2 py-3 bg-neutral-800 hover:bg-neutral-700 border border-white/10 rounded-xl text-xs text-white font-semibold transition"
-                            >
-                              <MessageCircle className="w-4 h-4 text-amber-400" />
-                              <span>{showChat ? '채팅 내역 닫기' : '해당 채팅 내역 보기'}</span>
-                            </button>
-
-                            {showChat && (
-                              <div className="mt-4 border border-white/10 rounded-2xl bg-neutral-950/30 p-5 max-h-[500px] overflow-y-auto space-y-3">
-                                {poSessionMsgs.length > 0 ? poSessionMsgs.map((msg: any) => {
-                                  const imgRegex2 = /\[Image Attached:\s*(https?:\/\/[^\]]+)\]/g;
-                                  let ct = msg.content;
-                                  const imgs: string[] = [];
-                                  let m2;
-                                  while ((m2 = imgRegex2.exec(msg.content)) !== null) imgs.push(m2[1]);
-                                  if (imgs.length > 0) ct = ct.replace(/\[Image Attached:\s*https?:\/\/[^\]]+\]/g, '').trim();
-
-                                  return (
-                                    <div key={msg.message_id} className={`p-3 rounded-xl text-xs font-sans ${msg.sender_role === 'user' ? 'bg-neutral-800 text-white ml-6 sm:ml-12 border border-white/5' : 'bg-white/10 text-neutral-200 mr-6 sm:mr-12 border border-white/10'}`}>
-                                      <div className="flex items-center mb-1.5 space-x-2">
-                                        <div className={`w-2 h-2 rounded-full ${msg.sender_role === 'user' ? 'bg-amber-400' : 'bg-blue-400'}`}></div>
-                                        <span className="font-bold text-[10px] uppercase text-neutral-400">{msg.sender_role === 'user' ? 'Client' : 'AI Advisor'}</span>
-                                      </div>
-                                      {imgs.length > 0 && (
-                                        <div className="mb-2 flex flex-wrap gap-2">
-                                          {imgs.map((iu, ii) => (
-                                            <a key={ii} href={iu} target="_blank" rel="noreferrer" className="block hover:opacity-80 transition">
-                                              <img src={iu} alt="Attached" className="max-w-[200px] max-h-[200px] rounded-lg object-contain border border-white/20" />
-                                            </a>
-                                          ))}
-                                        </div>
-                                      )}
-                                      <div className="whitespace-pre-wrap leading-relaxed">{ct}</div>
-                                    </div>
-                                  );
-                                }) : (
-                                  <div className="text-center text-neutral-500 text-xs py-6">
-                                    채팅 데이터를 불러오는 중... 새로고침 버튼을 눌러주세요.
+                            <div className="border border-white/10 rounded-2xl overflow-hidden bg-neutral-900/60">
+                              <div className="flex items-center hover:bg-white/5 transition">
+                                <button
+                                  onClick={() => {
+                                    if (poSessionMsgs.length === 0) fetchChats();
+                                    setExpandedSessions(prev => ({...prev, [`po-chat-${po.order_id}`]: !prev[`po-chat-${po.order_id}`]}));
+                                  }}
+                                  className="flex-1 text-left px-5 py-3.5 flex justify-between items-center cursor-pointer"
+                                >
+                                  <div className="flex items-center space-x-2.5">
+                                    <MessageCircle className="w-4 h-4 text-amber-400" />
+                                    <span className="text-xs text-white font-semibold font-sans">상담 채팅 내역</span>
+                                    {poSessionMsgs.length > 0 && (
+                                      <span className="text-[10px] text-neutral-500">{poSessionMsgs.length}개 메시지</span>
+                                    )}
                                   </div>
+                                  <div className="text-neutral-500">
+                                    {showChat ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                  </div>
+                                </button>
+                                {showChat && poSessionMsgs.length > 0 && (
+                                  <button
+                                    onClick={() => handleTranslateSession(po.session_id)}
+                                    disabled={translatingKey === po.session_id}
+                                    className={`p-2 mx-3 rounded-lg border border-transparent transition cursor-pointer disabled:opacity-50 ${
+                                      showTranslated[po.session_id]
+                                        ? "text-blue-300 bg-blue-950/40 border-blue-500/30"
+                                        : "text-neutral-400 hover:text-blue-300 hover:bg-blue-950/20"
+                                    }`}
+                                    title={showTranslated[po.session_id] ? "원문 보기" : "한국어로 번역"}
+                                  >
+                                    {translatingKey === po.session_id
+                                      ? <RefreshCw className="w-4 h-4 animate-spin" />
+                                      : <Languages className="w-4 h-4" />}
+                                  </button>
                                 )}
                               </div>
-                            )}
+
+                              {showChat && (
+                                <div className="border-t border-white/5 bg-neutral-950/30 p-5 max-h-[500px] overflow-y-auto space-y-3">
+                                  {poSessionMsgs.length > 0 ? poSessionMsgs.map((msg: any) => {
+                                    const imgRegex2 = /\[Image Attached:\s*(https?:\/\/[^\]]+)\]/g;
+                                    let ct = msg.content;
+                                    const imgs: string[] = [];
+                                    let m2;
+                                    while ((m2 = imgRegex2.exec(msg.content)) !== null) imgs.push(m2[1]);
+                                    if (imgs.length > 0) ct = ct.replace(/\[Image Attached:\s*https?:\/\/[^\]]+\]/g, '').trim();
+
+                                    const isTranslatedPoView = showTranslated[po.session_id] && translations[msg.message_id];
+                                    const displayCt = isTranslatedPoView
+                                      ? translations[msg.message_id].replace(/\[이미지 첨부\]/g, "").trim()
+                                      : ct;
+
+                                    return (
+                                      <div key={msg.message_id} className={`p-3 rounded-xl text-xs font-sans ${msg.sender_role === 'user' ? 'bg-neutral-800 text-white ml-6 sm:ml-12 border border-white/5' : 'bg-white/10 text-neutral-200 mr-6 sm:mr-12 border border-white/10'}`}>
+                                        <div className="flex items-center mb-1.5 space-x-2">
+                                          <div className={`w-2 h-2 rounded-full ${msg.sender_role === 'user' ? 'bg-amber-400' : 'bg-blue-400'}`}></div>
+                                          <span className="font-bold text-[10px] uppercase text-neutral-400">{msg.sender_role === 'user' ? 'Client' : 'AI Advisor'}</span>
+                                          {isTranslatedPoView && (
+                                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-950/40 border border-blue-500/30 text-blue-300 font-semibold">번역됨</span>
+                                          )}
+                                        </div>
+                                        {imgs.length > 0 && (
+                                          <div className="mb-2 flex flex-wrap gap-2">
+                                            {imgs.map((iu, ii) => (
+                                              <a key={ii} href={iu} target="_blank" rel="noreferrer" className="block hover:opacity-80 transition">
+                                                <img src={iu} alt="Attached" className="max-w-[200px] max-h-[200px] rounded-lg object-contain border border-white/20" />
+                                              </a>
+                                            ))}
+                                          </div>
+                                        )}
+                                        <div className="whitespace-pre-wrap leading-relaxed">{displayCt}</div>
+                                      </div>
+                                    );
+                                  }) : (
+                                    <div className="text-center text-neutral-500 text-xs py-6">
+                                      채팅 데이터를 불러오는 중... 새로고침 버튼을 눌러주세요.
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -1374,6 +1613,162 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
                   </div>
                 );
               })}
+            </div>
+          )}
+        </>
+      ) : null}
+
+      {activeMainTab === "trash" ? (
+        <>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-white/10 pb-6">
+            <div>
+              <h2 className="text-xl font-light text-white font-sans">휴지통</h2>
+              <p className="text-xs text-neutral-400 font-light font-sans mt-1">
+                삭제된 채팅 세션, 문의, 견적(발주서)이 이곳에 보관됩니다. 복원하거나 영구 삭제할 수 있습니다.
+              </p>
+            </div>
+            <div className="flex items-center space-x-3">
+              <button onClick={fetchTrash} className="p-2.5 rounded-xl bg-neutral-900 border border-white/15 text-neutral-400 hover:text-white transition cursor-pointer">
+                <RefreshCw className={`w-4 h-4 ${isTrashLoading ? "animate-spin" : ""}`} />
+              </button>
+              {(trashData.sessions.length + trashData.submissions.length + trashData.pos.length) > 0 && (
+                <button
+                  onClick={handleEmptyTrash}
+                  className="px-4 py-2.5 rounded-xl bg-red-950/20 border border-red-900/40 hover:border-red-500/50 hover:bg-red-950/40 text-red-400 text-xs font-medium cursor-pointer transition flex items-center space-x-1.5 font-sans"
+                >
+                  <XCircle className="w-3.5 h-3.5" />
+                  <span>휴지통 비우기 (전체 영구삭제)</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {isTrashLoading ? (
+            <div className="py-20 flex flex-col items-center justify-center space-y-3.5">
+              <RefreshCw className="w-6 h-6 text-white animate-spin" />
+              <span className="text-xs text-neutral-400 font-sans font-medium">휴지통 동기화 중...</span>
+            </div>
+          ) : (trashData.sessions.length + trashData.submissions.length + trashData.pos.length) === 0 ? (
+            <div className="py-20 flex flex-col items-center justify-center space-y-4 bg-neutral-900 border border-white/10 rounded-2xl">
+              <div className="w-12 h-12 rounded-full bg-neutral-950 border border-white/5 flex items-center justify-center text-neutral-600">
+                <Trash2 className="w-5 h-5" />
+              </div>
+              <span className="text-xs text-neutral-500 font-sans">휴지통이 비어 있습니다.</span>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-8 select-text">
+              {/* Trashed Chat Sessions */}
+              {trashData.sessions.length > 0 && (
+                <div className="bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden">
+                  <div className="px-6 py-4 border-b border-white/10 flex items-center space-x-2.5">
+                    <MessageCircle className="w-4 h-4 text-neutral-400" />
+                    <h3 className="text-sm font-semibold text-white font-sans">삭제된 채팅 세션 ({trashData.sessions.length})</h3>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {trashData.sessions.map((s: any) => (
+                      <div key={s.session_id} className="px-6 py-4 flex items-center justify-between hover:bg-white/[0.02] transition">
+                        <div className="text-xs font-sans">
+                          <span className="font-mono bg-black/50 px-2 py-1 rounded text-neutral-400 text-[10px] mr-3">ID: {s.session_id.substring(0, 8)}</span>
+                          <span className="text-neutral-300">{new Date(s.created_at).toLocaleString()}</span>
+                          <span className="block text-[10px] text-neutral-500 mt-1">삭제일: {s.deleted_at ? new Date(s.deleted_at).toLocaleString() : "—"}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleRestoreItem("session", s.session_id)}
+                            className="px-3 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-emerald-400 text-xs font-semibold transition cursor-pointer flex items-center space-x-1.5"
+                            title="복원"
+                          >
+                            <RotateCcw className="w-3.5 h-3.5" />
+                            <span>복원</span>
+                          </button>
+                          <button
+                            onClick={() => handlePurgeItem("session", s.session_id)}
+                            className="px-3 py-2 rounded-lg bg-red-950/20 border border-red-900/40 hover:bg-red-950/40 text-red-400 text-xs font-semibold transition cursor-pointer flex items-center space-x-1.5"
+                            title="영구 삭제"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>영구삭제</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Trashed Submissions */}
+              {trashData.submissions.length > 0 && (
+                <div className="bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden">
+                  <div className="px-6 py-4 border-b border-white/10 flex items-center space-x-2.5">
+                    <Inbox className="w-4 h-4 text-neutral-400" />
+                    <h3 className="text-sm font-semibold text-white font-sans">삭제된 문의 (리드) ({trashData.submissions.length})</h3>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {trashData.submissions.map((sub: any) => (
+                      <div key={sub.id} className="px-6 py-4 flex items-center justify-between hover:bg-white/[0.02] transition">
+                        <div className="text-xs font-sans">
+                          <span className="text-white font-medium">{sub.email}</span>
+                          <span className="text-neutral-500 ml-2">({sub.type === "quote" ? "견적 요청" : "사전 예약"} · {sub.country})</span>
+                          <span className="block text-[10px] text-neutral-500 mt-1">삭제일: {sub.deleted_at ? new Date(sub.deleted_at).toLocaleString() : "—"}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleRestoreItem("submission", sub.id)}
+                            className="px-3 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-emerald-400 text-xs font-semibold transition cursor-pointer flex items-center space-x-1.5"
+                          >
+                            <RotateCcw className="w-3.5 h-3.5" />
+                            <span>복원</span>
+                          </button>
+                          <button
+                            onClick={() => handlePurgeItem("submission", sub.id)}
+                            className="px-3 py-2 rounded-lg bg-red-950/20 border border-red-900/40 hover:bg-red-950/40 text-red-400 text-xs font-semibold transition cursor-pointer flex items-center space-x-1.5"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>영구삭제</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Trashed POs */}
+              {trashData.pos.length > 0 && (
+                <div className="bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden">
+                  <div className="px-6 py-4 border-b border-white/10 flex items-center space-x-2.5">
+                    <ShoppingCart className="w-4 h-4 text-neutral-400" />
+                    <h3 className="text-sm font-semibold text-white font-sans">삭제된 견적·발주서 (PO) ({trashData.pos.length})</h3>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {trashData.pos.map((po: any) => (
+                      <div key={po.order_id} className="px-6 py-4 flex items-center justify-between hover:bg-white/[0.02] transition">
+                        <div className="text-xs font-sans">
+                          <span className="text-white font-medium">{po.customer_name || "미지정"}</span>
+                          <span className="text-neutral-500 ml-2">({po.item_category || "품목 미정"})</span>
+                          <span className="block text-[10px] text-neutral-500 mt-1">삭제일: {po.deleted_at ? new Date(po.deleted_at).toLocaleString() : "—"}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleRestoreItem("po", po.order_id)}
+                            className="px-3 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-emerald-400 text-xs font-semibold transition cursor-pointer flex items-center space-x-1.5"
+                          >
+                            <RotateCcw className="w-3.5 h-3.5" />
+                            <span>복원</span>
+                          </button>
+                          <button
+                            onClick={() => handlePurgeItem("po", po.order_id)}
+                            className="px-3 py-2 rounded-lg bg-red-950/20 border border-red-900/40 hover:bg-red-950/40 text-red-400 text-xs font-semibold transition cursor-pointer flex items-center space-x-1.5"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>영구삭제</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </>

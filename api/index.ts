@@ -19,6 +19,27 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+// ─── Telegram Notification Helper ───────────────────────────────
+// TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID 미설정 시 조용히 무시됩니다.
+function escapeHtml(str: string): string {
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+async function sendTelegram(text: string) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
+    });
+  } catch (err) {
+    console.error("Telegram notification failed:", err);
+  }
+}
+
 // Lazy initialize Gemini client to prevent crash if not configured
 let aiClient: GoogleGenAI | null = null;
 function getGeminiClient(): GoogleGenAI {
@@ -66,16 +87,25 @@ const SEOJUN_ADMIN: AdminAccount = {
   email: "sj0822js@gmail.com",
   password: "Guqdpa1002@",
   name: "Seojun",
-  role: "admin",
+  role: "master",
   createdAt: new Date().toISOString(),
 };
 
 async function readSubmissions(): Promise<SubmissionItem[]> {
   try {
-    const { data, error } = await supabase
+    // 휴지통(soft delete)에 있는 항목 제외 — deleted_at 컬럼이 아직 없으면 전체 조회로 폴백
+    let { data, error } = await supabase
       .from("submissions")
       .select("*")
+      .is("deleted_at", null)
       .order("created_at", { ascending: false });
+
+    if (error) {
+      ({ data, error } = await supabase
+        .from("submissions")
+        .select("*")
+        .order("created_at", { ascending: false }));
+    }
 
     if (error) throw error;
     
@@ -301,6 +331,16 @@ app.use("/api/", limiter); // Apply to all API routes
       const { error } = await supabase.from("submissions").insert([newItemRecord]);
       if (error) throw error;
 
+      // 텔레그램 알림 (비동기, 실패해도 접수는 정상 처리)
+      const typeLabel = newItemRecord.type === "quote" ? "1:1 견적 요청" : "사전 예약";
+      sendTelegram(
+        `📨 <b>새 ${typeLabel} 접수</b>\n\n` +
+        `이메일: ${escapeHtml(newItemRecord.email)}\n` +
+        (newItemRecord.full_name ? `고객명: ${escapeHtml(newItemRecord.full_name)}\n` : "") +
+        `국가: ${escapeHtml(newItemRecord.country)}\n` +
+        `접수 ID: ${escapeHtml(newItemRecord.id)}`
+      );
+
       res.status(201).json({
         id: newItemRecord.id,
         type: newItemRecord.type as "quote" | "preorder",
@@ -351,26 +391,39 @@ app.use("/api/", limiter); // Apply to all API routes
     }
   });
 
-  // API to delete a specific submission
+  // API to move a specific submission to trash (soft delete)
   app.post("/api/submissions/delete", async (req, res) => {
     try {
       const { id } = req.body;
       if (!id) {
         return res.status(400).json({ error: "Submission ID is required" });
       }
-      const { error } = await supabase.from("submissions").delete().eq("id", id);
-      if (error) throw error;
+      // 휴지통으로 이동 — deleted_at 컬럼이 없으면 기존처럼 완전 삭제로 폴백
+      const { error } = await supabase
+        .from("submissions")
+        .update({ deleted_at: new Date().toISOString() })
+        .eq("id", id);
+      if (error) {
+        const { error: hardError } = await supabase.from("submissions").delete().eq("id", id);
+        if (hardError) throw hardError;
+      }
       res.json({ success: true });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }
   });
 
-  // API to clear all submissions in database
+  // API to move all submissions to trash
   app.post("/api/submissions/clear", async (req, res) => {
     try {
-      const { error } = await supabase.from("submissions").delete().neq("id", "");
-      if (error) throw error;
+      const { error } = await supabase
+        .from("submissions")
+        .update({ deleted_at: new Date().toISOString() })
+        .is("deleted_at", null);
+      if (error) {
+        const { error: hardError } = await supabase.from("submissions").delete().neq("id", "");
+        if (hardError) throw hardError;
+      }
       res.json({ success: true });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
@@ -380,13 +433,22 @@ app.use("/api/", limiter); // Apply to all API routes
   // API to retrieve chat sessions for Admin
   app.get("/api/admin/chats", async (req, res) => {
     try {
-      // Fetch sessions and their latest messages
-      const { data: sessions, error: sessionsError } = await supabase
+      // Fetch sessions and their latest messages (휴지통 제외, 컬럼 없으면 폴백)
+      let { data: sessions, error: sessionsError } = await supabase
         .from("sessions")
         .select("*")
+        .is("deleted_at", null)
         .order("created_at", { ascending: false });
 
+      if (sessionsError) {
+        ({ data: sessions, error: sessionsError } = await supabase
+          .from("sessions")
+          .select("*")
+          .order("created_at", { ascending: false }));
+      }
+
       if (sessionsError) throw sessionsError;
+      sessions = sessions || [];
 
       const { data: messages, error: messagesError } = await supabase
         .from("messages")
@@ -417,16 +479,24 @@ app.use("/api/", limiter); // Apply to all API routes
     }
   });
 
-  // API to retrieve POs for Admin
+  // API to retrieve POs for Admin (휴지통 제외, 컬럼 없으면 폴백)
   app.get("/api/admin/pos", async (req, res) => {
     try {
-      const { data: pos, error } = await supabase
+      let { data: pos, error } = await supabase
         .from("apparel_orders")
         .select("*")
+        .is("deleted_at", null)
         .order("created_at", { ascending: false });
 
+      if (error) {
+        ({ data: pos, error } = await supabase
+          .from("apparel_orders")
+          .select("*")
+          .order("created_at", { ascending: false }));
+      }
+
       if (error) throw error;
-      res.json(pos);
+      res.json(pos || []);
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }
@@ -448,11 +518,20 @@ app.use("/api/", limiter); // Apply to all API routes
         .single();
       
       if (!existingSession) {
-        await supabase.from("sessions").insert([{ 
-          session_id: sessionId, 
+        await supabase.from("sessions").insert([{
+          session_id: sessionId,
           visitor_id: "guest",
           user_id: userId || null
         }]);
+
+        // 새 고객이 채팅으로 연락 시작 → 텔레그램 알림
+        const preview = String(message).replace(/\[Image Attached:[^\]]*\]/g, "[이미지 첨부]").slice(0, 300);
+        sendTelegram(
+          `💬 <b>새 채팅 문의가 시작되었습니다</b>\n\n` +
+          (userEmail ? `고객: ${escapeHtml(userEmail)}\n` : `고객: 비로그인 방문자\n`) +
+          `첫 메시지: ${escapeHtml(preview)}\n` +
+          `세션: ${escapeHtml(String(sessionId).substring(0, 8))}`
+        );
       } else if (userId) {
         await supabase.from("sessions").update({ user_id: userId }).eq("session_id", sessionId);
       }
@@ -506,29 +585,30 @@ app.use("/api/", limiter); // Apply to all API routes
       const systemInstruction = 
         "[System Instructions] K-Fashion 플랫폼 리드 수집 챗봇\n\n" +
         "당신은 한국의 부산에 위치한 30년 한국 전통의 프리미엄 의류 제조 공장(Korea Apparel Works)의 글로벌 소싱 어시스턴트인 'Mark'입니다.\n" +
-        "우리가 위치한 부산은 한국 전통의 섬유 및 직물 산업의 허브이자 대형 항만이 있는 물류의 중심지임을 고객에게 자부심 있게 설명하세요.\n\n" +
+        "부산(한국 섬유 산업의 허브이자 대형 항만 물류 중심지) 스토리는 첫인사에서 언급하지 마세요. 원단을 논의할 때나 생산/배송 관련 질문이 나올 때, 신뢰를 더하는 한 문장으로만 자연스럽게 언급하세요.\n\n" +
         "[당신의 유일한 최종 목표]\n" +
         "웹사이트에 방문한 해외 바이어(주로 미국, 동남아 신진 브랜드 창업자)와 짧고 친절하게 대화하여, " +
         "그들이 만들고 싶어 하는 옷의 1) 종류, 2) 원단 촉감, 3) 수량을 파악한 뒤, 최종적으로 견적서를 보내기 위한 4) '이메일 주소'를 수집하는 것입니다.\n\n" +
         "[절대 지켜야 할 핵심 규칙]\n" +
         "- 짧고 명확하게: 한 번에 하나의 질문만 하세요. 절대 길게 설명하지 마세요. (최대 2~3문장 이내)\n" +
         "- 가격 확답 금지: 바이어가 정확한 가격을 물어보면, '수량과 원단에 따라 다르므로, 생산 총괄 디렉터가 이메일로 정확한 견적을 보내드립니다.'라고 안내하며 이메일을 요구하세요.\n" +
-        "- 타겟 품목 유도: 우리의 주력 품목은 '티셔츠, 맨투맨(스웨트셔츠), 심플한 골프 카라티'입니다. 바이어가 너무 복잡한 드레스나 아우터를 요구하면, '저희는 프리미엄 베이직 웨어(티셔츠, 후디 등)의 소량 생산에 가장 특화되어 있습니다.'라고 안내하세요.\n" +
+        "- 타겟 품목 유도: 우리의 주력 품목은 '상의(티셔츠, 맨투맨, 후디, 카라티 등)와 스포츠웨어'입니다. 바이어가 너무 복잡한 드레스나 아우터를 요구하면, '저희는 상의와 스포츠웨어의 소량 생산에 가장 특화되어 있습니다.'라고 안내하세요.\n" +
+        "- 과한 칭찬 금지: 'Great choice!', 'Excellent!' 같은 과장된 칭찬이나 아부성 표현을 남발하지 마세요. 꼭 필요한 경우 절제된 긍정 표현 한 번이면 충분합니다. 차분하고 신뢰감 있는 전문가 톤을 유지하세요.\n" +
         "- 언어: 사용자가 질문하는 언어(영어, 한국어, 태국어 등)에 맞춰서 자연스럽게 대답하되, 어조는 매우 전문적이고 친절하며 환영하는 태도여야 합니다.\n\n" +
         "[대화 시나리오 흐름 (이 순서를 반드시 따르세요)]\n\n" +
-        "Step 1. 환영 및 품목 파악\n" +
-        "사용자가 먼저 말을 걸면 환영 인사와 함께 본인을 'Mark from Korea Apparel Works'라고 정확히 소개하고 어떤 옷을 만들고 싶은지 묻습니다.\n" +
-        "(예: 'Hello! I am Mark from Korea Apparel Works, located in Korea\\'s premium manufacturing hub. Are you looking to make T-shirts, Sweatshirts, or Golf wear today?')\n\n" +
+        "Step 1. 환영 + 가치 제안 + 품목/사진 유도\n" +
+        "사용자가 먼저 말을 걸면: ① 한 문장으로 본인('Mark from Korea Apparel Works')과 특화 분야(상의·스포츠웨어)를 소개하고, ② 핵심 가치(샘플 1장부터 제작, 24시간 내 견적)를 전달한 뒤, ③ 만들고 싶은 품목을 물으면서 '참고할 디자인 사진이 있으면 지금 바로 올려달라'고 명시적으로 유도하세요. 부산/공장 입지 소개는 이 단계에서 하지 마세요.\n" +
+        "(예: 'Hello, I\\'m Mark from Korea Apparel Works — we specialize in premium tops and sportswear, with samples from just 1 pc and quotes within 24 hours. What are you looking to produce? If you have a design photo, just upload it here and I\\'ll take it from there.')\n\n" +
         "Step 2. 원단 '촉감' 파악\n" +
-        "품목을 대답하면, 칭찬해 준 뒤 어떤 원단 느낌을 원하는지 묻습니다. 전문 용어 대신 일상적인 단어를 사용하세요.\n" +
-        "(예: 'Great choice! For the fabric, what kind of feel are you looking for? (e.g., Soft & lightweight, Heavy & sturdy, or Moisture-wicking stretchy?)')\n\n" +
+        "품목을 대답하면, 어떤 원단 느낌을 원하는지 묻습니다. 과한 칭찬 없이 바로 본론으로, 전문 용어 대신 일상적인 단어를 사용하세요.\n" +
+        "(예: 'For the fabric, what kind of feel are you looking for? (e.g., Soft & lightweight, Heavy & sturdy, or Moisture-wicking stretchy?)')\n\n" +
         "Step 3. 수량(MOQ) 파악\n" +
         "원단을 대답하면, 생각하는 총 생산 수량을 묻습니다. 샘플은 1장부터 가능하고, 벌크(대량생산) MOQ는 50장부터라는 점을 안내하세요.\n" +
-        "(예: 'Excellent. We have the perfect premium fabrics for that in our Busan factory. Roughly how many pieces are you planning to produce? (Samples start from just 1 pc, and bulk MOQs from 50 pcs!)')\n\n" +
+        "(예: 'We have suitable premium fabrics for that in our Busan factory. Roughly how many pieces are you planning to produce? (Samples start from 1 pc, and bulk MOQs from 50 pcs.)')\n\n" +
         "Step 4. 작업지시서\n" +
         "주문하실 품목의 작업지시서(Tech Pack)가 있는지 물어봐야 합니다.\n\n" +
         "Step 5. 샘플이미지\n" +
-        "참고할만한 샘플이미지가 있는지 물어봐야 합니다.\n\n" +
+        "참고할만한 샘플이미지가 있는지 물어봐야 합니다. 단, 고객이 앞 단계에서 이미 사진을 올렸다면 이 단계는 건너뛰세요.\n\n" +
         "Step 6. 추가 요청사항 확인\n" +
         "추가로 문의를 남기실 내용이 있는지, 디자인/포장 등 기타 특이사항이 더 있는지 질문합니다.\n" +
         "이 단계에서는 절대로 이메일이나 성함을 먼저 묻지 말고, 오직 추가 요청사항이 있는지만 확인하세요.\n\n" +
@@ -563,7 +643,8 @@ app.use("/api/", limiter); // Apply to all API routes
         "Style rules:\n" +
         "- CRITICAL: Always respond in the SAME LANGUAGE the user writes in. Match their language exactly.\n" +
         "- Keep responses SHORT (2-3 sentences max per turn).\n" +
-        "- Maintain a sophisticated, premium, welcoming, and professional B2B advisor persona.";
+        "- Maintain a sophisticated, premium, welcoming, and professional B2B advisor persona.\n" +
+        "- Do NOT overuse compliments, flattery, or exclamation marks. Stay calm, measured, and professional — one restrained positive remark is enough when genuinely warranted.";
 
       const response = await client.models.generateContent({
         // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
@@ -571,7 +652,7 @@ app.use("/api/", limiter); // Apply to all API routes
         contents: contents,
         config: {
           systemInstruction: systemInstruction,
-          temperature: 0.7,
+          temperature: 0.6,
         }
       });
 
@@ -618,6 +699,17 @@ app.use("/api/", limiter); // Apply to all API routes
             } else {
               await supabase.from("apparel_orders").insert([poPayload]);
             }
+
+            // 견적(발주서) 접수 → 텔레그램 알림
+            sendTelegram(
+              `📋 <b>${existingPo ? "견적(발주서) 업데이트" : "새 견적(발주서) 접수"}</b>\n\n` +
+              `고객명: ${escapeHtml(poPayload.customer_name)}\n` +
+              `품목: ${escapeHtml(poPayload.item_category)}\n` +
+              `스펙: ${escapeHtml(poPayload.manufacturing_specs)}\n` +
+              `요청사항: ${escapeHtml(String(poPayload.additional_requests).slice(0, 500))}\n` +
+              (userEmail ? `가입 이메일: ${escapeHtml(userEmail)}\n` : "") +
+              `세션: ${escapeHtml(String(sessionId).substring(0, 8))}`
+            );
           }
         } catch (err) {
           console.error("Failed to parse PO JSON:", err);
@@ -694,6 +786,217 @@ app.use("/api/", limiter); // Apply to all API routes
       }
 
       res.json({ success: true, message: "Data deleted." });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // ─── Page View Tracking ─────────────────────────────────────────
+  app.post("/api/track-view", async (req, res) => {
+    try {
+      const { path: viewPath, visitorId } = req.body || {};
+      const { error } = await supabase.from("page_views").insert([{
+        path: typeof viewPath === "string" ? viewPath.slice(0, 200) : "/",
+        visitor_id: typeof visitorId === "string" ? visitorId.slice(0, 64) : null,
+      }]);
+      if (error) throw error;
+      res.json({ success: true });
+    } catch (e: any) {
+      // page_views 테이블이 아직 없어도 사이트 동작에 영향 없도록 조용히 처리
+      res.json({ success: false });
+    }
+  });
+
+  // ─── Admin Dashboard Stats (견적수, 조회수 등) ───────────────────
+  app.get("/api/admin/stats", async (req, res) => {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const safeCount = async (query: any): Promise<number | null> => {
+      try {
+        const { count, error } = await query;
+        if (error) return null;
+        return count ?? 0;
+      } catch {
+        return null;
+      }
+    };
+
+    const notDeletedCount = async (table: string) => {
+      let c = await safeCount(supabase.from(table).select("*", { count: "exact", head: true }).is("deleted_at", null));
+      if (c === null) {
+        c = await safeCount(supabase.from(table).select("*", { count: "exact", head: true }));
+      }
+      return c;
+    };
+
+    const [totalViews, todayViews, uniqueVisitorsRaw, chatSessions, poCount, submissionCount] = await Promise.all([
+      safeCount(supabase.from("page_views").select("*", { count: "exact", head: true })),
+      safeCount(supabase.from("page_views").select("*", { count: "exact", head: true }).gte("created_at", todayStart.toISOString())),
+      (async () => {
+        try {
+          const { data, error } = await supabase.from("page_views").select("visitor_id");
+          if (error) return null;
+          return new Set((data || []).map((r: any) => r.visitor_id).filter(Boolean)).size;
+        } catch { return null; }
+      })(),
+      notDeletedCount("sessions"),
+      notDeletedCount("apparel_orders"),
+      notDeletedCount("submissions"),
+    ]);
+
+    res.json({
+      totalViews,           // null이면 page_views 테이블 미생성 상태
+      todayViews,
+      uniqueVisitors: uniqueVisitorsRaw,
+      chatSessions,
+      poCount,
+      submissionCount,
+    });
+  });
+
+  // ─── Chat Translation (Gemini) ──────────────────────────────────
+  app.post("/api/translate", async (req, res) => {
+    try {
+      const { texts } = req.body;
+      if (!Array.isArray(texts) || texts.length === 0 || texts.length > 200) {
+        return res.status(400).json({ error: "texts must be a non-empty array (max 200)" });
+      }
+
+      const client = getGeminiClient();
+      const response = await client.models.generateContent({
+        // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
+        model: "gemini-3.1-flash-lite",
+        contents: [{ role: "user", parts: [{ text: JSON.stringify(texts) }] }],
+        config: {
+          systemInstruction:
+            "You are a professional translator for a Korean apparel factory. " +
+            "The input is a JSON array of chat messages in any language. " +
+            "Translate each message into natural Korean. If a message is already Korean, return it unchanged. " +
+            "Preserve line breaks and placeholders like [Image Attached: ...] or [이미지 첨부] as-is. " +
+            "Return ONLY a valid JSON array of strings with the same length and order as the input. No commentary.",
+          responseMimeType: "application/json",
+          temperature: 0.2,
+        },
+      });
+
+      let translations: string[];
+      try {
+        translations = JSON.parse(response.text || "[]");
+      } catch {
+        return res.status(500).json({ error: "Failed to parse translation response" });
+      }
+      if (!Array.isArray(translations) || translations.length !== texts.length) {
+        return res.status(500).json({ error: "Translation response mismatch" });
+      }
+
+      res.json({ translations });
+    } catch (e: any) {
+      console.error("Translation error:", e);
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // ─── Trash (휴지통) : 채팅 세션 / 문의 / 견적(PO) ────────────────
+  const TRASH_TARGETS: Record<string, { table: string; key: string }> = {
+    session: { table: "sessions", key: "session_id" },
+    submission: { table: "submissions", key: "id" },
+    po: { table: "apparel_orders", key: "order_id" },
+  };
+
+  // 휴지통 목록 조회
+  app.get("/api/admin/trash", async (req, res) => {
+    const fetchTrashed = async (table: string) => {
+      try {
+        const { data, error } = await supabase
+          .from(table)
+          .select("*")
+          .not("deleted_at", "is", null)
+          .order("deleted_at", { ascending: false });
+        if (error) return [];
+        return data || [];
+      } catch { return []; }
+    };
+
+    const [sessions, submissions, pos] = await Promise.all([
+      fetchTrashed("sessions"),
+      fetchTrashed("submissions"),
+      fetchTrashed("apparel_orders"),
+    ]);
+
+    res.json({ sessions, submissions, pos });
+  });
+
+  // 휴지통으로 이동 (소프트 삭제)
+  app.post("/api/admin/trash", async (req, res) => {
+    try {
+      const { kind, id } = req.body;
+      const target = TRASH_TARGETS[kind];
+      if (!target || !id) return res.status(400).json({ error: "kind and id are required" });
+
+      const { error } = await supabase
+        .from(target.table)
+        .update({ deleted_at: new Date().toISOString() })
+        .eq(target.key, id);
+      if (error) throw error;
+      res.json({ success: true });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // 휴지통에서 복원
+  app.post("/api/admin/restore", async (req, res) => {
+    try {
+      const { kind, id } = req.body;
+      const target = TRASH_TARGETS[kind];
+      if (!target || !id) return res.status(400).json({ error: "kind and id are required" });
+
+      const { error } = await supabase
+        .from(target.table)
+        .update({ deleted_at: null })
+        .eq(target.key, id);
+      if (error) throw error;
+      res.json({ success: true });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // 휴지통에서 영구 삭제 (id 지정 또는 all: true 로 전체 비우기)
+  app.post("/api/admin/purge", async (req, res) => {
+    try {
+      const { kind, id, all } = req.body;
+
+      const purgeSession = async (sessionId: string) => {
+        await supabase.from("messages").delete().eq("session_id", sessionId);
+        // PO가 이 세션을 참조 중이면 참조만 해제 (PO 자체는 유지)
+        await supabase.from("apparel_orders").update({ session_id: null }).eq("session_id", sessionId);
+        await supabase.from("sessions").delete().eq("session_id", sessionId);
+      };
+
+      if (all === true) {
+        // 휴지통 전체 비우기
+        const { data: trashedSessions } = await supabase
+          .from("sessions").select("session_id").not("deleted_at", "is", null);
+        for (const s of trashedSessions || []) {
+          await purgeSession(s.session_id);
+        }
+        await supabase.from("submissions").delete().not("deleted_at", "is", null);
+        await supabase.from("apparel_orders").delete().not("deleted_at", "is", null);
+        return res.json({ success: true });
+      }
+
+      const target = TRASH_TARGETS[kind];
+      if (!target || !id) return res.status(400).json({ error: "kind and id are required" });
+
+      if (kind === "session") {
+        await purgeSession(id);
+      } else {
+        const { error } = await supabase.from(target.table).delete().eq(target.key, id);
+        if (error) throw error;
+      }
+      res.json({ success: true });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }
