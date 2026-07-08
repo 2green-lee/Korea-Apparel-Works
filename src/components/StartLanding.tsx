@@ -49,6 +49,9 @@ export default function StartLanding() {
   const exportMapRef = useRef<HTMLDivElement>(null);
   const [exportMapIn, setExportMapIn] = useState(false);
 
+  const samplePolicyRef = useRef<HTMLDivElement>(null);
+  const [samplePolicyIn, setSamplePolicyIn] = useState(false);
+
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
     const el = galleryRef.current;
@@ -103,6 +106,15 @@ export default function StartLanding() {
       }, { threshold: 0.1 });
       obsWk.observe(wkEl);
       observers.push(obsWk);
+    }
+
+    const spEl = samplePolicyRef.current;
+    if (spEl) {
+      const obsSp = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) { setSamplePolicyIn(true); obsSp.disconnect(); }
+      }, { threshold: 0.1 });
+      obsSp.observe(spEl);
+      observers.push(obsSp);
     }
     
     return () => observers.forEach(o => o.disconnect());
@@ -889,8 +901,8 @@ export default function StartLanding() {
         </section>
 
         {/* Sample Policy Section */}
-        <section className="w-full bg-white pt-24 pb-24 px-6 border-t border-neutral-100">
-          <div className="max-w-[1000px] mx-auto w-full">
+        <section ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 border-t border-neutral-100 overflow-hidden">
+          <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* 1. Header */}
             <div className="text-center mb-16">
               <div className="text-blue-600 font-bold tracking-wider text-xs sm:text-sm uppercase mb-3">Sample policy</div>
