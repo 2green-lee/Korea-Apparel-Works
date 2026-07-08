@@ -221,45 +221,7 @@ export default function WelcomeLanding() {
           </div>
         </section>
 
-        {/* Combined Image Grid */}
-        <section className="w-full px-4 lg:px-6 pb-12 lg:pb-20 relative">
-          <div ref={galleryRef} className={`w-full max-w-[1200px] mx-auto relative transition-all duration-1000 ease-out ${galleryIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-            <div className="w-full grid grid-cols-3 lg:grid-cols-4 gap-[1px] sm:gap-[2px] border border-neutral-300 rounded-none overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-transparent">
-              {[
-                { type: "remote", name: "w1.png" },
-                { type: "remote", name: "w2.png" },
-                { type: "remote", name: "w3.png" },
-                { type: "remote", name: "w4.png" },
-                { type: "remote", name: "w5.png" },
-                { type: "remote", name: "w6.png" },
-                { type: "remote", name: "m1.png" },
-                { type: "remote", name: "m2.png" },
-                { type: "remote", name: "m3.png" },
-                { type: "remote", name: "m4.png" },
-                { type: "remote", name: "m5.png" },
-                { type: "remote", name: "m6.png" }
-              ].map((img, i) => {
-                const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-                const imgUrl = `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(img.name)}`;
-                  
-                return (
-                  <div 
-                    key={i} 
-                    className="relative w-full overflow-hidden bg-neutral-100 group aspect-square"
-                  >
-                    <img 
-                      src={`${imgUrl}?format=webp&quality=80`}
-                      alt={`Gallery ${i}`}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+
 
         {/* Story Section - Temporarily hidden */}
         <section className="hidden w-full bg-transparent py-16 lg:py-24 px-6 flex flex-col items-center text-center">
@@ -279,8 +241,7 @@ export default function WelcomeLanding() {
         </section>
         </div>
 
-        {/* Hero to Custom Apparel Gradient Transition */}
-        <div className="h-[300px] lg:h-[500px] w-full" style={{ background: "linear-gradient(to bottom, #BFDBFE 0%, #dbeafe 20%, #eff6ff 45%, #ffffff 100%)" }}></div>
+
 
 
         {/* Why Korea + Capabilities Wrapper */}
@@ -297,10 +258,10 @@ export default function WelcomeLanding() {
           </div>
 
           <div className="max-w-[1200px] mx-auto w-full relative group/whycarousel">
-            <div ref={whyKoreaScrollRef} className="flex overflow-x-auto pb-12 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-12 gap-6 snap-x snap-mandatory scrollbar-hide">
+            <div ref={whyKoreaScrollRef} className="flex overflow-x-auto pb-12 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-12 gap-6 snap-x snap-mandatory scrollbar-hide lg:grid lg:grid-cols-2 lg:overflow-visible">
               
               {/* Card 1: Tariffs */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-full snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -370,7 +331,7 @@ export default function WelcomeLanding() {
               </div>
 
               {/* Card 2: Supply Chain */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-full snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -480,7 +441,7 @@ export default function WelcomeLanding() {
               </div>
 
               {/* Card 3: FTA */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-full snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -542,7 +503,7 @@ export default function WelcomeLanding() {
               </div>
 
               {/* Card 4: Global Brands */}
-              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-[45vw] lg:w-[45%] snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+              <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-full snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
                 <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
                   
                   {/* Subtle background glow for the card */}
@@ -628,10 +589,10 @@ export default function WelcomeLanding() {
             </div>
             
             {/* Scroll Buttons */}
-            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'left')} className="absolute -left-4 lg:left-0 lg:-ml-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 lg:opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'left')} className="absolute -left-4 lg:left-0 lg:-ml-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 lg:hidden transition-all duration-300 z-20 focus:outline-hidden">
               <ChevronLeft className="w-8 h-8 lg:w-10 lg:h-10" />
             </button>
-            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'right')} className="absolute -right-4 lg:right-0 lg:-mr-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 lg:opacity-0 group-hover/whycarousel:opacity-100 transition-all duration-300 z-20 focus:outline-hidden">
+            <button onClick={() => scrollGallery(whyKoreaScrollRef, 'right')} className="absolute -right-4 lg:right-0 lg:-mr-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 lg:hidden transition-all duration-300 z-20 focus:outline-hidden">
               <ChevronRight className="w-8 h-8 lg:w-10 lg:h-10" />
             </button>
 
@@ -726,6 +687,120 @@ export default function WelcomeLanding() {
             })}
           </div>
         </div>
+
+        {/* Sample Policy Section */}
+        <section ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 border-t border-neutral-100 overflow-hidden">
+          <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            {/* 1. Header */}
+            <div className="text-center mb-16">
+              <div className="text-blue-600 font-bold tracking-wider text-xs sm:text-sm uppercase mb-3">Sample policy</div>
+              <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-4">Try us with zero risk</h2>
+              <p className="text-lg text-neutral-600 font-light max-w-2xl mx-auto">
+                See our quality in your hands before committing to anything.
+              </p>
+            </div>
+
+            {/* 2. Pricing Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-4">
+              {/* Card 1 */}
+              <div className="bg-white rounded-2xl p-6 border-2 border-blue-400 shadow-md shadow-blue-900/5 relative overflow-hidden flex flex-col">
+                <div className="absolute top-0 inset-x-0 h-1.5 bg-blue-500"></div>
+                <div className="text-sm font-bold text-blue-600 mb-2 uppercase tracking-wide">First sample</div>
+                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$99</div>
+                <div className="text-[16px] text-neutral-600 font-medium">One piece, one size<br/>Basic construction</div>
+              </div>
+              {/* Card 2 */}
+              <div className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col hover:border-neutral-300 transition-colors">
+                <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Additional size</div>
+                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$49<span className="text-xl text-neutral-400 font-semibold">/pc</span></div>
+                <div className="text-[16px] text-neutral-600 font-medium">Same fabric<br/>Same shipment</div>
+              </div>
+              {/* Card 3 */}
+              <div className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col hover:border-neutral-300 transition-colors">
+                <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Revision</div>
+                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$59</div>
+                <div className="text-[16px] text-neutral-600 font-medium">Same style, adjusted<br/>Existing pattern</div>
+              </div>
+            </div>
+            <div className="text-center text-[14px] sm:text-[16px] text-neutral-500 mb-16">
+              + Shipping at cost — typically $35–50 to the US, DHL tracked
+            </div>
+
+            {/* 3. Credit Banner */}
+            <div className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl p-6 sm:p-8 mb-16 flex flex-col items-center text-center">
+              <h3 className="text-xl sm:text-2xl font-bold text-emerald-900 mb-8">Your sample fee comes back on your bulk order</h3>
+              <div className="flex flex-row w-full max-w-lg mx-auto items-center justify-center divide-x divide-emerald-200/60">
+                <div className="flex-1 px-4 flex flex-col items-center">
+                  <div className="text-4xl sm:text-5xl font-black text-emerald-600 mb-1">50%</div>
+                  <div className="text-xs sm:text-sm text-emerald-800 font-medium">credited at 50 pcs+</div>
+                </div>
+                <div className="flex-1 px-4 flex flex-col items-center">
+                  <div className="text-4xl sm:text-5xl font-black text-emerald-600 mb-1">100%</div>
+                  <div className="text-xs sm:text-sm text-emerald-800 font-medium">credited at 100 pcs+</div>
+                </div>
+              </div>
+            </div>
+
+            {/* 4. 3 Steps */}
+            <div className="relative w-full max-w-3xl mx-auto mb-20">
+              <div className="absolute top-[24px] left-[10%] right-[10%] h-[2px] bg-neutral-100 z-0 hidden sm:block"></div>
+              <div className="flex flex-row justify-between relative z-10 gap-2 sm:gap-4 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 scrollbar-hide snap-x">
+                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center text-blue-600 font-bold text-lg mb-4 relative">
+                    1
+                  </div>
+                  <h4 className="text-[18px] sm:text-[19px] font-bold text-neutral-900 mb-2 leading-tight">Approve before<br className="hidden sm:block"/> we ship</h4>
+                  <p className="text-[15px] sm:text-[16px] text-neutral-500 leading-relaxed px-2">Photos and measurements sent for your sign-off</p>
+                </div>
+                
+                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center text-blue-600 font-bold text-lg mb-4 relative">
+                    2
+                  </div>
+                  <h4 className="text-[18px] sm:text-[19px] font-bold text-neutral-900 mb-2 leading-tight">Hold it.<br className="hidden sm:block"/> Test it.</h4>
+                  <p className="text-[15px] sm:text-[16px] text-neutral-500 leading-relaxed px-2">Check the fit, the fabric, the make</p>
+                </div>
+
+                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
+                  <div className="w-12 h-12 rounded-full bg-emerald-50 border-2 border-white shadow-sm flex items-center justify-center text-emerald-600 font-bold text-lg mb-4 relative">
+                    3
+                  </div>
+                  <h4 className="text-[18px] sm:text-[19px] font-bold text-neutral-900 mb-2 leading-tight">Scale when<br className="hidden sm:block"/> ready</h4>
+                  <p className="text-[15px] sm:text-[16px] text-neutral-500 leading-relaxed px-2">Your sample fee credited to bulk</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Guarantees */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
+                  <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+                </div>
+                <div>
+                  <h4 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 mb-2">Off-spec? We remake it free</h4>
+                  <p className="text-[16px] text-neutral-600 leading-relaxed">If it doesn't match the agreed spec, we remake and reship on us</p>
+                </div>
+              </div>
+              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
+                  <ShieldCheck className="w-5 h-5" strokeWidth={2} />
+                </div>
+                <div>
+                  <h4 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 mb-2">Still off? Full refund</h4>
+                  <p className="text-[16px] text-neutral-600 leading-relaxed">If the remake misses too, every dollar back including shipping</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 6. Microcopy */}
+            <div className="text-center text-[14px] sm:text-[16px] text-neutral-400 max-w-2xl mx-auto space-y-1">
+              <p>New colorways quoted per fabric availability.</p>
+              <p>Embroidery, prints, and custom hardware quoted per spec — before anything starts.</p>
+            </div>
+
+          </div>
+        </section>
 
         {/* AI Workflow Section */}
         <section className="mt-20 py-24 px-6 w-full bg-neutral-950 text-white border-t border-neutral-900">
@@ -846,120 +921,6 @@ export default function WelcomeLanding() {
           {/* Global Export Map Section placed inside the black area */}
           <div ref={exportMapRef} className={`w-full transition-all duration-1000 ease-out ${exportMapIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
             <ExportMap />
-          </div>
-        </section>
-
-        {/* Sample Policy Section */}
-        <section ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 border-t border-neutral-100 overflow-hidden">
-          <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {/* 1. Header */}
-            <div className="text-center mb-16">
-              <div className="text-blue-600 font-bold tracking-wider text-xs sm:text-sm uppercase mb-3">Sample policy</div>
-              <h2 className="text-4xl lg:text-5xl font-black text-neutral-900 tracking-tight mb-4">Try us with zero risk.</h2>
-              <p className="text-lg text-neutral-600 font-light max-w-2xl mx-auto">
-                See our quality in your hands before committing to anything.
-              </p>
-            </div>
-
-            {/* 2. Pricing Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-4">
-              {/* Card 1 */}
-              <div className="bg-white rounded-2xl p-6 border-2 border-blue-400 shadow-md shadow-blue-900/5 relative overflow-hidden flex flex-col">
-                <div className="absolute top-0 inset-x-0 h-1.5 bg-blue-500"></div>
-                <div className="text-sm font-bold text-blue-600 mb-2 uppercase tracking-wide">First sample</div>
-                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$99</div>
-                <div className="text-sm text-neutral-600 font-medium">One piece, one size<br/>Basic construction</div>
-              </div>
-              {/* Card 2 */}
-              <div className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col hover:border-neutral-300 transition-colors">
-                <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Additional size</div>
-                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$49<span className="text-xl text-neutral-400 font-semibold">/pc</span></div>
-                <div className="text-sm text-neutral-600 font-medium">Same fabric<br/>Same shipment</div>
-              </div>
-              {/* Card 3 */}
-              <div className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col hover:border-neutral-300 transition-colors">
-                <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Revision</div>
-                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$59</div>
-                <div className="text-sm text-neutral-600 font-medium">Same style, adjusted<br/>Existing pattern</div>
-              </div>
-            </div>
-            <div className="text-center text-xs sm:text-sm text-neutral-500 mb-16">
-              + Shipping at cost — typically $35–50 to the US, DHL tracked
-            </div>
-
-            {/* 3. Credit Banner */}
-            <div className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl p-6 sm:p-8 mb-16 flex flex-col items-center text-center">
-              <h3 className="text-xl sm:text-2xl font-bold text-emerald-900 mb-8">Your sample fee comes back on your bulk order</h3>
-              <div className="flex flex-row w-full max-w-lg mx-auto items-center justify-center divide-x divide-emerald-200/60">
-                <div className="flex-1 px-4 flex flex-col items-center">
-                  <div className="text-4xl sm:text-5xl font-black text-emerald-600 mb-1">50%</div>
-                  <div className="text-xs sm:text-sm text-emerald-800 font-medium">credited at 50 pcs+</div>
-                </div>
-                <div className="flex-1 px-4 flex flex-col items-center">
-                  <div className="text-4xl sm:text-5xl font-black text-emerald-600 mb-1">100%</div>
-                  <div className="text-xs sm:text-sm text-emerald-800 font-medium">credited at 100 pcs+</div>
-                </div>
-              </div>
-            </div>
-
-            {/* 4. 3 Steps */}
-            <div className="relative w-full max-w-3xl mx-auto mb-20">
-              <div className="absolute top-[24px] left-[10%] right-[10%] h-[2px] bg-neutral-100 z-0 hidden sm:block"></div>
-              <div className="flex flex-row justify-between relative z-10 gap-2 sm:gap-4 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 scrollbar-hide snap-x">
-                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
-                  <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center text-blue-600 font-bold text-lg mb-4 relative">
-                    1
-                  </div>
-                  <h4 className="text-[15px] sm:text-base font-bold text-neutral-900 mb-2 leading-tight">Approve before<br className="hidden sm:block"/> we ship</h4>
-                  <p className="text-xs sm:text-[13px] text-neutral-500 leading-relaxed px-2">Photos and measurements sent for your sign-off</p>
-                </div>
-                
-                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
-                  <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center text-blue-600 font-bold text-lg mb-4 relative">
-                    2
-                  </div>
-                  <h4 className="text-[15px] sm:text-base font-bold text-neutral-900 mb-2 leading-tight">Hold it.<br className="hidden sm:block"/> Test it.</h4>
-                  <p className="text-xs sm:text-[13px] text-neutral-500 leading-relaxed px-2">Check the fit, the fabric, the make</p>
-                </div>
-
-                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
-                  <div className="w-12 h-12 rounded-full bg-emerald-50 border-2 border-white shadow-sm flex items-center justify-center text-emerald-600 font-bold text-lg mb-4 relative">
-                    3
-                  </div>
-                  <h4 className="text-[15px] sm:text-base font-bold text-neutral-900 mb-2 leading-tight">Scale when<br className="hidden sm:block"/> ready</h4>
-                  <p className="text-xs sm:text-[13px] text-neutral-500 leading-relaxed px-2">Your sample fee credited to bulk</p>
-                </div>
-              </div>
-            </div>
-
-            {/* 5. Guarantees */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
-                  <RefreshCcw className="w-5 h-5" strokeWidth={2} />
-                </div>
-                <div>
-                  <h4 className="text-[16px] sm:text-lg font-bold text-neutral-900 mb-2">Off-spec? We remake it free</h4>
-                  <p className="text-[14px] text-neutral-600 leading-relaxed">If it doesn't match the agreed spec, we remake and reship on us</p>
-                </div>
-              </div>
-              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
-                  <ShieldCheck className="w-5 h-5" strokeWidth={2} />
-                </div>
-                <div>
-                  <h4 className="text-[16px] sm:text-lg font-bold text-neutral-900 mb-2">Still off? Full refund</h4>
-                  <p className="text-[14px] text-neutral-600 leading-relaxed">If the remake misses too, every dollar back including shipping</p>
-                </div>
-              </div>
-            </div>
-
-            {/* 6. Microcopy */}
-            <div className="text-center text-xs sm:text-sm text-neutral-400 max-w-2xl mx-auto space-y-1">
-              <p>New colorways quoted per fabric availability.</p>
-              <p>Embroidery, prints, and custom hardware quoted per spec — before anything starts.</p>
-            </div>
-
           </div>
         </section>
 
