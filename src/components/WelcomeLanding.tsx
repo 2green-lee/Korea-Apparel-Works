@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ExportMap from './ExportMap';
 import { fabricsData, getFabricPatternSvg } from '../lib/fabricData';
-import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCheck, Zap, Bot, LineChart, MessageSquare, FileText, Scissors, CheckCircle2, Check, Truck, MapPin, FileCheck, Award, ChevronLeft, ChevronRight, Ship, Layers, Globe } from 'lucide-react';
+import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCheck, Zap, Bot, LineChart, MessageSquare, FileText, Scissors, CheckCircle2, Check, Truck, MapPin, FileCheck, Award, ChevronLeft, ChevronRight, Ship, Layers, Globe, RefreshCcw } from 'lucide-react';
 
 export default function WelcomeLanding() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -183,10 +183,10 @@ export default function WelcomeLanding() {
             <div className="flex flex-col items-center gap-3 sm:gap-5">
               <div className="w-full flex items-center justify-center py-6 sm:py-10 lg:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
                 <div className="text-[7vw] sm:text-4xl lg:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
-                  1<span className="text-[4vw] sm:text-2xl lg:text-3xl lg:text-4xl text-neutral-500 ml-0.5 sm:ml-1">pcs~</span>
+                  $99
                 </div>
               </div>
-              <div className="text-[11px] sm:text-sm lg:text-sm lg:text-base text-neutral-600 font-medium text-center leading-tight">Minimum Order<br className="sm:hidden"/> (MOQ)</div>
+              <div className="text-[11px] sm:text-sm lg:text-sm lg:text-base text-neutral-600 font-medium text-center leading-tight">First Sample,<br className="sm:hidden"/> Risk-Free</div>
             </div>
             {/* Item 2 */}
             <div className="flex flex-col items-center gap-3 sm:gap-5">
@@ -834,6 +834,120 @@ export default function WelcomeLanding() {
           {/* Global Export Map Section placed inside the black area */}
           <div ref={exportMapRef} className={`w-full transition-all duration-1000 ease-out ${exportMapIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
             <ExportMap />
+          </div>
+        </section>
+
+        {/* Sample Policy Section */}
+        <section className="w-full bg-white pt-24 pb-24 px-6 border-t border-neutral-100">
+          <div className="max-w-[1000px] mx-auto w-full">
+            {/* 1. Header */}
+            <div className="text-center mb-16">
+              <div className="text-blue-600 font-bold tracking-wider text-xs sm:text-sm uppercase mb-3">Sample policy</div>
+              <h2 className="text-4xl lg:text-5xl font-black text-neutral-900 tracking-tight mb-4">Try us with zero risk.</h2>
+              <p className="text-lg text-neutral-600 font-light max-w-2xl mx-auto">
+                See our quality in your hands before committing to anything.
+              </p>
+            </div>
+
+            {/* 2. Pricing Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-4">
+              {/* Card 1 */}
+              <div className="bg-white rounded-2xl p-6 border-2 border-blue-400 shadow-md shadow-blue-900/5 relative overflow-hidden flex flex-col">
+                <div className="absolute top-0 inset-x-0 h-1.5 bg-blue-500"></div>
+                <div className="text-sm font-bold text-blue-600 mb-2 uppercase tracking-wide">First sample</div>
+                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$99</div>
+                <div className="text-sm text-neutral-600 font-medium">One piece, one size<br/>Basic construction</div>
+              </div>
+              {/* Card 2 */}
+              <div className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col hover:border-neutral-300 transition-colors">
+                <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Additional size</div>
+                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$49<span className="text-xl text-neutral-400 font-semibold">/pc</span></div>
+                <div className="text-sm text-neutral-600 font-medium">Same fabric<br/>Same shipment</div>
+              </div>
+              {/* Card 3 */}
+              <div className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col hover:border-neutral-300 transition-colors">
+                <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Revision</div>
+                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$59</div>
+                <div className="text-sm text-neutral-600 font-medium">Same style, adjusted<br/>Existing pattern</div>
+              </div>
+            </div>
+            <div className="text-center text-xs sm:text-sm text-neutral-500 mb-16">
+              + Shipping at cost — typically $35–50 to the US, DHL tracked
+            </div>
+
+            {/* 3. Credit Banner */}
+            <div className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl p-6 sm:p-8 mb-16 flex flex-col items-center text-center">
+              <h3 className="text-xl sm:text-2xl font-bold text-emerald-900 mb-8">Your sample fee comes back on your bulk order</h3>
+              <div className="flex flex-row w-full max-w-lg mx-auto items-center justify-center divide-x divide-emerald-200/60">
+                <div className="flex-1 px-4 flex flex-col items-center">
+                  <div className="text-4xl sm:text-5xl font-black text-emerald-600 mb-1">50%</div>
+                  <div className="text-xs sm:text-sm text-emerald-800 font-medium">credited at 50 pcs+</div>
+                </div>
+                <div className="flex-1 px-4 flex flex-col items-center">
+                  <div className="text-4xl sm:text-5xl font-black text-emerald-600 mb-1">100%</div>
+                  <div className="text-xs sm:text-sm text-emerald-800 font-medium">credited at 100 pcs+</div>
+                </div>
+              </div>
+            </div>
+
+            {/* 4. 3 Steps */}
+            <div className="relative w-full max-w-3xl mx-auto mb-20">
+              <div className="absolute top-[24px] left-[10%] right-[10%] h-[2px] bg-neutral-100 z-0 hidden sm:block"></div>
+              <div className="flex flex-row justify-between relative z-10 gap-2 sm:gap-4 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 scrollbar-hide snap-x">
+                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center text-blue-600 font-bold text-lg mb-4 relative">
+                    1
+                  </div>
+                  <h4 className="text-[15px] sm:text-base font-bold text-neutral-900 mb-2 leading-tight">Approve before<br className="hidden sm:block"/> we ship</h4>
+                  <p className="text-xs sm:text-[13px] text-neutral-500 leading-relaxed px-2">Photos and measurements sent for your sign-off</p>
+                </div>
+                
+                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center text-blue-600 font-bold text-lg mb-4 relative">
+                    2
+                  </div>
+                  <h4 className="text-[15px] sm:text-base font-bold text-neutral-900 mb-2 leading-tight">Hold it.<br className="hidden sm:block"/> Test it.</h4>
+                  <p className="text-xs sm:text-[13px] text-neutral-500 leading-relaxed px-2">Check the fit, the fabric, the make</p>
+                </div>
+
+                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
+                  <div className="w-12 h-12 rounded-full bg-emerald-50 border-2 border-white shadow-sm flex items-center justify-center text-emerald-600 font-bold text-lg mb-4 relative">
+                    3
+                  </div>
+                  <h4 className="text-[15px] sm:text-base font-bold text-neutral-900 mb-2 leading-tight">Scale when<br className="hidden sm:block"/> ready</h4>
+                  <p className="text-xs sm:text-[13px] text-neutral-500 leading-relaxed px-2">Your sample fee credited to bulk</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Guarantees */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
+                  <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+                </div>
+                <div>
+                  <h4 className="text-[16px] sm:text-lg font-bold text-neutral-900 mb-2">Off-spec? We remake it free</h4>
+                  <p className="text-[14px] text-neutral-600 leading-relaxed">If it doesn't match the agreed spec, we remake and reship on us</p>
+                </div>
+              </div>
+              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
+                  <ShieldCheck className="w-5 h-5" strokeWidth={2} />
+                </div>
+                <div>
+                  <h4 className="text-[16px] sm:text-lg font-bold text-neutral-900 mb-2">Still off? Full refund</h4>
+                  <p className="text-[14px] text-neutral-600 leading-relaxed">If the remake misses too, every dollar back including shipping</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 6. Microcopy */}
+            <div className="text-center text-xs sm:text-sm text-neutral-400 max-w-2xl mx-auto space-y-1">
+              <p>New colorways quoted per fabric availability.</p>
+              <p>Embroidery, prints, and custom hardware quoted per spec — before anything starts.</p>
+            </div>
+
           </div>
         </section>
 
