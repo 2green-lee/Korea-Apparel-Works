@@ -1,0 +1,26 @@
+node:internal/modules/cjs/loader:1456
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module './view'
+Require stack:
+- /Users/green/Desktop/Korea-Apparel-Works/node_modules/express/lib/application.js
+- /Users/green/Desktop/Korea-Apparel-Works/node_modules/express/lib/express.js
+    at node:internal/modules/cjs/loader:1456:15
+    at nextResolveSimple (/Users/green/Desktop/Korea-Apparel-Works/node_modules/tsx/dist/register-BOkp8V6j.cjs:10:1017)
+    at /Users/green/Desktop/Korea-Apparel-Works/node_modules/tsx/dist/register-BOkp8V6j.cjs:9:4388
+    at /Users/green/Desktop/Korea-Apparel-Works/node_modules/tsx/dist/register-BOkp8V6j.cjs:9:3818
+    at resolveTsPaths (/Users/green/Desktop/Korea-Apparel-Works/node_modules/tsx/dist/register-BOkp8V6j.cjs:10:770)
+    at /Users/green/Desktop/Korea-Apparel-Works/node_modules/tsx/dist/register-BOkp8V6j.cjs:10:1155
+    at T._resolveFilename (file:///Users/green/Desktop/Korea-Apparel-Works/node_modules/tsx/dist/register-CqMfTiWi.mjs:2:14889)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+    at defaultResolve (node:internal/modules/cjs/loader:1101:31)
+    at nextStep (node:internal/modules/customization_hooks:189:26) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/green/Desktop/Korea-Apparel-Works/node_modules/express/lib/application.js',
+    '/Users/green/Desktop/Korea-Apparel-Works/node_modules/express/lib/express.js'
+  ]
+}
+
+Node.js v24.14.0

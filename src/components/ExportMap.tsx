@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography, Marker, Line } from "react-simple-maps";
 import { CheckCircle2 } from "lucide-react";
+import { motion } from "motion/react";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
@@ -31,7 +32,13 @@ const ExportMap = ({ className }: { className?: string }) => {
     : { scale: 175, rotate: [-137, 0, 0] as [number, number, number], center: [0, 30] as [number, number] };
 
   return (
-    <div className={`w-full max-w-[900px] mx-auto pb-20 pt-0 px-2 lg:px-6 relative ${className || 'mt-[250px]'}`}>
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }} 
+      whileInView={{ opacity: 1, y: 0 }} 
+      viewport={{ once: true, margin: "-50px" }} 
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className={`w-full max-w-[900px] mx-auto pb-20 pt-0 px-2 lg:px-6 relative ${className || 'mt-[250px]'}`}
+    >
       <div className="text-center mb-8 lg:mb-12">
         <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4 flex items-start justify-center gap-3 lg:gap-5 z-10">
           <span className="text-center">Global Export Reach</span>
@@ -116,7 +123,7 @@ const ExportMap = ({ className }: { className?: string }) => {
           }
         }
       `}} />
-    </div>
+    </motion.div>
   );
 };
 

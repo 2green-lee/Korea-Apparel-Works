@@ -22,7 +22,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 0);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -45,18 +45,18 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
     <header
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-sans flex items-center ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-150 font-sans flex items-center h-16 border-b shadow-md sm:shadow-none ${
         currentSlide > 0
-          ? "bg-white h-16"
-          : isScrolled || isHovered 
-            ? "bg-[#e9eceb] h-16" 
-            : "bg-transparent h-16"
+          ? "bg-white border-neutral-100"
+          : isScrolled
+            ? "bg-white/90 backdrop-blur-md border-neutral-100"
+            : "bg-transparent border-transparent"
       }`}
     >
       <div className="w-full h-full px-6 lg:px-12 flex items-center justify-between">
         
         {/* 데스크톱 왼쪽 네비게이션 메뉴 (토글 캡슐 형태) */}
-        <div className="hidden min-[930px]:flex items-center bg-neutral-100/60 backdrop-blur-md p-1 rounded-full relative">
+        <div className="hidden min-[930px]:flex items-center bg-white/40 backdrop-blur-xl border border-white/60 shadow-md p-1 rounded-full relative">
           {["Home", "Manufacturing", "Product"].map((tab, index) => (
             <button
               key={tab}
@@ -96,12 +96,10 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
               onClearChat();
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="flex flex-col items-center group cursor-pointer focus:outline-hidden"
+            className="flex items-center group cursor-pointer focus:outline-hidden"
             title="Reset to home and clear conversation"
           >
-            <span className="font-sans font-medium text-[17px] tracking-normal sm:tracking-[0.1em] transition-colors duration-500 select-none text-neutral-900 group-hover:opacity-80 whitespace-nowrap">
-              Korea Apparel Works
-            </span>
+            <span className="font-medium text-[17px] tracking-wide text-neutral-900 transition-opacity duration-500 group-hover:opacity-80 whitespace-nowrap">Korea Apparel Works</span>
           </button>
         </div>
 
@@ -155,7 +153,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
         <div className="flex items-center justify-between px-5 py-4 shrink-0">
           <div className="flex items-center space-x-3">
             <img src="/logo1.png" alt="Logo" className="w-6 h-6 object-contain invert opacity-90" />
-            <span className="font-medium text-[15px] tracking-wide text-neutral-100 whitespace-nowrap">Korea Apparel Works</span>
+            <span className="font-semibold text-[15px] tracking-wide text-neutral-100 whitespace-nowrap">Korea Apparel Works</span>
           </div>
           <button onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-neutral-400 hover:text-white transition-colors focus:outline-hidden">
             <X className="w-6 h-6" />

@@ -312,16 +312,13 @@ export default function App() {
 
   const clientViewBackgroundStyle = useMemo(() => currentView === "client" ? (
     currentSlide === 0 ? {
-      backgroundImage: `linear-gradient(to bottom, transparent 60%, var(--color-luxury-cream) 100%), url(${bgImage})`,
-      backgroundSize: "100% 100%, cover",
-      backgroundPosition: "center, center top",
-      backgroundRepeat: "no-repeat, no-repeat",
-      backgroundAttachment: "fixed, fixed",
-      backgroundColor: "var(--color-luxury-cream)"
+      backgroundImage: "linear-gradient(to bottom, #ffffff 0%, #e0f2fe 60%)",
+      backgroundColor: "#e0f2fe",
+      backgroundAttachment: "fixed"
     } : {
-      backgroundColor: isMobile ? "#ffffff" : "var(--color-luxury-cream)"
+      backgroundColor: "#ffffff"
     }
-  ) : {}, [currentView, currentSlide, isMobile]);
+  ) : {}, [currentView, currentSlide]);
 
   return (
     <div 
@@ -330,19 +327,7 @@ export default function App() {
       }`}
       style={clientViewBackgroundStyle}
     >
-      {currentView === "client" && isMobile && (
-        <div 
-          className="fixed inset-0 pointer-events-none transition-opacity duration-500"
-          style={{
-            backgroundImage: currentSlide === 0 ? `linear-gradient(to bottom, transparent 60%, var(--color-luxury-cream) 100%), url(${bgImage})` : 'none',
-            backgroundSize: "100% 100%, max(200vw, 200vh) auto",
-            backgroundPosition: "center, center top",
-            backgroundRepeat: "no-repeat, no-repeat",
-            backgroundColor: "var(--color-luxury-cream)",
-            opacity: currentSlide === 0 ? 1 : 0
-          }}
-        />
-      )}
+
 
       {currentView === "admin" ? (
         <Suspense fallback={null}><AdminDashboard onExit={() => handleSetView("client")} /></Suspense>
@@ -404,7 +389,7 @@ export default function App() {
           </main>
 
           {/* 5. Standalone Premium legal bottom */}
-          <Footer onAdminClick={() => handleSetView("admin")} setCurrentSlide={setCurrentSlide} />
+          <Footer currentSlide={currentSlide} onAdminClick={() => handleSetView("admin")} setCurrentSlide={setCurrentSlide} />
         </>
       )}
 

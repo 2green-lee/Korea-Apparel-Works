@@ -46,7 +46,7 @@ export default function MobileChatView({
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-transparent font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-transparent sticky top-0 z-10 shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 bg-white/60 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.04)] sticky top-0 z-10 shrink-0">
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="p-2 -ml-2 text-neutral-700 hover:text-black transition-colors"
@@ -145,10 +145,13 @@ export default function MobileChatView({
       {/* Chat Messages Area */}
       {messages.length === 1 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-6">
-          <img src="/logo1.png" alt="Korea Apparel Works Logo" className="w-[40px] h-[40px] mb-5 opacity-90 object-contain" />
-          <h2 className="text-[20px] font-normal text-neutral-900 text-center tracking-tight leading-snug">
-            Talk to Mark, our AI agent,<br />about making your apparel.
+          <img src="/logo1.png" alt="Korea Apparel Works Logo" className="w-[40px] h-[40px] mb-5 opacity-75 object-contain" />
+          <h2 className="font-dm-sans text-[26px] font-[450] tracking-tight text-neutral-800 leading-tight text-center">
+            Start your brand with us
           </h2>
+          <p className="pretendard-font mt-3 text-neutral-600 text-[14px] text-center max-w-xs font-normal">
+            Upload a photo or just describe it — get pricing, MOQ, and lead time.<br />Made in Korea.
+          </p>
         </div>
       ) : (
         <div

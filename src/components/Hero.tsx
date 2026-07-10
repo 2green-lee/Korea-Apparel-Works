@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Camera, Mic, ArrowUp, RefreshCw, Search, Ruler, ChevronLeft, ChevronRight, ChevronDown, Shirt, Award, Layers, Sparkles, Check, History, MessageSquare, FileText, Truck, User, Factory, Package, ShieldCheck, Zap, LineChart, Scissors, CheckCircle2, Plus, Minus, Bot } from "lucide-react";
 import ExportMap from "./ExportMap";
 import { AnimatePresence, motion } from "motion/react";
+import WhyKorea from './WhyKorea';
 import tshirtIcon from "./free-icon-clothes-7640468.png";
 import { supabase } from "../lib/supabase";
 
@@ -413,24 +414,8 @@ export default function Hero({
       
 
 
-      <button
-        onClick={handlePrevSlide}
-        className="hidden lg:flex fixed left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
-        aria-label="Previous Slide"
-      >
-        <ChevronLeft className="w-[28px] h-[28px] group-hover:-translate-x-0.5 transition-transform" />
-      </button>
-
-      <button
-        onClick={handleNextSlide}
-        className="hidden lg:flex fixed right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 active:scale-95 items-center justify-center transition-all duration-300 cursor-pointer group text-neutral-700 hover:text-neutral-950"
-        aria-label="Next Slide"
-      >
-        <ChevronRight className="w-[28px] h-[28px] group-hover:translate-x-0.5 transition-transform" />
-      </button>
-
       <div className={`relative z-10 w-full flex flex-col items-center justify-center text-center px-0 lg:px-4 select-none transition-all duration-500 ${
-        (currentSlide === 0 && messages.length > 1) ? "max-w-[1400px] my-auto" : currentSlide === 1 ? "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-0" : "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-16"
+        currentSlide === 0 ? "max-w-[1400px] my-auto" : currentSlide === 1 ? "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-0" : "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-16"
       }`}>
         
         <AnimatePresence mode="popLayout" custom={direction}>
@@ -448,40 +433,29 @@ export default function Hero({
             >
               {messages.length === 1 && (
                 <>
-                  <img src="/logo1.png" alt="Korea Apparel Works Logo"  className="w-[clamp(50px,calc(35px+2.5vw),60px)] mb-[50px] select-none pointer-events-none transition-all duration-300" />
-                  <div className="flex space-x-2.5 mb-5 select-none">
-                    {SLIDES.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentSlide(index)}
-                        className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                          index === currentSlide ? "w-6 bg-neutral-950" : "w-1.5 bg-neutral-950/20 hover:bg-neutral-950/40"
-                        }`}
-                        aria-label={`Go to slide ${index + 1}`}
-                      />
-                    ))}
+                  <div className="flex flex-col items-center mt-[20px] mb-[30px]">
+                    <img src="/logo1.png" alt="Korea Apparel Works Logo"  className="w-[clamp(50px,calc(35px+2.5vw),60px)] select-none pointer-events-none transition-all duration-300" />
                   </div>
+
                 </>
               )}
 
               {messages.length === 1 && (
                 <div className="mb-10 select-none flex flex-col items-center w-full px-2">
                   <h1 className="font-dm-sans text-[clamp(26px,calc(-4px+4.5vw),41px)] font-[450] tracking-tight text-neutral-900 leading-tight text-center transition-all duration-300">
-                    Talk to Mark, our AI agent,<br />
-                    <span className="text-neutral-900">about making your apparel.</span>
+                    Start your brand with us
                   </h1>
                   <p className="pretendard-font mt-4 text-neutral-600 text-[clamp(14px,calc(11px+0.5vw),16px)] max-w-lg mx-auto font-normal text-center transition-all duration-300">
                     Upload a photo or just describe it — get pricing, MOQ, and lead time.
                     <br />
-                    Made in Korea, no Section 301 tariffs.
+                    Made in Korea.
                   </p>
                 </div>
               )}
-
               <div className={`w-full backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.06)] flex flex-col font-sans transition-all duration-500 overflow-hidden relative group/card select-text ${
                 messages.length > 1 
-                  ? "fixed top-16 bottom-0 left-0 right-0 z-40 bg-white/95 rounded-none border-none p-4 pb-[max(env(safe-area-inset-bottom),16px)] lg:relative lg:top-auto lg:bottom-auto lg:left-auto lg:right-auto lg:bg-white/85 lg:rounded-[28px] lg:border lg:border-neutral-200/80 lg:p-6 lg:max-w-[1000px] lg:h-[80vh] lg:max-h-[800px]" 
-                  : "relative max-w-[700px] h-[200px] bg-white/85 rounded-[28px] border border-neutral-200/80 p-6"
+                  ? "fixed top-16 bottom-0 left-0 right-0 z-40 bg-white/95 rounded-none border-none p-4 pb-[max(env(safe-area-inset-bottom),16px)] md:relative md:top-auto md:bottom-auto md:left-auto md:right-auto md:w-[calc(100%-48px)] md:bg-white/85 md:rounded-[28px] md:border md:border-neutral-200/80 md:p-6 md:max-w-[1000px] md:h-[85vh] md:max-h-[900px]" 
+                  : "relative max-w-[700px] w-[calc(100%-48px)] sm:w-full h-[200px] bg-white/85 rounded-[28px] border border-neutral-200/80 p-6"
               }`}>
                 {messages.length > 1 && (
                   <div className="border-b border-neutral-100 pb-4 mb-4 select-text flex flex-col flex-1 min-h-0">
@@ -621,58 +595,25 @@ export default function Hero({
               transition={slideTransition}
               className="w-full flex flex-col items-center justify-center relative mt-[-200px]"
             >
-              <div className="hidden lg:flex space-x-2.5 mb-5 mt-24">
-                {SLIDES.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                      index === currentSlide ? "w-6 bg-neutral-950" : "w-1.5 bg-neutral-950/20 hover:bg-neutral-950/40"
-                    }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
+
 
               <div id="about-us-section" className="w-full flex flex-col font-sans text-left relative select-text bg-transparent rounded-none overflow-visible scroll-mt-24 mt-16 lg:mt-0">
-                <div className="py-10 lg:py-12 px-4 lg:px-0 border-none w-full bg-transparent">
-                  <div className="w-full flex flex-col gap-8 lg:gap-10 rounded-2xl lg:rounded-3xl bg-transparent lg:bg-white border border-neutral-200/60 lg:border-[#e9ecef]/80 p-6 lg:p-10 lg:p-12 transition-all duration-300 lg:hover:border-[#dee2e6] lg:hover:shadow-md group">
-                    <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black text-neutral-900 leading-tight tracking-tight text-center lg:text-left group-hover:text-black transition-colors w-full mb-4 lg:mb-6">
-                      From one factory floor to a global platform
-                    </h2>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 w-full">
-                      <div className="flex flex-col justify-start">
-                        <div className="space-y-4 text-[15px] sm:text-lg lg:text-[20px] text-neutral-600 font-light leading-relaxed text-center lg:text-left px-0 sm:px-0">
-                          <p>
-                            Our story begins with my father.<br />
-                            For over 30 years, he ran an apparel factory in Korea, manufacturing premium shirts, polos, sportswear, and golf wear.
-                          </p>
-                          <p>
-                            Despite world-class production capabilities, the factory faced the limits of traditional manufacturing, relying entirely on local, network-based orders while the global market rapidly digitalized.
-                          </p>
-                          <p>
-                            To bring my father’s lifelong expertise to the world, we now connect global brands with 30 years of manufacturing know-how and uncompromising quality.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="hidden lg:block w-full relative h-full min-h-[300px]">
-                        <div className="w-full aspect-[16/9] lg:aspect-auto lg:absolute lg:inset-0 rounded-2xl overflow-hidden border border-neutral-200/60 relative group/img bg-neutral-100">
-                          <img 
-                            src="/a2.jpg" 
-                            alt="Korea Apparel Works Sewing Facility" 
-                            
-                            className="w-full h-full object-cover opacity-90 group-hover/img:opacity-100 group-hover/img:scale-105 transition-all duration-700" 
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="w-full mt-10 lg:mt-16 relative px-4 lg:px-0">
+
+                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                  <WhyKorea />
+                </motion.div>
+
+
+                <motion.div className="w-full mt-10 lg:mt-16 relative px-4 lg:px-0">
                   <div className="max-w-[1200px] mx-auto w-full relative">
+                    <div className="text-center mb-8 lg:mb-12">
+                      <h2 className="text-3xl lg:text-5xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
+                        <span className="text-center">Why Korea Apparel Works?</span>
+                      </h2>
+                    </div>
                     <div className="grid grid-cols-3 gap-[2px] pb-8">
-                      {['b1.jpg', 'b2-2.jpg', 'b3.jpg', 'b4.jpg', 'b5.jpg', 'b6.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
+                      {['b1.jpg', 'b3.jpg', 'b5.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
                         const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
                         const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
                         return (
@@ -687,9 +628,9 @@ export default function Hero({
                       )})}
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-                <div id="core-capabilities-section" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-[25px] pt-8 lg:pt-12 w-full px-4 lg:px-0 scroll-mt-20">
+                <motion.div id="core-capabilities-section" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-[25px] pt-8 lg:pt-12 w-full px-4 lg:px-0 scroll-mt-20">
                   {/* Card 1 */}
                   <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
                     <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
@@ -733,19 +674,16 @@ export default function Hero({
                       Prototype from 1 piece and scale production as your brand grows.
                     </p>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* AI Workflow Section */}
-        <section className="relative mt-20 py-24 px-6 text-white border-t border-neutral-900 bg-neutral-950 mb-[-1px]" style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
+        <motion.section className="relative mt-20 py-24 px-6 text-white border-t border-neutral-900 bg-neutral-950 mb-[-1px]" style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
           <div className="relative z-10 w-full">
             <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-16">
               <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black mb-4 lg:mb-6 tracking-tight leading-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
-                <span className="text-center">AI-powered from<br className="hidden lg:block" /> inquiry to delivery</span>
+                <span className="text-center">Start your brand with us</span>
               </h2>
-              <p className="text-[15px] sm:text-lg lg:text-[20px] text-neutral-400 font-light leading-relaxed px-6 sm:px-0">
-                We've integrated AI across the entire production workflow — so international buyers can place orders in any language, get accurate quotes instantly, and track every step of production without picking up the phone.
-              </p>
             </div>
 
             {/* Feature Highlights */}
@@ -856,7 +794,7 @@ export default function Hero({
                 <div className="flex w-full mt-[100px] lg:mt-[150px] max-w-[1200px] mx-auto justify-center">
                   <ExportMap className="mt-0 pb-10 pt-4 w-full" />
                 </div>
-                </section>
+                </motion.section>
               </div>
         </motion.div>
       )}
@@ -872,23 +810,12 @@ export default function Hero({
               transition={slideTransition}
               className="w-full flex flex-col items-center justify-center relative mt-[-200px]"
             >
-              <div className="hidden lg:flex space-x-2.5 mb-5 mt-24">
-                {SLIDES.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                      index === currentSlide ? "w-6 bg-neutral-950" : "w-1.5 bg-neutral-950/20 hover:bg-neutral-950/40"
-                    }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
-              </div>
+
 
               <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent rounded-none p-4 lg:p-0 overflow-hidden">
                 {/* Unified View */}
                 <div className="flex flex-col w-full">
-                  <section className="pt-[120px] pb-0 w-full overflow-hidden bg-transparent">
+                  <motion.section className="pt-[120px] pb-0 w-full overflow-hidden bg-transparent">
                     <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-8">
                       <div>
                         <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black tracking-tight text-neutral-900 leading-tight mb-4 lg:mb-6 flex items-start justify-center gap-3 lg:gap-5 z-10">
@@ -917,45 +844,9 @@ export default function Hero({
                         )})}
                       </div>
                     </div>
-                  </section>
+                  </motion.section>
 
-                  <section className="mt-[200px] pt-0 pb-12 px-6 w-full max-w-[770px] mx-auto">
-                    <div className="text-center mb-16">
-                      <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black tracking-tight text-neutral-900 leading-tight flex items-start justify-center gap-3 lg:gap-5 z-10 mb-4 lg:mb-6">
-                        Premium Fabrics
-                      </h2>
-                      <p className="text-[15px] sm:text-lg lg:text-[20px] text-neutral-500 font-light leading-relaxed max-w-lg mx-auto px-6 sm:px-0">
-                        Our garments start with the best raw materials. From high-stretch performance knits to classic heritage weaves.
-                      </p>
-                    </div>
 
-                    <div className="grid grid-cols-2 gap-3 lg:gap-4 max-w-[1000px] mx-auto items-start">
-                      {PREMIUM_FABRICS.map((fabric) => {
-                        const isOpen = openFabric === fabric.id;
-                        return (
-                          <div 
-                            key={fabric.id} 
-                            onClick={() => setOpenFabric(isOpen ? null : fabric.id)}
-                            className={`bg-white rounded-xl border overflow-hidden shadow-sm transition-all cursor-pointer flex flex-col ${isOpen ? 'border-blue-400' : 'border-neutral-200'}`}
-                          >
-                            <div className="aspect-[2.5/1] w-full relative flex-shrink-0">
-                              {getFabricPatternSvg(fabric.id, fabric.engName)}
-                              <div className={`absolute bottom-2 right-2 w-6 h-6 rounded-full flex items-center justify-center transition-colors shadow-xs backdrop-blur-sm ${isOpen ? 'bg-blue-50 text-blue-600' : 'bg-white/80 text-neutral-400'}`}>
-                                {isOpen ? <Minus size={14} className="w-4 h-4" /> : <Plus size={14} className="w-4 h-4" />}
-                              </div>
-                            </div>
-                            <div 
-                              className={`px-4 flex flex-col justify-center overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-60 py-4 opacity-100' : 'max-h-0 py-0 opacity-0'}`}
-                            >
-                              <p className="text-neutral-600 text-[11px] font-light leading-relaxed">
-                                {fabric.description}
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </section>
                 </div>
 
 
