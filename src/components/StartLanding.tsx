@@ -246,10 +246,10 @@ export default function StartLanding() {
             <div className="flex flex-col items-center gap-3 sm:gap-5">
               <div className="w-full flex items-center justify-center py-6 sm:py-10 lg:py-14 px-1 bg-white/60 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-all sm:hover:-translate-y-1">
                 <div className="text-[7vw] sm:text-4xl lg:text-5xl lg:text-6xl font-extrabold text-neutral-900 whitespace-nowrap tracking-tighter">
-                  $99
+                  MOQ
                 </div>
               </div>
-              <div className="text-[11px] sm:text-sm lg:text-sm lg:text-base text-neutral-600 font-medium text-center leading-tight">First Sample,<br className="sm:hidden"/> Risk-Free</div>
+              <div className="text-[11px] sm:text-sm lg:text-sm lg:text-base text-neutral-600 font-medium text-center leading-tight">Minimum<br className="sm:hidden"/> Order Quantity</div>
             </div>
             {/* Item 2 */}
             <div className="flex flex-col items-center gap-3 sm:gap-5">
