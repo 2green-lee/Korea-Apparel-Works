@@ -47,7 +47,7 @@ export default function WhyKorea() {
         </h2>
       </div>
 
-      <div ref={whyKoreaRef} className={`w-full max-w-[1200px] pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 lg:px-0 transition-all duration-1000 ease-out ${whyKoreaIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+      <div ref={whyKoreaRef} className={`w-full max-w-[1200px] pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 lg:px-0 transition-all duration-1000 ease-out ${whyKoreaIn ? 'translate-y-0' : 'translate-y-16'}`}>
       <div className="max-w-[1200px] mx-auto w-full text-center mb-12 lg:mb-16">
         <h2 className="text-3xl lg:text-5xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
           <span className="text-center">Why Korea?</span>

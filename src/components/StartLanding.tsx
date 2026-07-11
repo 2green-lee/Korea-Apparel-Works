@@ -199,7 +199,7 @@ export default function StartLanding() {
               {/* Chat window: stretches from headline top to button bottom on desktop */}
               <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/80 bg-white/70 shadow-sm p-4 sm:p-5 lg:flex-1">
                 {/* User message: uploaded photo */}
-                <div className={`flex justify-end transition-all duration-700 ease-out ${chatReveal >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
+                <div className={`flex justify-end transition-all duration-700 ease-out ${chatReveal >= 1 ? 'translate-y-0' : 'translate-y-3'}`}>
                   <div className="bg-white/95 backdrop-blur-md border border-neutral-100 rounded-2xl rounded-tr-md p-2 max-w-[78%] shadow-sm">
                     <img src={optimizedS1Url} alt="Uploaded design" className="rounded-xl w-full max-h-36 object-cover" />
                     <div className="flex items-center gap-1.5 px-1 pt-2 pb-0.5">
@@ -210,7 +210,7 @@ export default function StartLanding() {
                 </div>
 
                 {/* Mark reply */}
-                <div className={`flex items-start gap-2.5 transition-all duration-700 ease-out ${chatReveal >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
+                <div className={`flex items-start gap-2.5 transition-all duration-700 ease-out ${chatReveal >= 2 ? 'translate-y-0' : 'translate-y-3'}`}>
                   <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
                     <Bot size={16} />
                   </div>
@@ -305,7 +305,7 @@ export default function StartLanding() {
 
         {/* Sample Policy Section */}
         <section ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 border-t border-neutral-100 overflow-hidden">
-          <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'translate-y-0' : 'translate-y-10'}`}>
             {/* 1. Header */}
             <div className="text-center mb-16">
               <div className="text-blue-600 font-bold tracking-wider text-xs sm:text-sm uppercase mb-3">Sample policy</div>
@@ -419,14 +419,14 @@ export default function StartLanding() {
         {/* AI Workflow Section */}
         <section className="mt-20 py-24 px-6 w-full bg-neutral-950 text-white border-t border-neutral-900">
           {/* Global Export Map Section placed inside the black area */}
-          <div ref={exportMapRef} className={`w-full transition-all duration-1000 ease-out ${exportMapIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+          <div ref={exportMapRef} className={`w-full transition-all duration-1000 ease-out ${exportMapIn ? 'translate-y-0' : 'translate-y-16'}`}>
             <ExportMap />
           </div>
         </section>
 
         {/* Atelier Image Gallery */}
         <div className="w-full bg-neutral-950 pt-6 lg:pt-8 pb-12 lg:pb-16 px-4 lg:px-6">
-          <div ref={atelierRef} className={`w-full overflow-hidden relative transition-all duration-1000 ease-out ${atelierIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
+          <div ref={atelierRef} className={`w-full overflow-hidden relative transition-all duration-1000 ease-out ${atelierIn ? 'translate-y-0' : 'translate-y-16'}`}>
             <div className="max-w-[1200px] mx-auto w-full grid grid-cols-3 gap-[1px] sm:gap-[2px] border border-neutral-900 rounded-none overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-neutral-900">
             {['b1.jpg', 'b3.jpg', 'b5.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
               const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";

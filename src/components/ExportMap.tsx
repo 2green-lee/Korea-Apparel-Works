@@ -33,8 +33,8 @@ const ExportMap = ({ className }: { className?: string }) => {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 30 }} 
-      whileInView={{ opacity: 1, y: 0 }} 
+      initial={{ y: 30 }}
+      whileInView={{ y: 0 }}
       viewport={{ once: true, margin: "-50px" }} 
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`w-full max-w-[900px] mx-auto pb-20 pt-0 px-2 lg:px-6 relative ${className || 'mt-[250px]'}`}
