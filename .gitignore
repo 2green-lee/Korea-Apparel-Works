@@ -37,3 +37,8 @@ pnpm-debug.log*
 
 # Claude Code local config
 .claude/
+
+# Debug logs and PID files
+*.log
+*.pid
+hero_diff.txt
