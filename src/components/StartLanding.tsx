@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ExportMap from './ExportMap';
+import WhyKorea from './WhyKorea';
 import { fabricsData, getFabricPatternSvg } from '../lib/fabricData';
 import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCheck, Zap, Bot, LineChart, MessageSquare, FileText, Scissors, CheckCircle2, Check, Truck, MapPin, FileCheck, Award, ChevronLeft, ChevronRight, Ship, Layers, Globe, RefreshCcw } from 'lucide-react';
 
@@ -416,6 +417,79 @@ export default function StartLanding() {
 
           </div>
         </section>
+
+        {/* Why Korea Section */}
+        <div className="w-full bg-white overflow-hidden">
+          <WhyKorea />
+        </div>
+
+        {/* Why Korea Apparel Works Section */}
+        <div className="w-full bg-white pb-16 lg:pb-24 px-4 lg:px-0">
+          <div className="max-w-[1200px] mx-auto w-full relative">
+            <div className="text-center mb-8 lg:mb-12">
+              <h2 className="text-3xl lg:text-5xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
+                <span className="text-center">Why Korea Apparel Works?</span>
+              </h2>
+            </div>
+            <div className="grid grid-cols-3 gap-[2px] pb-8">
+              {['b1.jpg', 'b3.jpg', 'b5.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
+                const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
+                return (
+                  <div key={idx} className="w-full aspect-[4/3] overflow-hidden bg-neutral-100 shadow-sm group/gridimg">
+                    <img
+                      src={optimizedUrl}
+                      alt={`Factory gallery ${idx + 1}`}
+                      loading="lazy"
+                      className="w-full h-full object-cover opacity-90 group-hover/gridimg:opacity-100 transition-all duration-500 hover:scale-[1.05]"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-[25px] pt-8 lg:pt-12 w-full">
+              {/* Card 1 */}
+              <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
+                  <Factory className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
+                </div>
+                <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
+                <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                  Family-owned factory with direct production and transparent processes.
+                </p>
+              </div>
+              {/* Card 2 */}
+              <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-3 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
+                  <Package className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
+                </div>
+                <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
+                <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                  From design to finished product, we manage every production stage.
+                </p>
+              </div>
+              {/* Card 3 */}
+              <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
+                  <ShieldCheck className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
+                </div>
+                <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
+                <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                  High-end craftsmanship and technical expertise for performance apparel.
+                </p>
+              </div>
+              {/* Card 4 */}
+              <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
+                  <Zap className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
+                </div>
+                <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
+                <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                  Prototype from 1 piece and scale production as your brand grows.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* AI Workflow Section */}
         <section className="mt-20 py-24 px-6 w-full bg-neutral-950 text-white border-t border-neutral-900">
