@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import ExportMap from './ExportMap';
 import WhyKorea from './WhyKorea';
 import { fabricsData, getFabricPatternSvg } from '../lib/fabricData';
-import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCheck, Zap, Bot, LineChart, MessageSquare, FileText, Scissors, CheckCircle2, Check, Truck, MapPin, FileCheck, Award, ChevronLeft, ChevronRight, Ship, Layers, Globe, RefreshCcw } from 'lucide-react';
+import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCheck, Zap, User, LineChart, MessageSquare, FileText, Scissors, CheckCircle2, Check, Truck, MapPin, FileCheck, Award, ChevronLeft, ChevronRight, Ship, Layers, Globe, RefreshCcw } from 'lucide-react';
 
 export default function StartLanding() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -18,6 +19,7 @@ export default function StartLanding() {
   const optimizedS1Url = `${supabaseUrl}/storage/v1/render/image/public/factory/s1.jpg?format=webp&quality=80`;
   const heroImages = [optimizedS1Url, '/s2.jpg', '/s3.jpg', '/s4.jpg'];
   const [heroSlide, setHeroSlide] = useState(0);
+  const [kawSlide, setKawSlide] = useState(0);
   useEffect(() => {
     const id = setInterval(() => {
       setHeroSlide((prev) => (prev + 1) % heroImages.length);
@@ -165,7 +167,7 @@ export default function StartLanding() {
       <main className="flex-1 flex flex-col">
         <div className="w-full bg-gradient-to-b from-white via-blue-50 to-blue-200">
           {/* Hero Section */}
-          <section className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 px-6 overflow-hidden flex-1 flex items-center">
+          <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 px-6 overflow-hidden flex-1 flex items-center">
           <div className="max-w-[1200px] mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-[49px] items-stretch">
 
             {/* Left: Copy */}
@@ -216,9 +218,9 @@ export default function StartLanding() {
               {/* Chat window: stretches from headline top to button bottom on desktop */}
               <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/80 bg-white/70 shadow-sm p-4 sm:p-5 lg:flex-1">
                 {/* User message: uploaded photo */}
-                <div className={`flex justify-end transition-all duration-700 ease-out ${chatReveal >= 1 ? 'translate-y-0' : 'translate-y-3'}`}>
+                <div className={`flex justify-end transition-all duration-500 ease-out ${chatReveal >= 1 ? 'opacity-100' : 'opacity-0'}`}>
                   <div className="bg-white/95 backdrop-blur-md border border-neutral-100 rounded-2xl rounded-tr-md p-2 max-w-[78%] shadow-sm">
-                    <img src={optimizedS1Url} alt="Uploaded design" className="rounded-xl w-full max-h-36 object-cover" />
+                    <img src={`${supabaseUrl}/storage/v1/render/image/public/clothes/p1.jpg?format=webp&quality=80`} alt="Uploaded design" className="rounded-xl w-full max-h-36 object-cover" />
                     <div className="flex items-center gap-1.5 px-1 pt-2 pb-0.5">
                       <FileCheck size={13} className="text-neutral-600 shrink-0" />
                       <span className="text-[12px] text-neutral-600 truncate">your-design.jpg</span>
@@ -227,9 +229,9 @@ export default function StartLanding() {
                 </div>
 
                 {/* Mark reply */}
-                <div className={`flex items-start gap-2.5 transition-all duration-700 ease-out ${chatReveal >= 2 ? 'translate-y-0' : 'translate-y-3'}`}>
+                <div className={`flex items-start gap-2.5 transition-all duration-500 ease-out ${chatReveal >= 2 ? 'opacity-100' : 'opacity-0'}`}>
                   <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <Bot size={16} />
+                    <User size={16} />
                   </div>
                   <div className="min-w-0">
                     <div className="text-xs font-semibold text-neutral-900 mb-1">Mark</div>
@@ -255,10 +257,10 @@ export default function StartLanding() {
             </div>
 
           </div>
-        </section>
+        </motion.section>
 
         {/* Metrics */}
-        <section className="px-6 pb-12 lg:pb-[150px]">
+        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="px-6 pb-12 lg:pb-[150px]">
           <div className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-4xl mx-auto">
             {/* Item 1 */}
             <div className="flex flex-col items-center gap-3 sm:gap-5">
@@ -291,11 +293,11 @@ export default function StartLanding() {
               <div className="text-[11px] sm:text-sm lg:text-sm lg:text-base text-neutral-600 font-medium text-center leading-tight">Partner<br className="sm:hidden"/> Brands</div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
 
         {/* Story Section - Temporarily hidden */}
-        <section className="hidden w-full bg-transparent py-16 lg:py-24 px-6 flex flex-col items-center text-center">
+        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="hidden w-full bg-transparent py-16 lg:py-24 px-6 flex flex-col items-center text-center">
           <div className="max-w-4xl w-full flex flex-col items-center bg-white/70 backdrop-blur-xl border border-white/80 shadow-xl rounded-3xl p-10 lg:p-16 hover:-translate-y-2 hover:shadow-2xl hover:bg-white/80 transition-all duration-500">
             <h2 className="text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-10">
               From one factory floor to a global platform
@@ -309,7 +311,7 @@ export default function StartLanding() {
               </p>
             </div>
           </div>
-        </section>
+        </motion.section>
         </div>
 
 
@@ -321,7 +323,7 @@ export default function StartLanding() {
         </div>
 
         {/* Sample Policy Section */}
-        <section ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 border-t border-neutral-100 overflow-hidden">
+        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 border-t border-neutral-100 overflow-hidden">
           <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'translate-y-0' : 'translate-y-10'}`}>
             {/* 1. Header */}
             <div className="text-center mb-16">
@@ -359,7 +361,7 @@ export default function StartLanding() {
             </div>
 
             {/* 3. Credit Banner */}
-            <a href="/" id="gtm-start-sample-credit-btn" className="gtm-conversion-btn w-full bg-emerald-50 border border-emerald-100 rounded-2xl p-6 sm:p-8 mb-16 flex flex-col items-center text-center cursor-pointer hover:shadow-md transition-all">
+            <div className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl p-6 sm:p-8 mb-16 flex flex-col items-center text-center">
               <h3 className="text-xl sm:text-2xl font-bold text-emerald-900 mb-8">Your sample fee comes back on your bulk order</h3>
               <div className="flex flex-row w-full max-w-lg mx-auto items-center justify-center divide-x divide-emerald-200/60">
                 <div className="flex-1 px-4 flex flex-col items-center">
@@ -371,7 +373,7 @@ export default function StartLanding() {
                   <div className="text-xs sm:text-sm text-emerald-800 font-medium">credited at 100 pcs+</div>
                 </div>
               </div>
-            </a>
+            </div>
 
             {/* 4. 3 Steps */}
             <div className="relative w-full max-w-3xl mx-auto mb-20">
@@ -405,7 +407,7 @@ export default function StartLanding() {
 
             {/* 5. Guarantees */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-              <a href="/" id="gtm-start-sample-remake-btn" className="gtm-conversion-btn bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100 cursor-pointer hover:shadow-md transition-all">
+              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
                   <RefreshCcw className="w-5 h-5" strokeWidth={2} />
                 </div>
@@ -413,8 +415,8 @@ export default function StartLanding() {
                   <h4 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 mb-2">Off-spec? We remake it free</h4>
                   <p className="text-[16px] text-neutral-600 leading-relaxed">If it doesn't match the agreed spec, we remake and reship on us</p>
                 </div>
-              </a>
-              <a href="/" id="gtm-start-sample-refund-btn" className="gtm-conversion-btn bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100 cursor-pointer hover:shadow-md transition-all">
+              </div>
+              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
                   <ShieldCheck className="w-5 h-5" strokeWidth={2} />
                 </div>
@@ -422,7 +424,7 @@ export default function StartLanding() {
                   <h4 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 mb-2">Still off? Full refund</h4>
                   <p className="text-[16px] text-neutral-600 leading-relaxed">If the remake misses too, every dollar back including shipping</p>
                 </div>
-              </a>
+              </div>
             </div>
 
             {/* 6. Microcopy */}
@@ -431,20 +433,46 @@ export default function StartLanding() {
             </div>
 
           </div>
-        </section>
+        </motion.section>
 
         {/* Why Korea Section */}
-        <div className="w-full bg-white overflow-hidden">
+        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white overflow-hidden">
           <WhyKorea />
-        </div>
+        </motion.section>
 
         {/* Why Korea Apparel Works Section */}
-        <div className="w-full bg-white pb-16 lg:pb-24 px-4 lg:px-0">
+        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white pt-16 lg:pt-[100px] pb-16 lg:pb-24 px-4 lg:px-0">
           <div className="max-w-[1200px] mx-auto w-full relative">
             <div className="text-center mb-8 lg:mb-12">
               <h2 className="text-3xl lg:text-5xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
                 <span className="text-center">Why Korea Apparel Works?</span>
               </h2>
+            </div>
+
+            {/* Factory photo carousel */}
+            <div className="relative w-full max-w-[900px] mx-auto">
+              <div className="relative w-full aspect-[4/3] sm:aspect-[3/2] overflow-hidden rounded-2xl bg-neutral-100 shadow-md">
+                {['b1.jpg', 'b3.jpg', 'b5.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => (
+                  <img
+                    key={idx}
+                    src={`${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`}
+                    alt={`Factory gallery ${idx + 1}`}
+                    loading="lazy"
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${kawSlide === idx ? 'opacity-100' : 'opacity-0'}`}
+                  />
+                ))}
+                <button onClick={() => setKawSlide((p) => (p + 5) % 6)} aria-label="Previous image" className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur flex items-center justify-center text-neutral-700 hover:bg-white shadow-md transition-all z-10">
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button onClick={() => setKawSlide((p) => (p + 1) % 6)} aria-label="Next image" className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur flex items-center justify-center text-neutral-700 hover:bg-white shadow-md transition-all z-10">
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                  {[0, 1, 2, 3, 4, 5].map((idx) => (
+                    <button key={idx} onClick={() => setKawSlide(idx)} aria-label={`Go to image ${idx + 1}`} className={`h-2 rounded-full transition-all ${kawSlide === idx ? 'bg-white w-5' : 'bg-white/50 w-2'}`} />
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-[25px] pt-8 lg:pt-12 w-full">
@@ -490,7 +518,7 @@ export default function StartLanding() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.section>
 
         {/* AI Workflow Section */}
         <section className="mt-20 py-24 px-6 w-full bg-neutral-950 text-white">
@@ -505,15 +533,17 @@ export default function StartLanding() {
 
         {/* Final CTA Section */}
         <section className="w-full bg-neutral-950 pt-32 pb-40 px-6 flex flex-col items-center text-center -mt-[1px] relative z-10">
-          <h2 className="text-3xl lg:text-5xl font-bold text-white tracking-tight mb-4 leading-tight">
-            The Ultimate Apparel<br />Production Partner
-          </h2>
-          <p className="text-lg lg:text-xl text-neutral-400 font-light mb-10">
-            Start your journey with us today.
-          </p>
-          <a id="gtm-start-footer-request-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">
-            Ask Us Anything
-          </a>
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="flex flex-col items-center w-full">
+            <h2 className="text-3xl lg:text-5xl font-bold text-white tracking-tight mb-4 leading-tight">
+              The Ultimate Apparel<br />Production Partner
+            </h2>
+            <p className="text-lg lg:text-xl text-neutral-400 font-light mb-10">
+              Start your journey with us today.
+            </p>
+            <a id="gtm-start-footer-request-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">
+              Ask Us Anything
+            </a>
+          </motion.div>
         </section>
       </main>
     </div>
