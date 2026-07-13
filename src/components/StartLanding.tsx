@@ -167,7 +167,7 @@ export default function StartLanding() {
               {/* Description */}
               <p className="max-w-xl text-lg lg:text-xl text-neutral-600 font-light mb-8 leading-relaxed">
                 Korea-made knitwear, from one piece.<br />
-                Tees, hoodies, sweats, and sportswear : OEM/ODM with no minimum. Test our quality with a single sample before you commit.
+                Tees, hoodies, sweats, and sportswear — OEM/ODM with no minimum. Test our quality with a single sample before you commit.
               </p>
 
               {/* Buttons */}
