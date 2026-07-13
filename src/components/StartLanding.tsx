@@ -269,7 +269,7 @@ export default function StartLanding() {
               </div>
               <div className="flex flex-col items-center">
                 <div className="text-[11px] sm:text-sm lg:text-sm lg:text-base text-neutral-600 font-medium text-center leading-tight">MOQ</div>
-                <div className="text-[9px] sm:text-[11px] lg:text-xs text-neutral-600 font-normal mt-0.5">(Minimum Order Quantity)</div>
+                <div className="text-[9px] sm:text-[11px] lg:text-xs text-neutral-600 font-normal mt-0.5 text-center">(Minimum Order Quantity)</div>
               </div>
             </div>
             {/* Item 2 */}
@@ -335,20 +335,20 @@ export default function StartLanding() {
             {/* 2. Pricing Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-4">
               {/* Card 1 */}
-              <a href="/" id="gtm-start-sample-first-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border-2 border-blue-400 shadow-md shadow-blue-900/5 relative overflow-hidden flex flex-col cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <a href="/" id="gtm-start-sample-first-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border-2 border-blue-400 shadow-md shadow-blue-900/5 relative overflow-hidden flex flex-col items-center text-center cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="absolute top-0 inset-x-0 h-1.5 bg-blue-500"></div>
                 <div className="text-sm font-bold text-blue-600 mb-2 uppercase tracking-wide">First sample</div>
                 <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$99</div>
                 <div className="text-[16px] text-neutral-600 font-medium">One piece, one size<br/>Basic construction</div>
               </a>
               {/* Card 2 */}
-              <a href="/" id="gtm-start-sample-size-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col cursor-pointer hover:border-neutral-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <a href="/" id="gtm-start-sample-size-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col items-center text-center cursor-pointer hover:border-neutral-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Additional size</div>
                 <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$49<span className="text-xl text-neutral-400 font-semibold">/pc</span></div>
                 <div className="text-[16px] text-neutral-600 font-medium">Same fabric<br/>Same shipment</div>
               </a>
               {/* Card 3 */}
-              <a href="/" id="gtm-start-sample-revision-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col cursor-pointer hover:border-neutral-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <a href="/" id="gtm-start-sample-revision-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col items-center text-center cursor-pointer hover:border-neutral-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Revision</div>
                 <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$59</div>
                 <div className="text-[16px] text-neutral-600 font-medium">Same style, adjusted<br/>Existing pattern</div>
@@ -376,29 +376,29 @@ export default function StartLanding() {
             {/* 4. 3 Steps */}
             <div className="relative w-full max-w-3xl mx-auto mb-20">
               <div className="absolute top-[24px] left-[10%] right-[10%] h-[2px] bg-neutral-100 z-0 hidden sm:block"></div>
-              <div className="flex flex-row justify-between relative z-10 gap-2 sm:gap-4 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 scrollbar-hide snap-x">
-                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
+              <div className="flex flex-row justify-between relative z-10 gap-2 sm:gap-4 pb-4 sm:pb-0">
+                <div className="flex flex-col items-center text-center flex-1 min-w-0 sm:w-[200px]">
                   <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center text-blue-600 font-bold text-lg mb-4 relative">
                     1
                   </div>
-                  <h4 className="text-[18px] sm:text-[19px] font-bold text-neutral-900 mb-2 leading-tight">Approve before<br className="hidden sm:block"/> we ship</h4>
-                  <p className="text-[15px] sm:text-[16px] text-neutral-500 leading-relaxed px-2">Photos and measurements sent for your sign-off</p>
+                  <h4 className="text-[15px] sm:text-[19px] font-bold text-neutral-900 mb-2 leading-tight">Approve before<br className="hidden sm:block"/> we ship</h4>
+                  <p className="text-[13px] sm:text-[16px] text-neutral-500 leading-relaxed px-1 sm:px-2">Photos and measurements sent for your sign-off</p>
                 </div>
                 
-                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
+                <div className="flex flex-col items-center text-center flex-1 min-w-0 sm:w-[200px]">
                   <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center text-blue-600 font-bold text-lg mb-4 relative">
                     2
                   </div>
-                  <h4 className="text-[18px] sm:text-[19px] font-bold text-neutral-900 mb-2 leading-tight">Hold it.<br className="hidden sm:block"/> Test it.</h4>
-                  <p className="text-[15px] sm:text-[16px] text-neutral-500 leading-relaxed px-2">Check the fit, the fabric, the make</p>
+                  <h4 className="text-[15px] sm:text-[19px] font-bold text-neutral-900 mb-2 leading-tight">Hold it.<br className="hidden sm:block"/> Test it.</h4>
+                  <p className="text-[13px] sm:text-[16px] text-neutral-500 leading-relaxed px-1 sm:px-2">Check the fit, the fabric, the make</p>
                 </div>
 
-                <div className="flex flex-col items-center text-center w-[160px] sm:w-[200px] shrink-0 snap-center">
+                <div className="flex flex-col items-center text-center flex-1 min-w-0 sm:w-[200px]">
                   <div className="w-12 h-12 rounded-full bg-emerald-50 border-2 border-white shadow-sm flex items-center justify-center text-emerald-600 font-bold text-lg mb-4 relative">
                     3
                   </div>
-                  <h4 className="text-[18px] sm:text-[19px] font-bold text-neutral-900 mb-2 leading-tight">Scale when<br className="hidden sm:block"/> ready</h4>
-                  <p className="text-[15px] sm:text-[16px] text-neutral-500 leading-relaxed px-2">Your sample fee credited to bulk</p>
+                  <h4 className="text-[15px] sm:text-[19px] font-bold text-neutral-900 mb-2 leading-tight">Scale when<br className="hidden sm:block"/> ready</h4>
+                  <p className="text-[13px] sm:text-[16px] text-neutral-500 leading-relaxed px-1 sm:px-2">Your sample fee credited to bulk</p>
                 </div>
               </div>
             </div>
@@ -446,29 +446,15 @@ export default function StartLanding() {
                 <span className="text-center">Why Korea Apparel Works?</span>
               </h2>
             </div>
-            <div className="grid grid-cols-3 gap-[2px] pb-8">
-              {['b1.jpg', 'b3.jpg', 'b5.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
-                const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
-                return (
-                  <div key={idx} className="w-full aspect-[4/3] overflow-hidden bg-neutral-100 shadow-sm group/gridimg">
-                    <img
-                      src={optimizedUrl}
-                      alt={`Factory gallery ${idx + 1}`}
-                      loading="lazy"
-                      className="w-full h-full object-cover opacity-90 group-hover/gridimg:opacity-100 transition-all duration-500 hover:scale-[1.05]"
-                    />
-                  </div>
-                );
-              })}
-            </div>
+
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-[25px] pt-8 lg:pt-12 w-full">
               {/* Card 1 */}
               <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
                 <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
                   <Factory className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
-                <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                <div className="text-[15px] sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
+                <p className="text-[13px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                   Family-owned factory with direct production and transparent processes.
                 </p>
               </div>
@@ -477,8 +463,8 @@ export default function StartLanding() {
                 <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-3 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
                   <Package className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
-                <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                <div className="text-[15px] sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
+                <p className="text-[13px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                   From design to finished product, we manage every production stage.
                 </p>
               </div>
@@ -487,8 +473,8 @@ export default function StartLanding() {
                 <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
                   <ShieldCheck className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
-                <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                <div className="text-[15px] sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
+                <p className="text-[13px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                   High-end craftsmanship and technical expertise for performance apparel.
                 </p>
               </div>
@@ -497,8 +483,8 @@ export default function StartLanding() {
                 <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
                   <Zap className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
                 </div>
-                <div className="text-sm sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
-                <p className="text-[12px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
+                <div className="text-[15px] sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
+                <p className="text-[13px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
                   Prototype from 1 piece and scale production as your brand grows.
                 </p>
               </div>
@@ -507,37 +493,18 @@ export default function StartLanding() {
         </div>
 
         {/* AI Workflow Section */}
-        <section className="mt-20 py-24 px-6 w-full bg-neutral-950 text-white border-t border-neutral-900">
+        <section className="mt-20 py-24 px-6 w-full bg-neutral-950 text-white">
           {/* Global Export Map Section placed inside the black area */}
           <div ref={exportMapRef} className={`w-full transition-all duration-1000 ease-out ${exportMapIn ? 'translate-y-0' : 'translate-y-16'}`}>
             <ExportMap />
           </div>
         </section>
 
-        {/* Atelier Image Gallery */}
-        <div className="w-full bg-neutral-950 pt-6 lg:pt-8 pb-12 lg:pb-16 px-4 lg:px-6">
-          <div ref={atelierRef} className={`w-full overflow-hidden relative transition-all duration-1000 ease-out ${atelierIn ? 'translate-y-0' : 'translate-y-16'}`}>
-            <div className="max-w-[1200px] mx-auto w-full grid grid-cols-3 gap-[1px] sm:gap-[2px] border border-neutral-900 rounded-none overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 bg-neutral-900">
-            {['b1.jpg', 'b3.jpg', 'b5.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => {
-              const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-              const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`;
-              return (
-                <div key={idx} className="relative aspect-square lg:aspect-[4/3] bg-neutral-950 group overflow-hidden">
-                  <img 
-                    src={optimizedUrl} 
-                    alt="Factory" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                    loading="lazy" 
-                  />
-                </div>
-              );
-            })}
-            </div>
-          </div>
-        </div>
+
+
 
         {/* Final CTA Section */}
-        <section className="w-full bg-neutral-950 pt-32 pb-40 px-6 flex flex-col items-center text-center">
+        <section className="w-full bg-neutral-950 pt-32 pb-40 px-6 flex flex-col items-center text-center -mt-[1px] relative z-10">
           <h2 className="text-3xl lg:text-5xl font-bold text-white tracking-tight mb-4 leading-tight">
             The Ultimate Apparel<br />Production Partner
           </h2>

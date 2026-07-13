@@ -41,7 +41,7 @@ export default function WhyKorea() {
           alt="Fabric Texture" 
           className="absolute inset-0 w-full h-full object-cover scale-150 sm:scale-100 transition-transform duration-500 pointer-events-none"
         />
-        <div className="absolute inset-0 bg-neutral-900/40 mix-blend-multiply"></div>
+        <div className="absolute inset-0 bg-neutral-900/55 mix-blend-multiply"></div>
         <h2 className="relative z-10 text-white font-sans font-black text-3xl sm:text-4xl lg:text-5xl max-w-4xl tracking-tight leading-tight drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]">
           The Apparel OEM/ODM Solution<br className="hidden sm:block" /> Made in Korea
         </h2>
@@ -55,23 +55,21 @@ export default function WhyKorea() {
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full relative group/whycarousel">
-        <div ref={whyKoreaScrollRef} className="flex overflow-x-auto pb-12 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-12 gap-6 snap-x snap-mandatory scrollbar-hide lg:grid lg:grid-cols-2 lg:max-w-none lg:mx-0 lg:overflow-visible">
+        <div ref={whyKoreaScrollRef} className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:max-w-none lg:mx-0">
           {/* Card 2: Supply Chain */}
-          <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-full snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+          <div className="w-full lg:h-auto">
             <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
               
               {/* Subtle background glow for the card */}
               <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-blue-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
 
-              <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-white border border-blue-100 flex items-center justify-center mb-6 text-blue-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
+              <div className="hidden lg:flex w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-white border border-blue-100 items-center justify-center mb-6 text-blue-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
                 <MapPin className="w-7 h-7 lg:w-8 lg:h-8" strokeWidth={1.5} />
               </div>
               <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 lg:mb-6 leading-[1.1] relative z-10">
                 One Supply Chain.<br className="hidden lg:block"/> One Country.
               </h2>
-              <p className="text-base lg:text-lg text-neutral-600 font-light leading-relaxed mb-6 lg:mb-4 lg:mb-10 max-w-lg relative z-10">
-                Yarn to finish, all in one country. Not one ocean away.
-              </p>
+
 
               {/* Visual Chart: Supply Chain Comparison */}
               <div className="w-full flex flex-col justify-center gap-6 lg:gap-4 lg:gap-8 items-center mt-auto relative z-10">
@@ -166,21 +164,19 @@ export default function WhyKorea() {
           </div>
 
           {/* Card 4: Global Brands */}
-          <div className="flex-none w-[85vw] sm:w-[60vw] lg:w-full snap-center sm:snap-start h-auto lg:h-[550px] lg:h-auto">
+          <div className="w-full lg:h-auto">
             <div className="bg-white/80 backdrop-blur-xl border border-neutral-200/60 rounded-[2.5rem] lg:rounded-[3.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 py-10 lg:p-6 lg:py-8 lg:p-12 h-full flex flex-col items-center text-center relative overflow-hidden group/card hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
               
               {/* Subtle background glow for the card */}
               <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-b from-indigo-100/50 to-transparent blur-3xl -z-10 rounded-full pointer-events-none"></div>
 
-              <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-6 text-indigo-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
+              <div className="hidden lg:flex w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-indigo-50 border border-indigo-100 items-center justify-center mb-6 text-indigo-600 shadow-sm relative z-10 group-hover/card:scale-110 transition-transform duration-500">
                 <Globe className="w-7 h-7 lg:w-8 lg:h-8" strokeWidth={1.5} />
               </div>
               <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-4 lg:mb-6 leading-[1.1] relative z-10">
                 Global brands have sourced here for decades.
               </h2>
-              <p className="text-base lg:text-lg text-neutral-600 font-light leading-relaxed mb-6 lg:mb-4 lg:mb-10 max-w-lg relative z-10">
-                Quality isn't a promise. It's a track record.
-              </p>
+
 
               {/* Visual Chart: Abstract Global Map Nodes */}
               <div className="w-full max-w-[600px] h-[220px] lg:h-[160px] lg:h-[265px] relative mt-auto z-10 bg-indigo-50/40 rounded-3xl border border-indigo-100/50 overflow-hidden shadow-inner">
@@ -250,13 +246,7 @@ export default function WhyKorea() {
           </div>
         </div>
         
-        {/* Scroll Buttons */}
-        <button onClick={() => scrollGallery(whyKoreaScrollRef, 'left')} className="absolute -left-4 lg:left-0 lg:-ml-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 lg:hidden transition-all duration-300 z-20 focus:outline-hidden">
-          <ChevronLeft className="w-8 h-8 lg:w-10 lg:h-10" />
-        </button>
-        <button onClick={() => scrollGallery(whyKoreaScrollRef, 'right')} className="absolute -right-4 lg:right-0 lg:-mr-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 text-neutral-400 hover:text-blue-600 drop-shadow-md opacity-100 lg:hidden transition-all duration-300 z-20 focus:outline-hidden">
-          <ChevronRight className="w-8 h-8 lg:w-10 lg:h-10" />
-        </button>
+
       </div>
     </div>
     </div>
