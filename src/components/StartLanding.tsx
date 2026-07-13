@@ -237,7 +237,7 @@ export default function StartLanding() {
                     <div className="text-xs font-semibold text-neutral-900 mb-1">Mark</div>
                     <div className="inline-block bg-white/95 backdrop-blur-md border border-neutral-100 shadow-sm rounded-2xl rounded-tl-md px-4 py-3 max-w-[280px]">
                       <p className="text-[13px] text-neutral-600 leading-snug">
-                        Got it! MOQ from <b className="text-neutral-900">1&nbsp;pc</b>, sample in <b className="text-neutral-900">3–14 days</b>.
+                        Great design! We can definitely craft this. MOQ starts at just <b className="text-neutral-900">1&nbsp;pc</b>, and we can have a sample ready in <b className="text-neutral-900">3–14 days</b>.
                       </p>
                     </div>
                   </div>
@@ -452,7 +452,7 @@ export default function StartLanding() {
             {/* Factory photo carousel */}
             <div className="relative w-full max-w-[900px] mx-auto">
               <div className="relative w-full aspect-[4/3] sm:aspect-[3/2] overflow-hidden rounded-2xl bg-neutral-100 shadow-md">
-                {['b1.jpg', 'b3.jpg', 'b5.jpg', 'b7.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => (
+                {['b5.jpg', 'b7.jpg', 'b1.jpg', 'b3.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => (
                   <img
                     key={idx}
                     src={`${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`}
