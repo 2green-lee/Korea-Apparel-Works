@@ -2,22 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { MapPin, Layers, Truck, Factory, Ship, Scissors, ChevronLeft, ChevronRight, Globe } from 'lucide-react';
 
 export default function WhyKorea() {
-  const whyKoreaRef = useRef<HTMLDivElement>(null);
-  const [whyKoreaIn, setWhyKoreaIn] = useState(false);
   const whyKoreaScrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setWhyKoreaIn(true);
-        }
-      });
-    }, { threshold: 0.1 });
-
-    if (whyKoreaRef.current) observer.observe(whyKoreaRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   const scrollGallery = (ref: React.RefObject<HTMLDivElement>, direction: 'left' | 'right') => {
     if (ref.current) {
@@ -47,7 +32,7 @@ export default function WhyKorea() {
         </h2>
       </div>
 
-      <div ref={whyKoreaRef} className={`w-full max-w-[1200px] pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 lg:px-0 transition-all duration-1000 ease-out ${whyKoreaIn ? 'translate-y-0' : 'translate-y-16'}`}>
+      <div className="w-full max-w-[1200px] pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 lg:px-0">
       <div className="max-w-[1200px] mx-auto w-full text-center mb-12 lg:mb-16">
         <h2 className="text-3xl lg:text-5xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
           <span className="text-center">Why Korea?</span>
