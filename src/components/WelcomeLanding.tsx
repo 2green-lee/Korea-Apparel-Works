@@ -402,7 +402,7 @@ export default function WelcomeLanding() {
             {/* Factory photo carousel */}
             <div className="relative w-full max-w-[900px] mx-auto">
               <div className="relative w-full aspect-[4/3] sm:aspect-[3/2] overflow-hidden rounded-2xl bg-neutral-100 shadow-md">
-                {['b5.jpg', 'b7.jpg', 'b1.jpg', 'b3.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => (
+                {['b7.jpg', 'b1.jpg', 'b5.jpg', 'b3.jpg', 'b8.jpg', 'b9.jpg'].map((imgName, idx) => (
                   <img
                     key={idx}
                     src={`${supabaseUrl}/storage/v1/render/image/public/factory/${encodeURIComponent(imgName)}?format=webp&quality=80`}
