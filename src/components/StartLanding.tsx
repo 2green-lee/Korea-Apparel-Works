@@ -159,9 +159,23 @@ export default function StartLanding() {
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col relative">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-neutral-100">
-        <div className="max-w-[1200px] mx-auto flex items-center justify-center h-14 px-6">
-          <a href="/" className="font-medium text-[17px] tracking-wide text-neutral-900 hover:opacity-80 transition-opacity whitespace-nowrap">Korea Apparel Works</a>
+      <header className="sticky top-0 z-50 w-full flex items-center h-[70px] bg-white border-b border-neutral-200 shadow-xs">
+        <div className="w-full h-full px-6 lg:px-12 flex items-center justify-between relative">
+          
+          {/* Left Side Spacer (match Header.tsx) */}
+          <div className="hidden min-[930px]:flex items-center space-x-8">
+            <div className="w-8" />
+          </div>
+          <div className="flex min-[930px]:hidden mr-4 w-5"></div>
+
+          <a href="/" className="flex items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group focus:outline-hidden">
+            <img src="/logo6.png" alt="Korea Apparel Works Logo" className="h-[60px] object-contain translate-y-[3px]" />
+          </a>
+          
+          {/* Right Side */}
+          <div className="flex">
+            <a href="mailto:contact@k-apparel.works" className="inline-flex items-center justify-center active:scale-95 rounded-full px-5 py-2.5 transition duration-200 cursor-pointer text-sm font-medium font-dm-sans shadow-sm hover:shadow-md bg-neutral-900 hover:bg-neutral-800 text-white">Contact us</a>
+          </div>
         </div>
       </header>
       <main className="flex-1 flex flex-col">
@@ -244,15 +258,15 @@ export default function StartLanding() {
                 </div>
 
                 {/* Chat composer (design only) */}
-                <div className="mt-1 lg:mt-auto self-center w-[94%] flex items-center gap-2 bg-white border border-neutral-200 rounded-full pl-2 pr-2 py-1.5 shadow-sm">
-                  <button type="button" aria-label="Upload a photo" className="w-9 h-9 rounded-full flex items-center justify-center text-neutral-500 hover:bg-neutral-100 transition-colors shrink-0">
+                <a href="/" className="mt-1 lg:mt-auto self-center w-[94%] flex items-center gap-2 bg-white border border-neutral-200 rounded-full pl-2 pr-2 py-1.5 shadow-sm hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group">
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center text-neutral-500 group-hover:text-blue-500 transition-colors shrink-0">
                     <ImagePlus size={18} />
-                  </button>
-                  <span className="flex-1 text-[14px] text-neutral-400 truncate select-none">Message Mark…</span>
-                  <button type="button" aria-label="Send" className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 hover:bg-blue-700 transition-colors">
+                  </div>
+                  <span className="flex-1 text-[14px] text-neutral-400 group-hover:text-neutral-500 transition-colors truncate select-none">Message Mark…</span>
+                  <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 group-hover:bg-blue-500 transition-colors">
                     <ArrowUp size={18} />
-                  </button>
-                </div>
+                  </div>
+                </a>
               </div>
             </div>
 
@@ -327,37 +341,18 @@ export default function StartLanding() {
           <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'translate-y-0' : 'translate-y-10'}`}>
             {/* 1. Header */}
             <div className="text-center mb-16">
-              <div className="text-blue-600 font-bold tracking-wider text-xs sm:text-sm uppercase mb-3">Sample policy</div>
               <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-4">Try us with zero risk</h2>
               <p className="text-lg text-neutral-600 font-light max-w-2xl mx-auto">
                 See our quality in your hands before committing to anything.
               </p>
             </div>
 
-            {/* 2. Pricing Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-4">
-              {/* Card 1 */}
-              <a href="/" id="gtm-start-sample-first-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border-2 border-blue-400 shadow-md shadow-blue-900/5 relative overflow-hidden flex flex-col items-center text-center cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all">
-                <div className="absolute top-0 inset-x-0 h-1.5 bg-blue-500"></div>
-                <div className="text-sm font-bold text-blue-600 mb-2 uppercase tracking-wide">First sample</div>
-                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$99</div>
-                <div className="text-[16px] text-neutral-600 font-medium">One piece, one size<br/>Basic construction</div>
-              </a>
-              {/* Card 2 */}
-              <a href="/" id="gtm-start-sample-size-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col items-center text-center cursor-pointer hover:border-neutral-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-                <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Additional size</div>
-                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$49<span className="text-xl text-neutral-400 font-semibold">/pc</span></div>
-                <div className="text-[16px] text-neutral-600 font-medium">Same fabric<br/>Same shipment</div>
-              </a>
-              {/* Card 3 */}
-              <a href="/" id="gtm-start-sample-revision-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col items-center text-center cursor-pointer hover:border-neutral-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-                <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Revision</div>
-                <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$59</div>
-                <div className="text-[16px] text-neutral-600 font-medium">Same style, adjusted<br/>Existing pattern</div>
-              </a>
-            </div>
-            <div className="text-center text-[14px] sm:text-[16px] text-neutral-500 mb-16">
-              + Shipping at cost — typically $35–50 to the US, DHL tracked
+            {/* 2. No Sample Markup Banner */}
+            <div className="w-full bg-blue-50/50 border border-blue-100 rounded-3xl p-8 sm:p-12 mb-8 flex flex-col items-center text-center relative overflow-hidden">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-blue-900 mb-4 tracking-tight">No sample markup</h3>
+              <p className="text-lg sm:text-xl text-blue-800/80 font-medium max-w-2xl leading-relaxed">
+                We make your first sample at actual production cost — the same rate you'd pay in bulk.
+              </p>
             </div>
 
             {/* 3. Credit Banner */}

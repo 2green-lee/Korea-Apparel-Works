@@ -45,13 +45,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
     <header
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-150 font-sans flex items-center h-16 border-b shadow-md sm:shadow-none ${
-        currentSlide > 0
-          ? "bg-white border-neutral-100"
-          : isScrolled
-            ? "bg-white/90 backdrop-blur-md border-neutral-100"
-            : "bg-transparent border-transparent"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-150 font-sans flex items-center h-[70px] bg-white border-b border-neutral-200 shadow-xs"
     >
       <div className="w-full h-full px-6 lg:px-12 flex items-center justify-between">
         
@@ -78,6 +72,11 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
           ))}
         </div>
 
+        {/* Left Side: Empty or Logo */}
+        <div className="hidden min-[930px]:flex items-center space-x-8">
+          <div className="w-8" />
+        </div>
+
         {/* Left Side: Mobile Menu Trigger */}
         <div className="flex min-[930px]:hidden mr-4">
           <button
@@ -89,48 +88,21 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
         </div>
 
         {/* Center: Brand Identity Logo exactly styled as Belledonne */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-          <button
-            onClick={() => {
-              setCurrentSlide(0);
-              onClearChat();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            className="flex items-center group cursor-pointer focus:outline-hidden"
-            title="Reset to home and clear conversation"
-          >
-            <span className="font-medium text-[17px] tracking-wide text-neutral-900 transition-opacity duration-500 group-hover:opacity-80 whitespace-nowrap">Korea Apparel Works</span>
-          </button>
-        </div>
+        <button
+          onClick={() => {
+            setCurrentSlide(0);
+            onClearChat();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="flex items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-pointer focus:outline-hidden"
+          title="Reset to home and clear conversation"
+        >
+          <img src="/logo6.png" alt="Korea Apparel Works Logo" className="h-[60px] object-contain translate-y-[3px]" />
+        </button>
 
-        {/* Right Side: Options (Hidden for now) */}
-        <div className="hidden">
-          {user ? (
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={(e) => e.preventDefault()}
-                className="flex items-center space-x-1.5 bg-neutral-100 rounded-full px-3.5 py-1.5 transition duration-200 cursor-default text-sm font-normal text-neutral-800"
-              >
-                <User className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">My Account</span>
-              </button>
-              <button
-                onClick={onLogout}
-                className="flex items-center justify-center hover:bg-neutral-100 active:scale-95 rounded-full p-2 transition duration-200 cursor-pointer text-neutral-500 hover:text-neutral-800"
-                title="Sign Out"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={onOpenLogin}
-              className="flex items-center space-x-1.5 bg-neutral-900 hover:bg-neutral-800 active:scale-95 rounded-full px-4 py-2 transition duration-200 cursor-pointer text-sm font-normal text-white"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Sign In</span>
-            </button>
-          )}
+        {/* Right Side */}
+        <div className="flex">
+          <a href="mailto:contact@k-apparel.works" className="inline-flex items-center justify-center active:scale-95 rounded-full px-5 py-2.5 transition duration-200 cursor-pointer text-sm font-medium font-dm-sans shadow-sm hover:shadow-md bg-neutral-900 hover:bg-neutral-800 text-white">Contact us</a>
         </div>
 
       </div>
