@@ -157,8 +157,8 @@ export default function WelcomeLanding() {
 
               {/* Description */}
               <p className="max-w-xl text-lg lg:text-xl text-neutral-600 font-light mb-8 leading-relaxed">
-                Korea-made sportswear, from one piece.<br />
-                Performance tees, training hoodies, jerseys, compression wear — OEM/ODM with no minimum.
+                Korea-made polos and knits, from one piece.<br />
+                Golf, tennis, and pickleball apparel — OEM/ODM with no minimum.
               </p>
 
               {/* Buttons */}
