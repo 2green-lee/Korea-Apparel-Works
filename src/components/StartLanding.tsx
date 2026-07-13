@@ -25,6 +25,19 @@ export default function StartLanding() {
     return () => clearInterval(id);
   }, []);
 
+  // Push conversion CTA clicks to dataLayer so GTM/Google Ads can track them reliably
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      const el = (e.target as HTMLElement).closest('.gtm-conversion-btn');
+      if (el) {
+        (window as any).dataLayer = (window as any).dataLayer || [];
+        (window as any).dataLayer.push({ event: 'conversion_click', cta_id: el.id || 'unknown', page: 'start' });
+      }
+    };
+    document.addEventListener('click', handler, true);
+    return () => document.removeEventListener('click', handler, true);
+  }, []);
+
   // Sequential reveal of the chat thread: photo bubble first, then Mark's reply
   const [chatReveal, setChatReveal] = useState(0);
   useEffect(() => {
@@ -143,6 +156,12 @@ export default function StartLanding() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col relative">
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-neutral-100">
+        <div className="max-w-[1200px] mx-auto flex items-center justify-center h-14 px-6">
+          <a href="/" className="font-medium text-[17px] tracking-wide text-neutral-900 hover:opacity-80 transition-opacity whitespace-nowrap">Korea Apparel Works</a>
+        </div>
+      </header>
       <main className="flex-1 flex flex-col">
         <div className="w-full bg-gradient-to-b from-white via-blue-50 to-blue-200">
           {/* Hero Section */}
@@ -159,7 +178,7 @@ export default function StartLanding() {
 
               {/* Headline */}
               <h1 className="text-[9vw] sm:text-5xl lg:text-6xl lg:text-[3.4rem] xl:text-6xl font-bold tracking-tight mb-6 leading-[1.1] text-neutral-900">
-                Start your brand with one piece.
+                Start your brand <span className="text-blue-600">with one piece.</span>
               </h1>
 
               {/* Description */}
@@ -171,7 +190,6 @@ export default function StartLanding() {
               {/* Buttons */}
               <div className="w-full flex justify-center mt-4 lg:mt-auto">
                 <a id="gtm-start-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-3 px-10 sm:px-14 py-4 bg-neutral-900 text-white rounded-xl font-medium text-[clamp(13px,1.7vw,18px)] whitespace-nowrap hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
-                  <Bot size={22} className="text-blue-400" />
                   Ask Us Anything
                 </a>
               </div>
@@ -317,31 +335,31 @@ export default function StartLanding() {
             {/* 2. Pricing Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-4">
               {/* Card 1 */}
-              <div className="bg-white rounded-2xl p-6 border-2 border-blue-400 shadow-md shadow-blue-900/5 relative overflow-hidden flex flex-col">
+              <a href="/" id="gtm-start-sample-first-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border-2 border-blue-400 shadow-md shadow-blue-900/5 relative overflow-hidden flex flex-col cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="absolute top-0 inset-x-0 h-1.5 bg-blue-500"></div>
                 <div className="text-sm font-bold text-blue-600 mb-2 uppercase tracking-wide">First sample</div>
                 <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$99</div>
                 <div className="text-[16px] text-neutral-600 font-medium">One piece, one size<br/>Basic construction</div>
-              </div>
+              </a>
               {/* Card 2 */}
-              <div className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col hover:border-neutral-300 transition-colors">
+              <a href="/" id="gtm-start-sample-size-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col cursor-pointer hover:border-neutral-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Additional size</div>
                 <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$49<span className="text-xl text-neutral-400 font-semibold">/pc</span></div>
                 <div className="text-[16px] text-neutral-600 font-medium">Same fabric<br/>Same shipment</div>
-              </div>
+              </a>
               {/* Card 3 */}
-              <div className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col hover:border-neutral-300 transition-colors">
+              <a href="/" id="gtm-start-sample-revision-btn" className="gtm-conversion-btn bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm flex flex-col cursor-pointer hover:border-neutral-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                 <div className="text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wide">Revision</div>
                 <div className="text-4xl font-black text-neutral-900 mb-3 tracking-tight">$59</div>
                 <div className="text-[16px] text-neutral-600 font-medium">Same style, adjusted<br/>Existing pattern</div>
-              </div>
+              </a>
             </div>
             <div className="text-center text-[14px] sm:text-[16px] text-neutral-500 mb-16">
               + Shipping at cost — typically $35–50 to the US, DHL tracked
             </div>
 
             {/* 3. Credit Banner */}
-            <div className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl p-6 sm:p-8 mb-16 flex flex-col items-center text-center">
+            <a href="/" id="gtm-start-sample-credit-btn" className="gtm-conversion-btn w-full bg-emerald-50 border border-emerald-100 rounded-2xl p-6 sm:p-8 mb-16 flex flex-col items-center text-center cursor-pointer hover:shadow-md transition-all">
               <h3 className="text-xl sm:text-2xl font-bold text-emerald-900 mb-8">Your sample fee comes back on your bulk order</h3>
               <div className="flex flex-row w-full max-w-lg mx-auto items-center justify-center divide-x divide-emerald-200/60">
                 <div className="flex-1 px-4 flex flex-col items-center">
@@ -353,7 +371,7 @@ export default function StartLanding() {
                   <div className="text-xs sm:text-sm text-emerald-800 font-medium">credited at 100 pcs+</div>
                 </div>
               </div>
-            </div>
+            </a>
 
             {/* 4. 3 Steps */}
             <div className="relative w-full max-w-3xl mx-auto mb-20">
@@ -387,7 +405,7 @@ export default function StartLanding() {
 
             {/* 5. Guarantees */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
+              <a href="/" id="gtm-start-sample-remake-btn" className="gtm-conversion-btn bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100 cursor-pointer hover:shadow-md transition-all">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
                   <RefreshCcw className="w-5 h-5" strokeWidth={2} />
                 </div>
@@ -395,8 +413,8 @@ export default function StartLanding() {
                   <h4 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 mb-2">Off-spec? We remake it free</h4>
                   <p className="text-[16px] text-neutral-600 leading-relaxed">If it doesn't match the agreed spec, we remake and reship on us</p>
                 </div>
-              </div>
-              <div className="bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100">
+              </a>
+              <a href="/" id="gtm-start-sample-refund-btn" className="gtm-conversion-btn bg-neutral-50 rounded-2xl p-6 sm:p-8 flex items-start gap-4 sm:gap-5 border border-neutral-100 cursor-pointer hover:shadow-md transition-all">
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 mt-1">
                   <ShieldCheck className="w-5 h-5" strokeWidth={2} />
                 </div>
@@ -404,7 +422,7 @@ export default function StartLanding() {
                   <h4 className="text-[18px] sm:text-[20px] font-bold text-neutral-900 mb-2">Still off? Full refund</h4>
                   <p className="text-[16px] text-neutral-600 leading-relaxed">If the remake misses too, every dollar back including shipping</p>
                 </div>
-              </div>
+              </a>
             </div>
 
             {/* 6. Microcopy */}
