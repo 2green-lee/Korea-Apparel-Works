@@ -157,8 +157,8 @@ export default function WelcomeLanding() {
 
               {/* Description */}
               <p className="max-w-xl text-lg lg:text-xl text-neutral-600 font-light mb-8 leading-relaxed">
-                Premium sportswear, made in Korea.<br />
-                Test our quality with a single sample before you commit to anything.
+                Korea-made knitwear, from one piece.<br />
+                Tees, hoodies, sweats, and sportswear : OEM/ODM with no minimum. Test our quality with a single sample before you commit.
               </p>
 
               {/* Buttons */}
@@ -404,7 +404,7 @@ export default function WelcomeLanding() {
             Start your journey with us today.
           </p>
           <a id="gtm-welcome-footer-request-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">
-            Request Production
+            Ask Us Anything
           </a>
         </section>
       </main>
