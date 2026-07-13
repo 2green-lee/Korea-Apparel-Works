@@ -158,9 +158,9 @@ export default function StartLanding() {
 
               {/* Headline */}
               <h1 className="text-[9vw] sm:text-5xl lg:text-6xl lg:text-[3.4rem] xl:text-6xl font-bold tracking-tight mb-6 leading-[1.1] text-neutral-900">
-                One piece is enough to start your brand.<br />
+                Start your brand with one piece.<br />
                 <span className="text-blue-600">
-                  Even one is welcome here.
+                  No minimums. Made in Korea.
                 </span>
               </h1>
 

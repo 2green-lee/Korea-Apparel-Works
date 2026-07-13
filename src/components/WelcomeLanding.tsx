@@ -151,8 +151,8 @@ export default function WelcomeLanding() {
 
               {/* Headline */}
               <h1 className="text-[9vw] sm:text-5xl lg:text-6xl lg:text-[3.4rem] xl:text-6xl font-bold tracking-tight mb-6 leading-[1.1] text-neutral-900">
-                One piece is enough to start your brand.<br />
-                <span className="text-blue-600">Even one is welcome here.</span>
+                Start your brand with one piece.<br />
+                <span className="text-blue-600">No minimums. Made in Korea.</span>
               </h1>
 
               {/* Description */}
