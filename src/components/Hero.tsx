@@ -618,7 +618,7 @@ export default function Hero({
 
 
                 {/* AI Workflow Section */}
-        <motion.section className="relative mt-20 py-24 px-6 text-white border-t border-neutral-900 bg-neutral-950 mb-[-1px]" style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
+        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative mt-20 py-24 px-6 text-white border-t border-neutral-900 bg-neutral-950 mb-[-1px]" style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
           <div className="relative z-10 w-full">
             <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-16">
@@ -777,7 +777,7 @@ export default function Hero({
 
                 {/* Unified View */}
                 <div className="flex flex-col w-full px-4 lg:px-0">
-                  <motion.section className="pt-[150px] pb-0 w-full overflow-hidden bg-transparent">
+                  <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="pt-[150px] pb-0 w-full overflow-hidden bg-transparent">
                     <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-8 relative">
                       <div className="relative z-10">
                         <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black tracking-tight text-neutral-900 leading-tight mb-4 lg:mb-6 flex items-start justify-center gap-3 lg:gap-5">
@@ -788,18 +788,18 @@ export default function Hero({
                         </p>
                       </div>
                     </div>
-                    <div className="max-w-[1200px] mx-auto px-6 w-full relative group/carousel">
+                    <div className="max-w-[1300px] mx-auto px-4 lg:px-20 w-full relative group/carousel">
                       {/* Controls */}
                       <button 
                         onClick={() => scrollProductGallery('left')}
-                        className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 bg-white rounded-full shadow-lg border border-neutral-100 items-center justify-center text-neutral-400 hover:text-neutral-900 transition-colors z-20 opacity-0 group-hover/carousel:opacity-100 cursor-pointer"
+                        className="hidden lg:flex absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-neutral-100 items-center justify-center text-neutral-600 hover:text-neutral-900 transition-colors z-20 cursor-pointer"
                         aria-label="Scroll Left"
                       >
                         <ChevronLeft className="w-6 h-6" />
                       </button>
                       <button 
                         onClick={() => scrollProductGallery('right')}
-                        className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-12 h-12 bg-white rounded-full shadow-lg border border-neutral-100 items-center justify-center text-neutral-400 hover:text-neutral-900 transition-colors z-20 opacity-0 group-hover/carousel:opacity-100 cursor-pointer"
+                        className="hidden lg:flex absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-neutral-100 items-center justify-center text-neutral-600 hover:text-neutral-900 transition-colors z-20 cursor-pointer"
                         aria-label="Scroll Right"
                       >
                         <ChevronRight className="w-6 h-6" />
@@ -829,7 +829,7 @@ export default function Hero({
                   </motion.section>
 
                   {/* Fabrics Section */}
-                  <motion.section className="hidden pt-24 pb-16 w-full bg-transparent">
+                  <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="hidden pt-24 pb-16 w-full bg-transparent">
                     <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-6">
                       <h2 className="text-[33px] lg:text-[45px] font-black tracking-tight text-neutral-900 leading-tight">
                         Premium Fabrics

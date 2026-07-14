@@ -138,7 +138,7 @@ export default function WhyKorea() {
         </div>
       </motion.section>
 
-      <div className="w-full max-w-[1200px] pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 lg:px-0">
+      <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full max-w-[1200px] pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 lg:px-0">
       <div className="max-w-[1200px] mx-auto w-full text-center mb-12 lg:mb-16">
         <h2 className="text-3xl lg:text-5xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
           <span className="text-center">Why Korea?</span>
@@ -339,7 +339,7 @@ export default function WhyKorea() {
       </div>
 
       {/* Why Korea Apparel Works Section */}
-      <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white pt-16 lg:pt-[100px] pb-16 lg:pb-24 px-4 lg:px-0">
+      <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white pt-20 lg:pt-[220px] pb-16 lg:pb-24 px-4 lg:px-0">
         <div className="max-w-[1200px] mx-auto w-full relative">
           <div className="text-center mb-8 lg:mb-12">
             <h2 className="text-3xl lg:text-5xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
@@ -419,7 +419,7 @@ export default function WhyKorea() {
           </div>
         </div>
       </motion.section>
-    </div>
+    </motion.div>
     </div>
   );
 }
