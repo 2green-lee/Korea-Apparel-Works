@@ -338,7 +338,15 @@ export default function Hero({
   const [openFabric, setOpenFabric] = useState<string | null>(null);
   const [isFabricOpen, setIsFabricOpen] = useState(false);
   const lastSlideRef = useRef(currentSlide);
+  const productCarouselRef = useRef<HTMLDivElement>(null);
   const [direction, setDirection] = useState(1);
+
+  const scrollProductGallery = useCallback((dir: 'left' | 'right') => {
+    if (productCarouselRef.current) {
+      const scrollAmount = productCarouselRef.current.clientWidth * 0.8;
+      productCarouselRef.current.scrollBy({ left: dir === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
+  }, []);
 
   useEffect(() => {
     if (currentSlide > lastSlideRef.current) {
@@ -360,7 +368,7 @@ export default function Hero({
 
   const slideVariants = useMemo(() => ({
     enter: (dir: number) => ({
-      y: dir > 0 ? "100vh" : "-100vh",
+      y: 30,
       opacity: 0
     }),
     center: {
@@ -368,14 +376,14 @@ export default function Hero({
       opacity: 1
     },
     exit: (dir: number) => ({
-      y: dir > 0 ? "-100vh" : "100vh",
+      y: -30,
       opacity: 0
     })
   }), []);
 
   const slideTransition = useMemo(() => ({
-    duration: 0.8,
-    ease: [0.16, 1, 0.3, 1]
+    duration: 0.6,
+    ease: [0.22, 1, 0.36, 1]
   }), []);
 
   const {
@@ -418,7 +426,7 @@ export default function Hero({
         currentSlide === 0 ? "max-w-[1400px] my-auto" : currentSlide === 1 ? "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-0" : "max-w-[1100px] my-auto mt-24 lg:mt-32 mb-16"
       }`}>
         
-        <AnimatePresence mode="popLayout" custom={direction}>
+        <AnimatePresence mode="wait" custom={direction}>
           {currentSlide === 0 && (
             <motion.div
               key="slide-0"
@@ -607,51 +615,7 @@ export default function Hero({
 
 
 
-                <motion.div id="core-capabilities-section" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-[25px] pt-8 lg:pt-12 w-full px-4 lg:px-0 scroll-mt-20">
-                  {/* Card 1 */}
-                  <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 group">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 sm:mb-6 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 group-hover:scale-110 transition-all duration-300">
-                      <Factory className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
-                    </div>
-                    <div className="text-[15px] sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-blue-600 transition-colors leading-tight">30 Years of Manufacturing Expertise</div>
-                    <p className="text-[13px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
-                      Family-owned factory with direct production and transparent processes.
-                    </p>
-                  </div>
 
-                  {/* Card 2 */}
-                  <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-purple-200 hover:shadow-xl hover:shadow-purple-900/5 hover:-translate-y-1 group">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center mb-3 sm:mb-6 text-purple-600 group-hover:bg-purple-600 group-hover:text-white group-hover:border-purple-600 group-hover:scale-110 transition-all duration-300">
-                      <Package className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
-                    </div>
-                    <div className="text-[15px] sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-purple-600 transition-colors leading-tight">Full-Package OEM/ODM Solutions</div>
-                    <p className="text-[13px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
-                      From design to finished product, we manage every production stage.
-                    </p>
-                  </div>
-
-                  {/* Card 3 */}
-                  <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1 group">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 sm:mb-6 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 group-hover:scale-110 transition-all duration-300">
-                      <ShieldCheck className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
-                    </div>
-                    <div className="text-[15px] sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-emerald-600 transition-colors leading-tight">Premium Quality Control</div>
-                    <p className="text-[13px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
-                      High-end craftsmanship and technical expertise for performance apparel.
-                    </p>
-                  </div>
-
-                  {/* Card 4 */}
-                  <div className="w-full p-4 sm:p-6 lg:p-8 rounded-2xl bg-white border border-neutral-200 shadow-sm flex flex-col items-center text-center transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-900/5 hover:-translate-y-1 group">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center mb-3 sm:mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white group-hover:border-orange-600 group-hover:scale-110 transition-all duration-300">
-                      <Zap className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={1.5} />
-                    </div>
-                    <div className="text-[15px] sm:text-lg lg:text-xl font-bold text-neutral-900 tracking-tight mb-2 lg:mb-4 group-hover:text-orange-600 transition-colors leading-tight">Flexible MOQ</div>
-                    <p className="text-[13px] sm:text-sm lg:text-base text-neutral-600 font-light leading-relaxed">
-                      Prototype from 1 piece and scale production as your brand grows.
-                    </p>
-                  </div>
-                </motion.div>
 
                 {/* AI Workflow Section */}
         <motion.section className="relative mt-20 py-24 px-6 text-white border-t border-neutral-900 bg-neutral-950 mb-[-1px]" style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
@@ -789,13 +753,34 @@ export default function Hero({
             >
 
 
-              <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent rounded-none p-4 lg:p-0 overflow-hidden">
+              <div className="w-full flex flex-col font-sans text-left relative select-text bg-transparent rounded-none overflow-visible mt-16 lg:mt-0">
+                
+                {/* Product Page Hero Banner (Same as Manufacturing) */}
+                <div 
+                  className="relative h-[275px] sm:h-[400px] lg:h-[500px] flex flex-col items-center justify-center text-center px-4 overflow-hidden mb-8 lg:mb-12"
+                  style={{ 
+                    width: '100vw', 
+                    marginLeft: 'calc(50% - 50vw)',
+                    marginRight: 'calc(50% - 50vw)'
+                  }}
+                >
+                  <img 
+                    src="/close-up-cozy-texture-clothing.jpg" 
+                    alt="Cozy Fabric Texture" 
+                    className="absolute inset-0 w-full h-full object-cover scale-150 sm:scale-100 transition-transform duration-500 pointer-events-none"
+                  />
+                  <div className="absolute inset-0 bg-neutral-900/55 mix-blend-multiply"></div>
+                  <h2 className="relative z-10 text-white font-sans font-black text-3xl sm:text-4xl lg:text-5xl max-w-4xl tracking-tight leading-tight drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]">
+                    Premium Fabric,<br className="hidden sm:block" /> Flawless Details
+                  </h2>
+                </div>
+
                 {/* Unified View */}
-                <div className="flex flex-col w-full">
-                  <motion.section className="pt-[120px] pb-0 w-full overflow-hidden bg-transparent">
-                    <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-8">
-                      <div>
-                        <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black tracking-tight text-neutral-900 leading-tight mb-4 lg:mb-6 flex items-start justify-center gap-3 lg:gap-5 z-10">
+                <div className="flex flex-col w-full px-4 lg:px-0">
+                  <motion.section className="pt-[150px] pb-0 w-full overflow-hidden bg-transparent">
+                    <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-8 relative">
+                      <div className="relative z-10">
+                        <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black tracking-tight text-neutral-900 leading-tight mb-4 lg:mb-6 flex items-start justify-center gap-3 lg:gap-5">
                           Custom Apparel Solutions
                         </h2>
                         <p className="text-[15px] sm:text-lg lg:text-[20px] text-neutral-600 font-light leading-relaxed max-w-2xl mx-auto px-6 sm:px-0">
@@ -803,9 +788,29 @@ export default function Hero({
                         </p>
                       </div>
                     </div>
-                    <div className="max-w-[1200px] mx-auto px-6 w-full relative">
-                      {/* 전체 그리드의 외곽선(추가 의견 대기 중) */}
-                      <div className="grid grid-cols-3 lg:grid-cols-4 gap-[2px] pb-8">
+                    <div className="max-w-[1200px] mx-auto px-6 w-full relative group/carousel">
+                      {/* Controls */}
+                      <button 
+                        onClick={() => scrollProductGallery('left')}
+                        className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 bg-white rounded-full shadow-lg border border-neutral-100 items-center justify-center text-neutral-400 hover:text-neutral-900 transition-colors z-20 opacity-0 group-hover/carousel:opacity-100 cursor-pointer"
+                        aria-label="Scroll Left"
+                      >
+                        <ChevronLeft className="w-6 h-6" />
+                      </button>
+                      <button 
+                        onClick={() => scrollProductGallery('right')}
+                        className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-12 h-12 bg-white rounded-full shadow-lg border border-neutral-100 items-center justify-center text-neutral-400 hover:text-neutral-900 transition-colors z-20 opacity-0 group-hover/carousel:opacity-100 cursor-pointer"
+                        aria-label="Scroll Right"
+                      >
+                        <ChevronRight className="w-6 h-6" />
+                      </button>
+
+                      {/* Carousel */}
+                      <div 
+                        ref={productCarouselRef}
+                        className="flex gap-4 pb-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                      >
                         {[
                           'w1.png', 'w2.png', 'w3.png', 'w4.png', 'w5.png', 'w6.png',
                           'm1.png', 'm2.png', 'm3.png', 'm4.png', 'm5.png', 'm6.png'
@@ -813,7 +818,7 @@ export default function Hero({
                           const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
                           const optimizedUrl = `${supabaseUrl}/storage/v1/render/image/public/clothes/${encodeURIComponent(img)}?format=webp&quality=80`;
                           return (
-                          <div key={idx} className="bg-white overflow-hidden shadow-sm">
+                          <div key={idx} className="w-[calc(50%-8px)] shrink-0 snap-start bg-white overflow-hidden shadow-sm rounded-xl">
                             <div className="aspect-[3/4] w-full bg-neutral-100 relative overflow-hidden group/item">
                               <img src={optimizedUrl} alt={`Product ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-700 group-hover/item:scale-105" loading="lazy" />
                             </div>
@@ -823,6 +828,49 @@ export default function Hero({
                     </div>
                   </motion.section>
 
+                  {/* Fabrics Section */}
+                  <motion.section className="hidden pt-24 pb-16 w-full bg-transparent">
+                    <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-6">
+                      <h2 className="text-[33px] lg:text-[45px] font-black tracking-tight text-neutral-900 leading-tight">
+                        Premium Fabrics
+                      </h2>
+                      <p className="text-[15px] sm:text-lg text-neutral-600 font-light leading-relaxed max-w-2xl mx-auto">
+                        We source the finest materials globally to ensure unparalleled comfort, durability, and performance for your brand.
+                      </p>
+                    </div>
+                    
+                    <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                      {/* Fabric 1 */}
+                      <div className="relative aspect-square md:aspect-[4/5] rounded-2xl overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=1000" alt="Cotton Fabric" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-90 transition-opacity duration-300"></div>
+                        <div className="absolute bottom-6 left-6 right-6 text-left transform transition-transform duration-500 group-hover:-translate-y-2">
+                          <h3 className="text-white font-bold text-xl sm:text-2xl mb-1 sm:mb-2">Organic Cotton</h3>
+                          <p className="text-neutral-200 text-sm sm:text-base font-light">Breathable, soft, and sustainable</p>
+                        </div>
+                      </div>
+                      
+                      {/* Fabric 2 */}
+                      <div className="relative aspect-square md:aspect-[4/5] rounded-2xl overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1596435422891-b3b3e8e25d48?auto=format&fit=crop&q=80&w=1000" alt="Performance Fabric" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-90 transition-opacity duration-300"></div>
+                        <div className="absolute bottom-6 left-6 right-6 text-left transform transition-transform duration-500 group-hover:-translate-y-2">
+                          <h3 className="text-white font-bold text-xl sm:text-2xl mb-1 sm:mb-2">Performance Blends</h3>
+                          <p className="text-neutral-200 text-sm sm:text-base font-light">Moisture-wicking activewear fabrics</p>
+                        </div>
+                      </div>
+
+                      {/* Fabric 3 */}
+                      <div className="relative aspect-square md:aspect-[4/5] rounded-2xl overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1584347781845-80f0bcfb8d0d?auto=format&fit=crop&q=80&w=1000" alt="Knit Fabric" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-90 transition-opacity duration-300"></div>
+                        <div className="absolute bottom-6 left-6 right-6 text-left transform transition-transform duration-500 group-hover:-translate-y-2">
+                          <h3 className="text-white font-bold text-xl sm:text-2xl mb-1 sm:mb-2">Premium Knits</h3>
+                          <p className="text-neutral-200 text-sm sm:text-base font-light">Heavyweight and textured materials</p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.section>
 
                 </div>
 
