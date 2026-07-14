@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { MapPin, Layers, Truck, Factory, Ship, Scissors, ChevronLeft, ChevronRight, Globe, RefreshCcw, ShieldCheck, Package, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function WhyKorea() {
+export default function WhyKorea({ isLandingPage = false }: { isLandingPage?: boolean }) {
   const whyKoreaScrollRef = useRef<HTMLDivElement>(null);
   const samplePolicyRef = useRef<HTMLDivElement>(null);
   const [samplePolicyIn, setSamplePolicyIn] = useState(false);
@@ -24,8 +24,7 @@ export default function WhyKorea() {
     }
   };
 
-  return (
-    <div className="w-full flex flex-col items-center">
+  const bannerSection = (
       <div 
         className="relative h-[275px] sm:h-[400px] lg:h-[500px] flex flex-col items-center justify-center text-center px-4 overflow-hidden"
         style={{ 
@@ -44,9 +43,14 @@ export default function WhyKorea() {
           The Apparel OEM/ODM Solution<br className="hidden sm:block" /> Made in Korea
         </h2>
       </div>
+  );
 
+  return (
+    <div className="w-full flex flex-col items-center">
+      {!isLandingPage && bannerSection}
+      
       {/* Sample Policy Section */}
-      <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 border-t border-neutral-100 overflow-hidden">
+      <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 overflow-hidden">
         <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'translate-y-0' : 'translate-y-10'}`}>
           {/* 1. Header */}
           <div className="text-center mb-16">
@@ -137,6 +141,8 @@ export default function WhyKorea() {
           </div>
         </div>
       </motion.section>
+
+      {isLandingPage && bannerSection}
 
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full max-w-[1200px] pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 lg:px-0">
       <div className="max-w-[1200px] mx-auto w-full text-center mb-12 lg:mb-16">
