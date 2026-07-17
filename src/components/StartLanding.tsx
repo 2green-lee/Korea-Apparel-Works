@@ -174,7 +174,6 @@ export default function StartLanding() {
           
           {/* Right Side */}
           <div className="flex">
-            <a href="mailto:contact@k-apparel.works" className="inline-flex items-center justify-center active:scale-95 rounded-full px-5 py-2.5 transition duration-200 cursor-pointer text-sm font-medium font-dm-sans shadow-sm hover:shadow-md bg-neutral-900 hover:bg-neutral-800 text-white">Contact us</a>
           </div>
         </div>
       </header>
