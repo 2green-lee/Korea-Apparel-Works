@@ -174,7 +174,7 @@ export default function WelcomeLanding() {
       <main className="flex-1 flex flex-col">
         <div className="w-full bg-gradient-to-b from-white via-blue-50 to-blue-200">
           {/* Hero Section */}
-          <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 px-6 overflow-hidden flex-1 flex items-center">
+          <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 px-6 overflow-hidden flex-1 flex items-center">
           <div className="max-w-[1200px] mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-[49px] items-stretch">
 
             {/* Left: Copy */}
@@ -223,7 +223,7 @@ export default function WelcomeLanding() {
         </motion.section>
 
         {/* Metrics */}
-        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="px-6 pb-12 lg:pb-[150px]">
+        <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="px-6 pb-12 lg:pb-[150px]">
           <div className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-4xl mx-auto">
             {/* Item 1 */}
             <div className="flex flex-col items-center gap-3 sm:gap-5">
