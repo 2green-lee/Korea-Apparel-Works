@@ -608,7 +608,7 @@ export default function Hero({
               <div id="about-us-section" className="w-full flex flex-col font-sans text-left relative select-text bg-transparent rounded-none overflow-visible scroll-mt-24 mt-16 lg:mt-0">
 
 
-                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                <motion.div initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }}>
                   <WhyKorea />
                 </motion.div>
 
@@ -618,7 +618,7 @@ export default function Hero({
 
 
                 {/* AI Workflow Section */}
-        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative mt-20 py-24 px-6 text-white border-t border-neutral-900 bg-neutral-950 mb-[-1px]" style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
+        <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative mt-20 py-24 px-6 text-white border-t border-neutral-900 bg-neutral-950 mb-[-1px]" style={{width: '100vw', marginLeft: 'calc(-50vw + 50%)'}}>
           <div className="relative z-10 w-full">
             <div className="max-w-[770px] mx-auto w-full">
             <div className="text-center mb-16">
@@ -777,7 +777,7 @@ export default function Hero({
 
                 {/* Unified View */}
                 <div className="flex flex-col w-full px-4 lg:px-0">
-                  <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="pt-[150px] pb-0 w-full overflow-hidden bg-transparent">
+                  <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="pt-[150px] pb-0 w-full overflow-hidden bg-transparent">
                     <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-8 relative">
                       <div className="relative z-10">
                         <h2 className="text-[33px] lg:text-[45px] xl:text-[57px] font-black tracking-tight text-neutral-900 leading-tight mb-4 lg:mb-6 flex items-start justify-center gap-3 lg:gap-5">
@@ -829,7 +829,7 @@ export default function Hero({
                   </motion.section>
 
                   {/* Fabrics Section */}
-                  <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="hidden pt-24 pb-16 w-full bg-transparent">
+                  <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="hidden pt-24 pb-16 w-full bg-transparent">
                     <div className="max-w-[1000px] mx-auto px-6 mb-12 flex flex-col items-center text-center gap-6">
                       <h2 className="text-[33px] lg:text-[45px] font-black tracking-tight text-neutral-900 leading-tight">
                         Premium Fabrics

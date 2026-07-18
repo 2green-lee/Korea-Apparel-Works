@@ -50,7 +50,7 @@ export default function WhyKorea({ isLandingPage = false }: { isLandingPage?: bo
       {!isLandingPage && bannerSection}
       
       {/* Sample Policy Section */}
-      <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 overflow-hidden">
+      <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 overflow-hidden">
         <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'translate-y-0' : 'translate-y-10'}`}>
           {/* 1. Header */}
           <div className="text-center mb-16">
@@ -144,7 +144,7 @@ export default function WhyKorea({ isLandingPage = false }: { isLandingPage?: bo
 
       {isLandingPage && bannerSection}
 
-      <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full max-w-[1200px] pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 lg:px-0">
+      <motion.div initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full max-w-[1200px] pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 lg:px-0">
       <div className="max-w-[1200px] mx-auto w-full text-center mb-12 lg:mb-16">
         <h2 className="text-3xl lg:text-5xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5 z-10">
           <span className="text-center">Why Korea?</span>
@@ -345,7 +345,7 @@ export default function WhyKorea({ isLandingPage = false }: { isLandingPage?: bo
       </div>
 
       {/* Why Korea Apparel Works Section */}
-      <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white pt-20 lg:pt-[220px] pb-16 lg:pb-24 px-4 lg:px-0">
+      <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white pt-20 lg:pt-[220px] pb-16 lg:pb-24 px-4 lg:px-0">
         <div className="max-w-[1200px] mx-auto w-full relative">
           <div className="text-center mb-8 lg:mb-12">
             <h2 className="text-3xl lg:text-5xl font-black text-neutral-900 tracking-tight flex items-start justify-center gap-3 lg:gap-5 z-10">

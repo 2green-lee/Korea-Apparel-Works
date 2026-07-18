@@ -180,7 +180,7 @@ export default function StartLanding() {
       <main className="flex-1 flex flex-col">
         <div className="w-full bg-gradient-to-b from-white via-blue-50 to-blue-200">
           {/* Hero Section */}
-          <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 px-6 overflow-hidden flex-1 flex items-center">
+          <motion.section initial={{ y: 30 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 px-6 overflow-hidden flex-1 flex items-center">
           <div className="max-w-[1200px] mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-[49px] items-stretch">
 
             {/* Left: Copy */}
@@ -273,7 +273,7 @@ export default function StartLanding() {
         </motion.section>
 
         {/* Metrics */}
-        <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="px-6 pb-12 lg:pb-[150px]">
+        <motion.section initial={{ y: 30 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="px-6 pb-12 lg:pb-[150px]">
           <div className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-4xl mx-auto">
             {/* Item 1 */}
             <div className="flex flex-col items-center gap-3 sm:gap-5">
@@ -310,7 +310,7 @@ export default function StartLanding() {
 
 
         {/* Story Section - Temporarily hidden */}
-        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="hidden w-full bg-transparent py-16 lg:py-24 px-6 flex flex-col items-center text-center">
+        <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="hidden w-full bg-transparent py-16 lg:py-24 px-6 flex flex-col items-center text-center">
           <div className="max-w-4xl w-full flex flex-col items-center bg-white/70 backdrop-blur-xl border border-white/80 shadow-xl rounded-3xl p-10 lg:p-16 hover:-translate-y-2 hover:shadow-2xl hover:bg-white/80 transition-all duration-500">
             <h2 className="text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight mb-10">
               From one factory floor to a global platform
@@ -336,14 +336,14 @@ export default function StartLanding() {
         </div>
 
         {/* Why Korea Section */}
-        <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white overflow-hidden">
+        <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white overflow-hidden">
           <WhyKorea isLandingPage={true} />
         </motion.section>
 
 
         {/* Final CTA Section */}
         <section className="w-full bg-neutral-950 pt-32 pb-40 px-6 flex flex-col items-center text-center -mt-[1px] relative z-10">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="flex flex-col items-center w-full">
+          <motion.div initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="flex flex-col items-center w-full">
             <h2 className="text-3xl lg:text-5xl font-bold text-white tracking-tight mb-4 leading-tight">
               The Ultimate Apparel<br />Production Partner
             </h2>

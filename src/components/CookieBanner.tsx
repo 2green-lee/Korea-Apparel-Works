@@ -60,6 +60,7 @@ export default function CookieBanner() {
         {isVisible && (
           <motion.div
             id="cookie-consent-banner"
+            data-clarity-ignore="true"
             initial={{ opacity: 0, y: 50, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.96 }}
@@ -126,7 +127,7 @@ export default function CookieBanner() {
       {/* Customise Cookie Preferences Modal */}
       <AnimatePresence>
         {isCustomiseOpen && (
-          <div className="fixed inset-0 z-55 flex items-center justify-center p-4">
+          <div data-clarity-ignore="true" className="fixed inset-0 z-55 flex items-center justify-center p-4">
             {/* Backdrop Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -301,7 +302,7 @@ export default function CookieBanner() {
       {/* Modern Cookie Policy Overlay Modal */}
       <AnimatePresence>
         {isPolicyOpen && (
-          <div className="fixed inset-0 z-55 flex items-center justify-center p-4">
+          <div data-clarity-ignore="true" className="fixed inset-0 z-55 flex items-center justify-center p-4">
             {/* Backdrop Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
