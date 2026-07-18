@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { MapPin, Layers, Truck, Factory, Ship, Scissors, ChevronLeft, ChevronRight, Globe, RefreshCcw, ShieldCheck, Package, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function WhyKorea({ isLandingPage = false }: { isLandingPage?: boolean }) {
+export default function WhyKorea({ isLandingPage = false, ctaId = "gtm-start-hero-quote-btn" }: { isLandingPage?: boolean; ctaId?: string }) {
   const whyKoreaScrollRef = useRef<HTMLDivElement>(null);
   const samplePolicyRef = useRef<HTMLDivElement>(null);
   const [samplePolicyIn, setSamplePolicyIn] = useState(false);
@@ -11,7 +11,7 @@ export default function WhyKorea({ isLandingPage = false }: { isLandingPage?: bo
   useEffect(() => {
     const obsSp = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) { setSamplePolicyIn(true); obsSp.disconnect(); }
-    }, { threshold: 0.2 });
+    }, { threshold: 0.05 });
     const spEl = samplePolicyRef.current;
     if (spEl) obsSp.observe(spEl);
     return () => { if (spEl) obsSp.unobserve(spEl); };
@@ -50,8 +50,8 @@ export default function WhyKorea({ isLandingPage = false }: { isLandingPage?: bo
       {!isLandingPage && bannerSection}
       
       {/* Sample Policy Section */}
-      <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 overflow-hidden">
-        <div className={`max-w-[1000px] mx-auto w-full transition-all duration-1000 ${samplePolicyIn ? 'translate-y-0' : 'translate-y-10'}`}>
+      <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "200px 0px" }} transition={{ duration: 0.8, ease: "easeOut" }} ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 overflow-hidden">
+        <div className={`max-w-[1000px] mx-auto w-full transition-all duration-500 ${samplePolicyIn ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
           {/* 1. Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-4">Try us with zero risk</h2>
@@ -133,6 +133,17 @@ export default function WhyKorea({ isLandingPage = false }: { isLandingPage?: bo
                 <p className="text-[16px] text-neutral-600 leading-relaxed">If the remake misses too, every dollar back including shipping</p>
               </div>
             </div>
+          </div>
+
+          {/* Intermediate CTA */}
+          <div className="flex justify-center mb-16">
+            <a 
+              id={ctaId} 
+              href="/" 
+              className="gtm-conversion-btn inline-flex items-center justify-center gap-3 px-12 py-4 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl font-medium text-[clamp(14px,1.6vw,17px)] whitespace-nowrap transition-all shadow-lg shadow-neutral-900/10 hover:-translate-y-0.5"
+            >
+              Get pricing & lead time
+            </a>
           </div>
 
           {/* 6. Microcopy */}

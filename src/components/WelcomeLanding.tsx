@@ -15,10 +15,7 @@ export default function WelcomeLanding() {
   const [isWomensExpanded, setIsWomensExpanded] = useState(false);
 
   // Hero image slideshow (auto-rotates every 2s)
-  const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://tznhtceeqozjndfllknm.supabase.co";
-  const heroImages = ['p1.jpg', 'p2.jpg', 'p3.jpg', 'p4.jpg', 'p5.jpg', 'p7.jpg'].map(
-    (name) => `${supabaseUrl}/storage/v1/render/image/public/clothes/${name}?format=webp&quality=80`
-  );
+  const heroImages = ['/p1.jpg', '/p2.jpg', '/p3.jpg', '/p4.jpg', '/p5.jpg', '/p7.jpg'];
   const [heroSlide, setHeroSlide] = useState(0);
   const [kawSlide, setKawSlide] = useState(0);
   useEffect(() => {
@@ -198,14 +195,14 @@ export default function WelcomeLanding() {
               {/* Buttons */}
               <div className="w-full flex justify-center mt-4 lg:mt-auto">
                 <a id="gtm-welcome-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-3 px-10 sm:px-14 py-4 bg-neutral-900 text-white rounded-xl font-medium text-[clamp(13px,1.7vw,18px)] whitespace-nowrap hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
-                  Ask Us Anything
+                  Get pricing & lead time
                 </a>
               </div>
             </div>
 
             {/* Right: Auto-sliding Image Carousel */}
             <div className="relative mt-8 lg:mt-[64px] max-w-[614px] mx-auto w-full flex flex-col">
-              <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-2xl shadow-neutral-900/10 border border-neutral-200/50 aspect-[5/4] bg-neutral-100">
+              <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-2xl shadow-neutral-900/10 border border-neutral-200/50 aspect-[5/4] bg-transparent">
                 {heroImages.map((src, idx) => (
                   <img
                     key={src}
@@ -286,14 +283,14 @@ export default function WelcomeLanding() {
         </div>
 
         {/* Why Korea Section */}
-        <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white overflow-hidden">
-          <WhyKorea isLandingPage={true} />
+        <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "200px 0px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white overflow-hidden">
+          <WhyKorea isLandingPage={true} ctaId="gtm-welcome-middle-quote-btn" />
         </motion.section>
 
 
         {/* Final CTA Section */}
         <section className="w-full bg-neutral-950 pt-32 pb-40 px-6 flex flex-col items-center text-center -mt-[1px] relative z-10">
-          <motion.div initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="flex flex-col items-center w-full">
+          <motion.div initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "200px 0px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="flex flex-col items-center w-full">
             <h2 className="text-3xl lg:text-5xl font-bold text-white tracking-tight mb-4 leading-tight">
               The Ultimate Apparel<br />Production Partner
             </h2>
@@ -301,7 +298,7 @@ export default function WelcomeLanding() {
               Start your journey with us today.
             </p>
             <a id="gtm-welcome-footer-request-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">
-              Ask Us Anything
+              Start with one piece
             </a>
           </motion.div>
         </section>

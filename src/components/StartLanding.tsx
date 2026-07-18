@@ -205,7 +205,7 @@ export default function StartLanding() {
               {/* Buttons */}
               <div className="w-full flex justify-center mt-4 lg:mt-auto">
                 <a id="gtm-start-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-3 px-10 sm:px-14 py-4 bg-neutral-900 text-white rounded-xl font-medium text-[clamp(13px,1.7vw,18px)] whitespace-nowrap hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
-                  Ask Us Anything
+                  Get pricing & lead time
                 </a>
               </div>
             </div>
@@ -233,7 +233,7 @@ export default function StartLanding() {
                 {/* User message: uploaded photo */}
                 <div className={`flex justify-end transition-all duration-500 ease-out ${chatReveal >= 1 ? 'opacity-100' : 'opacity-0'}`}>
                   <div className="bg-white/95 backdrop-blur-md border border-neutral-100 rounded-2xl rounded-tr-md p-2 max-w-[78%] shadow-sm">
-                    <img src={`${supabaseUrl}/storage/v1/render/image/public/clothes/p1.jpg?format=webp&quality=80`} alt="Uploaded design" className="rounded-xl w-full max-h-36 object-cover" />
+                    <img src="/p1.jpg" alt="Uploaded design" className="rounded-xl w-full max-h-36 object-cover" />
                     <div className="flex items-center gap-1.5 px-1 pt-2 pb-0.5">
                       <FileCheck size={13} className="text-neutral-600 shrink-0" />
                       <span className="text-[12px] text-neutral-600 truncate">your-design.jpg</span>
@@ -337,7 +337,7 @@ export default function StartLanding() {
 
         {/* Why Korea Section */}
         <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white overflow-hidden">
-          <WhyKorea isLandingPage={true} />
+          <WhyKorea isLandingPage={true} ctaId="gtm-start-middle-quote-btn" />
         </motion.section>
 
 
@@ -351,7 +351,7 @@ export default function StartLanding() {
               Start your journey with us today.
             </p>
             <a id="gtm-start-footer-request-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-10 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all duration-300 text-lg tracking-wide">
-              Ask Us Anything
+              Start with one piece
             </a>
           </motion.div>
         </section>
