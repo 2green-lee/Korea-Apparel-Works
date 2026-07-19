@@ -14,6 +14,15 @@ export default function WelcomeLanding() {
   const [openFabric, setOpenFabric] = useState<string | null>(null);
   const [isWomensExpanded, setIsWomensExpanded] = useState(false);
 
+  // Sticky mobile CTA: show after scrolling past the hero CTA
+  const [showStickyCta, setShowStickyCta] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShowStickyCta(window.scrollY > 600);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   // Hero image slideshow (auto-rotates every 2s)
   const heroImages = ['/p1.jpg', '/p2.jpg', '/p3.jpg', '/p4.jpg', '/p5.jpg', '/p7.jpg'];
   const [heroSlide, setHeroSlide] = useState(0);
@@ -193,10 +202,14 @@ export default function WelcomeLanding() {
               </p>
 
               {/* Buttons */}
-              <div className="w-full flex justify-center mt-4 lg:mt-auto">
+              <div className="w-full flex flex-col items-center mt-4 lg:mt-auto">
                 <a id="gtm-welcome-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-3 px-10 sm:px-14 py-4 bg-neutral-900 text-white rounded-xl font-medium text-[clamp(13px,1.7vw,18px)] whitespace-nowrap hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
                   Get pricing & lead time
                 </a>
+                <div className="flex items-center gap-1.5 mt-3.5 text-[13px] sm:text-sm text-neutral-600">
+                  <Check className="w-4 h-4 text-emerald-600 shrink-0" strokeWidth={2.5} />
+                  <span>No sample markup — fee 100% credited on bulk orders</span>
+                </div>
               </div>
             </div>
 
@@ -219,7 +232,7 @@ export default function WelcomeLanding() {
         </motion.section>
 
         {/* Metrics */}
-        <motion.section initial={{ y: 30 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="px-6 pb-12 lg:pb-[150px]">
+        <motion.section initial={{ y: 30 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="px-6 pb-8 lg:pb-16">
           <div className="grid grid-cols-3 gap-3 sm:gap-6 w-full max-w-4xl mx-auto">
             {/* Item 1 */}
             <div className="flex flex-col items-center gap-3 sm:gap-5">
@@ -303,6 +316,23 @@ export default function WelcomeLanding() {
           </motion.div>
         </section>
       </main>
+
+      {/* Sticky mobile CTA bar (no opacity animation — keeps Clarity recordings clean) */}
+      {showStickyCta && (
+        <div
+          className="fixed bottom-0 inset-x-0 z-50 lg:hidden bg-white/95 backdrop-blur-md border-t border-neutral-200 px-4 pt-3"
+          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}
+        >
+          <a
+            id="gtm-welcome-sticky-quote-btn"
+            href="/"
+            className="gtm-conversion-btn flex items-center justify-center gap-2 w-full py-3.5 bg-neutral-900 text-white rounded-xl font-medium text-[15px]"
+          >
+            Get pricing & lead time
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+      )}
     </div>
   );
 }

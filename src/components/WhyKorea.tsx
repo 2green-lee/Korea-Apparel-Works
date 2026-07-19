@@ -39,7 +39,7 @@ export default function WhyKorea({ isLandingPage = false, ctaId = "gtm-start-her
       {!isLandingPage && bannerSection}
       
       {/* Sample Policy Section */}
-      <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "200px 0px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white pt-24 pb-24 px-6 overflow-hidden">
+      <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "200px 0px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white pt-14 lg:pt-16 pb-24 px-6 overflow-hidden">
         <div className="max-w-[1000px] mx-auto w-full">
           {/* 1. Header */}
           <div className="text-center mb-16">
