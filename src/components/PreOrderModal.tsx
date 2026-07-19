@@ -87,7 +87,7 @@ export default function PreOrderModal({ isOpen, onClose, defaultFinish, defaultS
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs font-sans animate-fadeIn">
+    <div data-clarity-ignore="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs font-sans animate-fadeIn">
       {/* Outer Card */}
       <div className="relative w-full max-w-xl bg-white rounded-3xl border border-[#efecdf] shadow-2xl p-6 lg:p-8 flex flex-col justify-between overflow-hidden">
         

@@ -118,7 +118,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
     : (email.trim() && country.trim() && password.trim() && checked);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm pretendard-font animate-fadeIn">
+    <div data-clarity-ignore="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm pretendard-font animate-fadeIn">
       {/* Outer Card */}
       <div className="relative w-full max-w-lg bg-white border border-neutral-200/80 shadow-[0_24px_64px_rgba(0,0,0,0.08)] rounded-3xl overflow-hidden transition-all duration-300 pretendard-font">
         

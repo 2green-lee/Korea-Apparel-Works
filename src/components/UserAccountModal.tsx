@@ -63,7 +63,7 @@ export default function UserAccountModal({ isOpen, onClose, user }: UserAccountM
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fadeIn text-left font-sans">
+    <div data-clarity-ignore="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fadeIn text-left font-sans">
       <div className="relative w-full max-w-md bg-white border border-neutral-200/80 rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.08)] p-6 sm:p-8 text-neutral-900">
         <button
           onClick={onClose}

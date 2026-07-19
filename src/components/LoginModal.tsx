@@ -82,7 +82,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn text-left font-sans">
+    <div data-clarity-ignore="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn text-left font-sans">
       <div className="relative w-full max-w-md bg-neutral-900 border border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8">
         <button
           onClick={onClose}

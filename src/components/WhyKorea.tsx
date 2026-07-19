@@ -4,18 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function WhyKorea({ isLandingPage = false, ctaId = "gtm-start-hero-quote-btn" }: { isLandingPage?: boolean; ctaId?: string }) {
   const whyKoreaScrollRef = useRef<HTMLDivElement>(null);
-  const samplePolicyRef = useRef<HTMLDivElement>(null);
-  const [samplePolicyIn, setSamplePolicyIn] = useState(false);
   const [kawSlide, setKawSlide] = useState(0);
-
-  useEffect(() => {
-    const obsSp = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) { setSamplePolicyIn(true); obsSp.disconnect(); }
-    }, { threshold: 0.05 });
-    const spEl = samplePolicyRef.current;
-    if (spEl) obsSp.observe(spEl);
-    return () => { if (spEl) obsSp.unobserve(spEl); };
-  }, []);
 
   const scrollGallery = (ref: React.RefObject<HTMLDivElement>, direction: 'left' | 'right') => {
     if (ref.current) {
@@ -50,8 +39,8 @@ export default function WhyKorea({ isLandingPage = false, ctaId = "gtm-start-her
       {!isLandingPage && bannerSection}
       
       {/* Sample Policy Section */}
-      <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "200px 0px" }} transition={{ duration: 0.8, ease: "easeOut" }} ref={samplePolicyRef} className="w-full bg-white pt-24 pb-24 px-6 overflow-hidden">
-        <div className={`max-w-[1000px] mx-auto w-full transition-all duration-500 ${samplePolicyIn ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+      <motion.section initial={{ y: 30 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "200px 0px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="w-full bg-white pt-24 pb-24 px-6 overflow-hidden">
+        <div className="max-w-[1000px] mx-auto w-full">
           {/* 1. Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl lg:text-6xl font-black text-neutral-900 tracking-tight mb-4">Try us with zero risk</h2>
