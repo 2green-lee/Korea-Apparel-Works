@@ -145,7 +145,7 @@ export default function MobileChatView({
       {/* Chat Messages Area */}
       {messages.length === 1 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-6">
-          <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[50px] mb-5 object-contain" />
+          <img src="/logo1.png" alt="Korea Apparel Works Logo" className="w-[40px] h-[40px] mb-5 opacity-75 object-contain" />
           <h2 className="font-dm-sans text-[26px] font-[450] tracking-tight text-neutral-800 leading-tight text-center">
             Start your brand with us
           </h2>
