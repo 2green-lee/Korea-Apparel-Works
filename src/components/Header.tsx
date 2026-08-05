@@ -97,7 +97,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
           className="flex items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-pointer focus:outline-hidden"
           title="Reset to home and clear conversation"
         >
-          <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[60px] object-contain translate-y-[3px]" />
+          <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[80px] object-contain translate-y-[3px]" />
         </button>
 
         {/* Right Side */}

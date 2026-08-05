@@ -169,7 +169,7 @@ export default function StartLanding() {
           <div className="flex min-[930px]:hidden mr-4 w-5"></div>
 
           <a href="/" className="flex items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group focus:outline-hidden">
-            <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[60px] object-contain translate-y-[3px]" />
+            <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[80px] object-contain translate-y-[3px]" />
           </a>
           
           {/* Right Side */}
