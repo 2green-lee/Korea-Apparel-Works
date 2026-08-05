@@ -45,7 +45,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
     <header
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-150 font-sans flex items-center h-[70px] bg-white border-b border-neutral-200 shadow-xs"
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-150 font-sans flex items-center h-[90px] bg-white border-b border-neutral-200 shadow-xs"
     >
       <div className="w-full h-full px-6 lg:px-12 flex items-center justify-between">
         

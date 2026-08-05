@@ -159,7 +159,7 @@ export default function StartLanding() {
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col relative">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full flex items-center h-[70px] bg-white border-b border-neutral-200 shadow-xs">
+      <header className="sticky top-0 z-50 w-full flex items-center h-[90px] bg-white border-b border-neutral-200 shadow-xs">
         <div className="w-full h-full px-6 lg:px-12 flex items-center justify-between relative">
           
           {/* Left Side Spacer (match Header.tsx) */}
