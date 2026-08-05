@@ -61,7 +61,7 @@ export default function MobileChatView({
           }}
           className="flex items-center justify-center focus:outline-none cursor-pointer"
         >
-          <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[40px] object-contain" />
+          <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[60px] object-contain" />
         </button>
         <div className="w-8" /> {/* Placeholder for balance */}
       </div>
