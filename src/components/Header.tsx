@@ -45,7 +45,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
     <header
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-150 font-sans flex items-center h-[90px] bg-white border-b border-neutral-200 shadow-xs"
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-150 font-sans flex items-center h-[80px] bg-white border-b border-neutral-200 shadow-xs"
     >
       <div className="w-full h-full px-6 lg:px-12 flex items-center justify-between">
         
@@ -97,7 +97,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
           className="flex items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-pointer focus:outline-hidden"
           title="Reset to home and clear conversation"
         >
-          <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[80px] object-contain translate-y-[3px]" />
+          <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[70px] object-contain translate-y-[3px]" />
         </button>
 
         {/* Right Side */}

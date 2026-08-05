@@ -159,7 +159,7 @@ export default function StartLanding() {
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-blue-100 selection:text-blue-900 flex flex-col relative">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full flex items-center h-[90px] bg-white border-b border-neutral-200 shadow-xs">
+      <header className="sticky top-0 z-50 w-full flex items-center h-[80px] bg-white border-b border-neutral-200 shadow-xs">
         <div className="w-full h-full px-6 lg:px-12 flex items-center justify-between relative">
           
           {/* Left Side Spacer (match Header.tsx) */}
@@ -169,7 +169,7 @@ export default function StartLanding() {
           <div className="flex min-[930px]:hidden mr-4 w-5"></div>
 
           <a href="/" className="flex items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group focus:outline-hidden">
-            <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[80px] object-contain translate-y-[3px]" />
+            <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[70px] object-contain translate-y-[3px]" />
           </a>
           
           {/* Right Side */}
