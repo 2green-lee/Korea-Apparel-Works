@@ -59,9 +59,9 @@ export default function MobileChatView({
             onClearChat();
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
-          className="font-medium text-neutral-900 text-[17px] tracking-normal select-none transition-colors active:opacity-70 focus:outline-none cursor-pointer"
+          className="flex items-center justify-center focus:outline-none cursor-pointer"
         >
-          Korea Apparel Works
+          <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[40px] object-contain" />
         </button>
         <div className="w-8" /> {/* Placeholder for balance */}
       </div>
@@ -83,7 +83,7 @@ export default function MobileChatView({
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-4 shrink-0">
           <div className="flex items-center space-x-3">
-            <img src="/logo1.png" alt="Logo" className="w-6 h-6 object-contain invert opacity-90" />
+            <img src="/logo12345.jpg" alt="Logo" className="w-8 h-8 object-contain rounded-md" />
             <span className="font-medium text-[15px] tracking-wide text-neutral-100 whitespace-nowrap">Korea Apparel Works</span>
           </div>
           <button onClick={() => setIsMenuOpen(false)} className="p-2 -mr-2 text-neutral-400 hover:text-white transition-colors">
@@ -145,7 +145,7 @@ export default function MobileChatView({
       {/* Chat Messages Area */}
       {messages.length === 1 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-6">
-          <img src="/logo1.png" alt="Korea Apparel Works Logo" className="w-[40px] h-[40px] mb-5 opacity-75 object-contain" />
+          <img src="/logo12345.jpg" alt="Korea Apparel Works Logo" className="h-[50px] mb-5 object-contain" />
           <h2 className="font-dm-sans text-[26px] font-[450] tracking-tight text-neutral-800 leading-tight text-center">
             Start your brand with us
           </h2>

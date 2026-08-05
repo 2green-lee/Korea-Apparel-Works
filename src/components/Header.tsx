@@ -123,7 +123,7 @@ const Header = React.memo(function Header({ onPreOrderClick, currentSlide, setCu
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-4 shrink-0">
           <div className="flex items-center space-x-3">
-            <img src="/logo1.png" alt="Logo" className="w-6 h-6 object-contain invert opacity-90" />
+            <img src="/logo12345.jpg" alt="Logo" className="w-8 h-8 object-contain rounded-md" />
             <span className="font-semibold text-[15px] tracking-wide text-neutral-100 whitespace-nowrap">Korea Apparel Works</span>
           </div>
           <button onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-neutral-400 hover:text-white transition-colors focus:outline-hidden">
