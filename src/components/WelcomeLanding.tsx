@@ -192,37 +192,15 @@ export default function WelcomeLanding() {
           <div className="max-w-[1320px] mx-auto w-full">
 
             {isMobileHero ? (
-            /* Mobile: copy on light background + 16:9 video card (no crop) */
-            <div className="flex flex-col items-center text-center pt-6">
-              {/* Badge */}
-              <a href="/" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/70 border border-neutral-200 text-[clamp(12px,1.4vw,14px)] whitespace-nowrap font-medium text-neutral-600 mb-6 shadow-sm hover:bg-white hover:shadow-md transition-all cursor-pointer">
+            /* Mobile: badge above, 4:3 video panel with headline + CTA overlaid, description below */
+            <div className="flex flex-col items-center pt-4">
+              {/* Badge above the video */}
+              <a href="/" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/70 border border-neutral-200 text-[12px] whitespace-nowrap font-medium text-neutral-600 mb-5 shadow-sm hover:bg-white hover:shadow-md transition-all cursor-pointer">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 The Apparel OEM/ODM Solution Made in Korea
               </a>
 
-              {/* Headline */}
-              <h1 className="text-[9vw] sm:text-5xl font-bold tracking-tight mb-6 leading-[1.15] text-neutral-900">
-                Start your brand<br />
-                <span className="text-blue-600 whitespace-nowrap">with one piece.</span>
-              </h1>
-
-              {/* Description */}
-              <p className="max-w-xl text-lg text-neutral-600 font-light mb-7 leading-relaxed">
-                Korea-made polos and knits, from one piece.<br />
-                Golf, tennis, and pickleball apparel — OEM/ODM with no minimum.
-              </p>
-
-              {/* CTA */}
-              <a id="gtm-welcome-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-3 px-10 sm:px-14 py-4 bg-neutral-900 text-white rounded-xl font-medium text-[clamp(14px,4vw,17px)] whitespace-nowrap hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
-                Get pricing & lead time
-              </a>
-              <div className="flex items-center gap-1.5 mt-3.5 mb-8 text-[13px] sm:text-sm text-neutral-600">
-                <Check className="w-4 h-4 text-emerald-600 shrink-0" strokeWidth={2.5} />
-                <span>No sample markup — fee 100% credited on bulk orders</span>
-              </div>
-
-              {/* 16:9 video card — full frame visible, no crop */}
-              <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-900/15 border border-neutral-200/50 aspect-video bg-neutral-950">
+              <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl shadow-neutral-900/20 aspect-[4/3] bg-neutral-950 flex items-center justify-center">
                 <video
                   className="absolute inset-0 w-full h-full object-cover"
                   src={HERO_VIDEO_URL}
@@ -234,6 +212,31 @@ export default function WelcomeLanding() {
                   preload="metadata"
                   aria-hidden="true"
                 />
+                {/* Readability overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/55 via-neutral-950/35 to-neutral-950/60" />
+
+                {/* On-video copy: headline + description + CTA */}
+                <div className="relative z-10 flex flex-col items-center text-center px-4 py-8">
+                  <h1 className="text-[8.5vw] sm:text-5xl font-bold tracking-tight mb-4 leading-[1.15] text-white">
+                    Start your brand<br />
+                    <span className="text-blue-400 whitespace-nowrap">with one piece.</span>
+                  </h1>
+
+                  <p className="max-w-md text-[13px] sm:text-sm text-white/85 font-light mb-5 leading-relaxed px-3">
+                    Korea-made polos and knits, from one piece.<br />
+                    Golf, tennis, and pickleball apparel — OEM/ODM with no minimum.
+                  </p>
+
+                  <a id="gtm-welcome-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white text-neutral-900 rounded-lg font-medium text-[14px] whitespace-nowrap hover:bg-neutral-100 transition-all shadow-lg shadow-neutral-950/30 hover:-translate-y-0.5">
+                    Get pricing & lead time
+                  </a>
+                </div>
+              </div>
+
+              {/* Below the video: reassurance */}
+              <div className="flex items-center gap-1.5 mt-5 mb-2 text-[13px] sm:text-sm text-neutral-600">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" strokeWidth={2.5} />
+                <span>No sample markup — fee 100% credited on bulk orders</span>
               </div>
             </div>
             ) : (
