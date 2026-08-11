@@ -5,6 +5,13 @@ import WhyKorea from './WhyKorea';
 import { fabricsData, getFabricPatternSvg } from '../lib/fabricData';
 import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCheck, Zap, Bot, LineChart, MessageSquare, FileText, Scissors, CheckCircle2, Check, Truck, MapPin, FileCheck, Award, ChevronLeft, ChevronRight, Ship, Layers, Globe, RefreshCcw } from 'lucide-react';
 
+// 히어로 배경 영상.
+// 6GB 원본을 그대로 쓰면 안 되고, 15~20초로 잘라 압축한 무음 루프(수 MB)를 public/ 폴더에 넣으세요.
+//   ffmpeg -i 원본.mov -t 15 -an -vf "scale=1920:-2,fps=30" -c:v libx264 -crf 26 -preset slow -movflags +faststart -pix_fmt yuv420p hero-loop.mp4
+// 파일이 없으면 아래 poster 이미지가 대신 보입니다.
+const HERO_VIDEO_URL = '/hero-loop.mp4';
+const HERO_VIDEO_POSTER = '/p1.jpg';
+
 export default function WelcomeLanding() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const mensScrollRef = useRef<HTMLDivElement>(null);
@@ -23,16 +30,7 @@ export default function WelcomeLanding() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Hero image slideshow (auto-rotates every 2s)
-  const heroImages = ['/p1.jpg', '/p2.jpg', '/p3.jpg', '/p4.jpg', '/p5.jpg', '/p7.jpg'];
-  const [heroSlide, setHeroSlide] = useState(0);
   const [kawSlide, setKawSlide] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => {
-      setHeroSlide((prev) => (prev + 1) % heroImages.length);
-    }, 3500);
-    return () => clearInterval(id);
-  }, [heroImages.length]);
 
   // Push conversion CTA clicks to dataLayer so GTM/Google Ads can track them reliably
   useEffect(() => {
@@ -179,52 +177,56 @@ export default function WelcomeLanding() {
       <main className="flex-1 flex flex-col">
         <div className="w-full bg-gradient-to-b from-white via-blue-50 to-blue-200">
           {/* Hero Section */}
-          <motion.section initial={{ y: 30 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 px-6 overflow-hidden flex-1 flex items-center">
-          <div className="max-w-[1200px] mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-[49px] items-stretch">
+          <motion.section initial={{ y: 30 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="relative pt-6 pb-16 lg:pt-8 lg:pb-24 px-4 lg:px-6 overflow-hidden flex-1 flex items-center">
+          <div className="max-w-[1320px] mx-auto w-full">
 
-            {/* Left: Copy */}
-            <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              {/* Badge */}
-              <a href="/" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/70 border border-neutral-200 text-[clamp(12px,1.4vw,14px)] whitespace-nowrap font-medium text-neutral-600 mb-6 shadow-sm hover:bg-white hover:shadow-md transition-all cursor-pointer">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                The Apparel OEM/ODM Solution Made in Korea
-              </a>
+            {/* Vimeo-style full-bleed video panel with copy overlaid */}
+            <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-2xl shadow-neutral-900/20 min-h-[560px] lg:min-h-[78vh] flex items-center justify-center">
+              {/* Background video (poster shows until the clip is added) */}
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src={HERO_VIDEO_URL}
+                poster={HERO_VIDEO_POSTER}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-hidden="true"
+              />
+              {/* Readability overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/55 via-neutral-950/35 to-neutral-950/60" />
 
-              {/* Headline */}
-              <h1 className="text-[9vw] sm:text-5xl lg:text-6xl lg:text-[3.4rem] xl:text-6xl font-bold tracking-tight mb-6 leading-[1.1] text-neutral-900">
-                Start your brand <span className="text-blue-600">with one piece.</span>
-              </h1>
-
-              {/* Description */}
-              <p className="max-w-xl text-lg lg:text-xl text-neutral-600 font-light mb-8 leading-relaxed">
-                Korea-made polos and knits, from one piece.<br />
-                Golf, tennis, and pickleball apparel — OEM/ODM with no minimum.
-              </p>
-
-              {/* Buttons */}
-              <div className="w-full flex flex-col items-center mt-4 lg:mt-auto">
-                <a id="gtm-welcome-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-3 px-10 sm:px-14 py-4 bg-neutral-900 text-white rounded-xl font-medium text-[clamp(13px,1.7vw,18px)] whitespace-nowrap hover:bg-neutral-800 transition-all shadow-lg shadow-neutral-900/20 hover:-translate-y-0.5">
-                  Get pricing & lead time
+              {/* Copy */}
+              <div className="relative z-10 flex flex-col items-center text-center px-6 py-16 lg:py-24 max-w-3xl mx-auto">
+                {/* Badge */}
+                <a href="/" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/15 border border-white/25 backdrop-blur-md text-[clamp(12px,1.4vw,14px)] whitespace-nowrap font-medium text-white/90 mb-6 shadow-sm hover:bg-white/25 transition-all cursor-pointer">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  The Apparel OEM/ODM Solution Made in Korea
                 </a>
-                <div className="flex items-center gap-1.5 mt-3.5 text-[13px] sm:text-sm text-neutral-600">
-                  <Check className="w-4 h-4 text-emerald-600 shrink-0" strokeWidth={2.5} />
-                  <span>No sample markup — fee 100% credited on bulk orders</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Right: Auto-sliding Image Carousel */}
-            <div className="relative mt-8 lg:mt-[64px] max-w-[614px] mx-auto w-full flex flex-col">
-              <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-2xl shadow-neutral-900/10 border border-neutral-200/50 aspect-[5/4] bg-transparent">
-                {heroImages.map((src, idx) => (
-                  <img
-                    key={src}
-                    src={src}
-                    alt={`Lookbook ${idx + 1}`}
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${idx === heroSlide ? 'opacity-100' : 'opacity-0'}`}
-                    loading={idx === 0 ? 'eager' : 'lazy'}
-                  />
-                ))}
+                {/* Headline */}
+                <h1 className="text-[9vw] sm:text-5xl lg:text-6xl lg:text-[3.4rem] xl:text-6xl font-bold tracking-tight mb-6 leading-[1.15] text-white">
+                  Start your brand<br />
+                  <span className="text-blue-400 whitespace-nowrap">with one piece.</span>
+                </h1>
+
+                {/* Description */}
+                <p className="max-w-xl text-lg lg:text-xl text-white/85 font-light mb-8 leading-relaxed">
+                  Korea-made polos and knits, from one piece.<br />
+                  Golf, tennis, and pickleball apparel — OEM/ODM with no minimum.
+                </p>
+
+                {/* Buttons */}
+                <div className="w-full flex flex-col items-center mt-2">
+                  <a id="gtm-welcome-hero-quote-btn" href="/" className="gtm-conversion-btn inline-flex items-center justify-center gap-3 px-10 sm:px-14 py-4 bg-white text-neutral-900 rounded-xl font-medium text-[clamp(13px,1.7vw,18px)] whitespace-nowrap hover:bg-neutral-100 transition-all shadow-lg shadow-neutral-950/30 hover:-translate-y-0.5">
+                    Get pricing & lead time
+                  </a>
+                  <div className="flex items-center gap-1.5 mt-3.5 text-[13px] sm:text-sm text-white/80">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" strokeWidth={2.5} />
+                    <span>No sample markup — fee 100% credited on bulk orders</span>
+                  </div>
+                </div>
               </div>
             </div>
 
