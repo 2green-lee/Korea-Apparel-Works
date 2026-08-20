@@ -441,8 +441,8 @@ export default function Hero({
             >
               {messages.length === 1 && (
                 <>
-                  <div className="flex flex-col items-center mt-[20px] mb-[30px]">
-                    <img src="/logo1.png" alt="Korea Apparel Works Logo"  className="w-[clamp(50px,calc(35px+2.5vw),60px)] select-none pointer-events-none transition-all duration-300" />
+                  <div className="flex flex-col items-center mt-[0px] mb-[-60px]">
+                    <img src="/logo1234.png" alt="Korea Apparel Works Logo"  className="w-[250px] select-none pointer-events-none transition-all duration-300" />
                   </div>
 
                 </>

@@ -388,10 +388,8 @@ export default function App() {
 
           </main>
 
-          {/* 5. Standalone Premium legal bottom */}
-          {currentSlide !== 0 && (
-            <Footer currentSlide={currentSlide} onAdminClick={() => handleSetView("admin")} setCurrentSlide={setCurrentSlide} />
-          )}
+          {/* 5. Standalone Premium legal bottom (home renders the transparent variant) */}
+          <Footer currentSlide={currentSlide} onAdminClick={() => handleSetView("admin")} setCurrentSlide={setCurrentSlide} />
         </>
       )}
 
