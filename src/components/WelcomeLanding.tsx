@@ -10,7 +10,8 @@ import { Minus, Plus, ArrowRight, ArrowUp, ImagePlus, Factory, Package, ShieldCh
 //   ffmpeg -i 원본.mov -t 15 -an -vf "scale=1920:-2,fps=30" -c:v libx264 -crf 26 -preset slow -movflags +faststart -pix_fmt yuv420p hero-loop.mp4
 // 파일이 없으면 아래 poster 이미지가 대신 보입니다.
 const HERO_VIDEO_URL = '/hero-loop.mp4';
-const HERO_VIDEO_POSTER = '/p1.jpg';
+// 포스터는 영상의 첫 프레임과 동일한 이미지 — 로드 전환이 눈에 띄지 않는다
+const HERO_VIDEO_POSTER = '/hero-poster.jpg';
 
 export default function WelcomeLanding() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -209,7 +210,7 @@ export default function WelcomeLanding() {
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                   aria-hidden="true"
                 />
                 {/* Readability overlay */}
