@@ -7,6 +7,8 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import hpp from "hpp";
+import { pricingPolicyPrompt, quoteFor } from "./pricingPolicy";
+import { fetchCategoryFabrics, formatFabricPriceTable, CategoryKey } from "./fabricSource";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -582,7 +584,23 @@ app.use("/api/", limiter); // Apply to all API routes
         parts: userParts
       });
 
-      const systemInstruction = 
+      // 원단 단가는 SwatchOn에서 실시간으로 가져온다. 모델에게 직접 검색시키면
+      // 가격을 지어내기 때문에(fabricSource.ts 주석 참고), 서버가 파싱한 값만 넘긴다.
+      // 6시간 캐시라 대부분의 요청은 네트워크를 타지 않는다.
+      const fabricCategories: CategoryKey[] = ["tshirt", "activewear", "shirt", "outerwear"];
+      const fabricGroups = await Promise.all(
+        fabricCategories.map(async (category) => ({
+          category,
+          fabrics: await fetchCategoryFabrics(category),
+        }))
+      );
+      // 표에 넣을 값은 서버가 quoteFor로 끝까지 계산한 '장당 판매가'다.
+      const fabricCatalog =
+        formatFabricPriceTable(fabricGroups, (bulkUsdPerYard, pieces) =>
+          quoteFor(pieces, undefined, bulkUsdPerYard).priceUsdPerPiece
+        ) || undefined;
+
+      const systemInstruction =
         "[System Instructions] K-Fashion 플랫폼 리드 수집 챗봇\n\n" +
         "당신은 한국의 부산에 위치한 30년 한국 전통의 프리미엄 의류 제조 공장(Korea Apparel Works)의 글로벌 소싱 어시스턴트인 'Mark'입니다.\n" +
         "부산(한국 섬유 산업의 허브이자 대형 항만 물류 중심지) 스토리는 첫인사에서 언급하지 마세요. 원단을 논의할 때나 생산/배송 관련 질문이 나올 때, 신뢰를 더하는 한 문장으로만 자연스럽게 언급하세요.\n\n" +
@@ -591,7 +609,7 @@ app.use("/api/", limiter); // Apply to all API routes
         "그들이 만들고 싶어 하는 옷의 1) 종류, 2) 원단 촉감, 3) 수량을 파악한 뒤, 최종적으로 견적서를 보내기 위한 4) '이메일 주소'를 수집하는 것입니다.\n\n" +
         "[절대 지켜야 할 핵심 규칙]\n" +
         "- 짧고 명확하게: 한 번에 하나의 질문만 하세요. 절대 길게 설명하지 마세요. (최대 2~3문장 이내)\n" +
-        "- 가격 확답 금지: 바이어가 정확한 가격을 물어보면, '수량과 원단에 따라 다르므로, 생산 총괄 디렉터가 이메일로 정확한 견적을 보내드립니다.'라고 안내하며 이메일을 요구하세요.\n" +
+        "- 가격 안내: 바이어가 가격을 물어보면 아래 [가격 정책] 자료를 근거로 장당 가격을 안내하세요. 단, 그 가격은 '개략적인 견적(broad estimate)'이며, 원단·사양·디테일을 저희와 상의하는 과정에서 조정될 수 있다는 점을 반드시 함께 말하세요. 확정 가격처럼 말하지 마세요. 이어서 정식 견적서는 생산 총괄 디렉터가 이메일로 보내드린다고 안내하며 이메일을 수집하세요.\n" +
         "- 타겟 품목 유도: 우리의 주력 품목은 '상의(티셔츠, 맨투맨, 후디, 카라티 등)와 스포츠웨어'입니다. 바이어가 너무 복잡한 드레스나 아우터를 요구하면, '저희는 상의와 스포츠웨어의 소량 생산에 가장 특화되어 있습니다.'라고 안내하세요.\n" +
         "- 과한 칭찬 금지: 'Great choice!', 'Excellent!' 같은 과장된 칭찬이나 아부성 표현을 남발하지 마세요. 꼭 필요한 경우 절제된 긍정 표현 한 번이면 충분합니다. 차분하고 신뢰감 있는 전문가 톤을 유지하세요.\n" +
         "- 언어: 사용자가 질문하는 언어(영어, 한국어, 태국어 등)에 맞춰서 자연스럽게 대답하되, 어조는 매우 전문적이고 친절하며 환영하는 태도여야 합니다.\n\n" +
@@ -644,7 +662,10 @@ app.use("/api/", limiter); // Apply to all API routes
         "- CRITICAL: Always respond in the SAME LANGUAGE the user writes in. Match their language exactly.\n" +
         "- Keep responses SHORT (2-3 sentences max per turn).\n" +
         "- Maintain a sophisticated, premium, welcoming, and professional B2B advisor persona.\n" +
-        "- Do NOT overuse compliments, flattery, or exclamation marks. Stay calm, measured, and professional — one restrained positive remark is enough when genuinely warranted.";
+        "- Do NOT overuse compliments, flattery, or exclamation marks. Stay calm, measured, and professional — one restrained positive remark is enough when genuinely warranted.\n\n" +
+        // 가격 자료는 api/pricingPolicy.ts에서 관리한다. 단가가 바뀌면 그 파일만 고치면 된다.
+        // 원단 단가는 SwatchOn 실시간 목록(6시간 캐시)에서 온다. 조회가 실패하면 기본 사다리로 떨어진다.
+        pricingPolicyPrompt(fabricCatalog);
 
       const response = await client.models.generateContent({
         // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
