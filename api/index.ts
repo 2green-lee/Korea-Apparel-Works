@@ -7,8 +7,8 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import hpp from "hpp";
-import { pricingPolicyPrompt, quoteFor } from "./pricingPolicy";
-import { fetchCategoryFabrics, formatFabricPriceTable, searchFabrics, CategoryKey } from "./fabricSource";
+import { pricingPolicyPrompt, quoteFor } from "./pricingPolicy.js";
+import { fetchCategoryFabrics, formatFabricPriceTable, searchFabrics, CategoryKey } from "./fabricSource.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
