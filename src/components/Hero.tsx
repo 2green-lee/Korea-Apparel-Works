@@ -463,7 +463,7 @@ export default function Hero({
               <div className={`w-full backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.06)] flex flex-col font-sans transition-all duration-500 overflow-hidden relative group/card select-text ${
                 messages.length > 1 
                   ? "fixed top-16 bottom-0 left-0 right-0 z-40 bg-white/95 rounded-none border-none p-4 pb-[max(env(safe-area-inset-bottom),16px)] md:relative md:top-auto md:bottom-auto md:left-auto md:right-auto md:w-[calc(100%-48px)] md:bg-white/85 md:rounded-[28px] md:border md:border-neutral-200/80 md:p-6 md:max-w-[1000px] md:h-[85vh] md:max-h-[900px]" 
-                  : "relative max-w-[700px] w-[calc(100%-48px)] sm:w-full h-[200px] bg-white/85 rounded-[28px] border border-neutral-200/80 p-6"
+                  : "relative max-w-[700px] w-[calc(100%-48px)] sm:w-full bg-white/85 rounded-[28px] border border-neutral-200/80 p-6"
               }`}>
                 {messages.length > 1 && (
                   <div className="border-b border-neutral-100 pb-4 mb-4 select-text flex flex-col flex-1 min-h-0">
@@ -518,7 +518,17 @@ export default function Hero({
                   </div>
                 )}
 
-                <form onSubmit={handleSendMessage} className={`w-full flex flex-col justify-between text-left ${messages.length > 1 ? "h-auto shrink-0 pt-2" : "flex-1 h-full"}`}>
+                {/* 대화 시작 전에도 마크의 인사를 띄워 둔다. 빈 입력창만 있을 때보다
+                    이미 상담이 열려 있는 것처럼 보여 말을 걸기 쉬워진다. */}
+                {messages.length === 1 && messages[0].role === "model" && (
+                  <div className="flex gap-3 justify-start mb-4 select-text">
+                    <div className="max-w-[85%] rounded-[18px] bg-neutral-50 border border-neutral-200/70 px-4 py-3 text-[14px] leading-relaxed text-neutral-700 font-light text-left">
+                      {messages[0].text}
+                    </div>
+                  </div>
+                )}
+
+                <form onSubmit={handleSendMessage} className={`w-full flex flex-col justify-between text-left ${messages.length > 1 ? "h-auto shrink-0 pt-2" : "flex-1"}`}>
                   <textarea
                     id="chat-input-textarea"
                     ref={textareaRef}

@@ -152,6 +152,15 @@ export default function MobileChatView({
           <p className="pretendard-font mt-3 text-neutral-600 text-[14px] text-center max-w-xs font-normal">
             Upload a photo or just describe it — get pricing, MOQ, and lead time.<br />Made in Korea.
           </p>
+
+          {/* 데스크톱과 마찬가지로, 말을 걸기 전에도 마크의 인사를 띄워 둔다. */}
+          {messages[0]?.role === "model" && (
+            <div className="w-full flex justify-start mt-7">
+              <div className="max-w-[85%] rounded-[20px] bg-neutral-100 px-4 py-3 text-[14px] leading-relaxed text-neutral-700 text-left">
+                {messages[0].text}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div
