@@ -1,5 +1,5 @@
 import express from "express";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import multer from "multer";
@@ -8,7 +8,7 @@ import rateLimit from "express-rate-limit";
 import cors from "cors";
 import hpp from "hpp";
 import { pricingPolicyPrompt, quoteFor } from "./pricingPolicy.js";
-import { fetchCategoryFabrics, formatFabricPriceTable, searchFabrics, CategoryKey } from "./fabricSource.js";
+import { fetchCategoryFabrics, searchFabrics, CategoryKey } from "./fabricSource.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -584,22 +584,6 @@ app.use("/api/", limiter); // Apply to all API routes
         parts: userParts
       });
 
-      // 원단 단가는 SwatchOn에서 실시간으로 가져온다. 모델에게 직접 검색시키면
-      // 가격을 지어내기 때문에(fabricSource.ts 주석 참고), 서버가 파싱한 값만 넘긴다.
-      // 6시간 캐시라 대부분의 요청은 네트워크를 타지 않는다.
-      const fabricCategories: CategoryKey[] = ["tshirt", "activewear", "shirt", "outerwear"];
-      const fabricGroups = await Promise.all(
-        fabricCategories.map(async (category) => ({
-          category,
-          fabrics: await fetchCategoryFabrics(category),
-        }))
-      );
-      // 표에 넣을 값은 서버가 quoteFor로 끝까지 계산한 '장당 판매가'다.
-      const fabricCatalog =
-        formatFabricPriceTable(fabricGroups, (bulkUsdPerYard, pieces) =>
-          quoteFor(pieces, undefined, bulkUsdPerYard).priceUsdPerPiece
-        ) || undefined;
-
       const systemInstruction =
         "[System Instructions] K-Fashion 플랫폼 리드 수집 챗봇\n\n" +
         "당신은 한국의 부산에 위치한 30년 한국 전통의 프리미엄 의류 제조 공장(Korea Apparel Works)의 글로벌 소싱 어시스턴트인 'Mark'입니다.\n" +
@@ -664,8 +648,7 @@ app.use("/api/", limiter); // Apply to all API routes
         "- Maintain a sophisticated, premium, welcoming, and professional B2B advisor persona.\n" +
         "- Do NOT overuse compliments, flattery, or exclamation marks. Stay calm, measured, and professional — one restrained positive remark is enough when genuinely warranted.\n\n" +
         // 가격 자료는 api/pricingPolicy.ts에서 관리한다. 단가가 바뀌면 그 파일만 고치면 된다.
-        // 원단 단가는 SwatchOn 실시간 목록(6시간 캐시)에서 온다. 조회가 실패하면 기본 사다리로 떨어진다.
-        pricingPolicyPrompt(fabricCatalog);
+        pricingPolicyPrompt();
 
       // 원단을 찾는 일만 모델에게 맡기고, 가격은 서버가 계산해서 돌려준다.
       // 모델이 직접 웹을 뒤지게 하면 SKU는 맞히면서 가격을 지어낸다(fabricSource.ts 주석 참고).
@@ -678,10 +661,10 @@ app.use("/api/", limiter); // Apply to all API routes
               "per-piece selling price at each quantity tier. Call this before quoting any garment price. " +
               "Query in English with material, weight and feel, e.g. 'soft lightweight cotton jersey'.",
             parameters: {
-              type: "OBJECT" as const,
+              type: Type.OBJECT,
               properties: {
                 description: {
-                  type: "STRING" as const,
+                  type: Type.STRING,
                   description: "Fabric description in English: material, weight, texture.",
                 },
               },
@@ -709,7 +692,19 @@ app.use("/api/", limiter); // Apply to all API routes
         const parts: any[] = [];
         for (const call of calls) {
           const query = String((call.args as any)?.description ?? "").trim();
-          const fabrics = query ? await searchFabrics(query, 6) : [];
+          let fabrics = query ? await searchFabrics(query, 6) : [];
+
+          // 검색이 비면(공급처 장애나 API 변경) 카테고리 목록으로 버틴다.
+          // 이 조회는 여기서만 일어나므로 평소 대화에는 얹히지 않는다.
+          if (!fabrics.length && query) {
+            const groups = await Promise.all(
+              (["tshirt", "activewear", "shirt", "outerwear"] as CategoryKey[]).map(async (category) => ({
+                category,
+                fabrics: await fetchCategoryFabrics(category),
+              }))
+            );
+            fabrics = groups.flatMap((g) => g.fabrics).slice(0, 6);
+          }
           parts.push({
             functionResponse: {
               name: call.name,
