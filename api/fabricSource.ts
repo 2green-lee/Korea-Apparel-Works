@@ -33,8 +33,59 @@ export interface Fabric {
   url: string;
 }
 
-const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6시간
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 1주
 const cache = new Map<string, { at: number; fabrics: Fabric[] }>();
+
+/**
+ * 고객이 말한 소재·촉감으로 SwatchOn 전체 카탈로그를 검색한다.
+ *
+ * 카테고리 목록은 카테고리당 24개가 전부라 조금만 특이한 요청("메리노 울")이면
+ * 마땅한 원단이 없었다. 이 검색은 20,000여 개 전체를 대상으로 하고, 요청도
+ * 견적 질문 한 번당 1회라 목록을 통째로 긁는 것보다 공급처에 훨씬 가볍다.
+ *
+ * 응답의 price는 상세 페이지 JSON-LD의 lowPrice(대량가)와 같은 값이다.
+ */
+export async function searchFabrics(query: string, limit = 8): Promise<Fabric[]> {
+  const key = `search:${query.toLowerCase().trim()}`;
+  const hit = cache.get(key);
+  if (hit && Date.now() - hit.at < CACHE_TTL_MS) return hit.fabrics.slice(0, limit);
+
+  const url =
+    "https://api.swatchon.com/api/mall/v1/search/qualities" +
+    `?sort=&page=1&perPage=${Math.min(limit, 24)}` +
+    `&searchTerm=${encodeURIComponent(query)}` +
+    "&preferredCurrency=usd&shippingCountry=US";
+
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": UA, Accept: "application/json", Origin: "https://www.swatchon.com" },
+      signal: AbortSignal.timeout(12_000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = (await res.json()) as { items?: any[] };
+    const fabrics: Fabric[] = (data.items ?? [])
+      .filter((it) => it?.code && it?.price != null)
+      .map((it) => ({
+        sku: it.code,
+        name: it.title ?? it.code,
+        bulkUsdPerYard: parseFloat(it.price),
+        composition: (it.contents ?? [])
+          .map((c: any) => [c?.name, c?.percentage != null ? `${c.percentage}%` : null].filter(Boolean).join(" "))
+          .filter(Boolean)
+          .join(", ") || undefined,
+        gsm: it?.metric?.weight ?? undefined,
+        url: `https://www.swatchon.com/fabric/${it.code}`,
+      }))
+      .filter((f) => Number.isFinite(f.bulkUsdPerYard));
+
+    if (fabrics.length) cache.set(key, { at: Date.now(), fabrics });
+    return fabrics;
+  } catch (err) {
+    console.error(`SwatchOn search failed (${query}):`, err);
+    return hit?.fabrics.slice(0, limit) ?? [];
+  }
+}
 
 function parseListing(html: string): Fabric[] {
   const out: Fabric[] = [];

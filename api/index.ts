@@ -8,7 +8,7 @@ import rateLimit from "express-rate-limit";
 import cors from "cors";
 import hpp from "hpp";
 import { pricingPolicyPrompt, quoteFor } from "./pricingPolicy";
-import { fetchCategoryFabrics, formatFabricPriceTable, CategoryKey } from "./fabricSource";
+import { fetchCategoryFabrics, formatFabricPriceTable, searchFabrics, CategoryKey } from "./fabricSource";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -667,15 +667,76 @@ app.use("/api/", limiter); // Apply to all API routes
         // 원단 단가는 SwatchOn 실시간 목록(6시간 캐시)에서 온다. 조회가 실패하면 기본 사다리로 떨어진다.
         pricingPolicyPrompt(fabricCatalog);
 
-      const response = await client.models.generateContent({
-        // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
-        model: "gemini-3.1-flash-lite",
-        contents: contents,
-        config: {
-          systemInstruction: systemInstruction,
-          temperature: 0.6,
+      // 원단을 찾는 일만 모델에게 맡기고, 가격은 서버가 계산해서 돌려준다.
+      // 모델이 직접 웹을 뒤지게 하면 SKU는 맞히면서 가격을 지어낸다(fabricSource.ts 주석 참고).
+      const searchFabricsTool = {
+        functionDeclarations: [
+          {
+            name: "search_fabrics",
+            description:
+              "Search the supplier catalogue for fabrics matching a customer's description and get the " +
+              "per-piece selling price at each quantity tier. Call this before quoting any garment price. " +
+              "Query in English with material, weight and feel, e.g. 'soft lightweight cotton jersey'.",
+            parameters: {
+              type: "OBJECT" as const,
+              properties: {
+                description: {
+                  type: "STRING" as const,
+                  description: "Fabric description in English: material, weight, texture.",
+                },
+              },
+              required: ["description"],
+            },
+          },
+        ],
+      };
+
+      const callConfig = {
+        systemInstruction: systemInstruction,
+        temperature: 0.6,
+        tools: [searchFabricsTool],
+      };
+
+      // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
+      const MODEL = "gemini-3.1-flash-lite";
+      let response = await client.models.generateContent({ model: MODEL, contents, config: callConfig });
+
+      // 원단 검색 → 결과 반영 → 답변. 한 턴에 두 번까지만 돌려 무한 호출을 막는다.
+      for (let hop = 0; hop < 2; hop++) {
+        const calls = response.functionCalls;
+        if (!calls?.length) break;
+
+        const parts: any[] = [];
+        for (const call of calls) {
+          const query = String((call.args as any)?.description ?? "").trim();
+          const fabrics = query ? await searchFabrics(query, 6) : [];
+          parts.push({
+            functionResponse: {
+              name: call.name,
+              response: {
+                fabrics: fabrics.map((f) => ({
+                  name: f.name,
+                  composition: f.composition ?? null,
+                  gsm: f.gsm ?? null,
+                  // 서버가 끝까지 계산한 장당 판매가. 모델은 읽기만 한다.
+                  pricePerPiece: {
+                    "100+": quoteFor(100, undefined, f.bulkUsdPerYard).priceUsdPerPiece,
+                    "50-99": quoteFor(50, undefined, f.bulkUsdPerYard).priceUsdPerPiece,
+                    "under50": quoteFor(30, undefined, f.bulkUsdPerYard).priceUsdPerPiece,
+                  },
+                })),
+              },
+            },
+          });
         }
-      });
+
+        // 모델이 돌려준 content를 그대로 되돌려줘야 한다. functionCall을 다시 만들어 넣으면
+        // thought_signature가 빠져 다음 호출이 400으로 떨어진다.
+        const modelTurn = response.candidates?.[0]?.content;
+        contents.push(modelTurn ?? { role: "model", parts: calls.map((c) => ({ functionCall: c })) });
+        contents.push({ role: "user", parts });
+        response = await client.models.generateContent({ model: MODEL, contents, config: callConfig });
+      }
 
       let replyText = response.text || "I was unable to generate a response. Please try again.";
 
