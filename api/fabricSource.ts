@@ -145,7 +145,9 @@ export async function fetchFabricDetail(
 export function formatFabricPriceTable(
   groups: { category: CategoryKey; fabrics: Fabric[] }[],
   priceAt: (bulkUsdPerYard: number, pieces: number) => number,
-  perCategory = 6
+  // 목록 요청 한 번이 24개를 주므로 전부 싣는다. 앞서 6개만 쓰던 때는 싼 원단에만
+  // 몰려 100장가가 $11~17에 그쳤고, 조금이라도 고급한 원단을 찾는 고객은 견적을 못 받았다.
+  perCategory = 24
 ): string {
   const lines: string[] = [];
 
