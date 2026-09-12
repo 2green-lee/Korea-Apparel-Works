@@ -16,7 +16,7 @@ export const FX_KRW_PER_USD = 1400;
 export const DEFAULT_YARDS_PER_PIECE = 1.2;
 
 /** 원가 대비 마크업. 원가 × (1 + MARKUP) = 권장 판매가. */
-export const MARKUP = 0.25;
+export const MARKUP = 0.10;
 
 /** 공임 사다리 — 장수 기준 (원/장). */
 const LABOR_KRW_TIERS = [
