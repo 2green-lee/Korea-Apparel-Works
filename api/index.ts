@@ -1,5 +1,5 @@
 import express from "express";
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import multer from "multer";
@@ -7,8 +7,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import hpp from "hpp";
-import { pricingPolicyPrompt, quoteFor } from "./pricingPolicy.js";
-import { fetchCategoryFabrics, searchFabrics, CategoryKey } from "./fabricSource.js";
+import { pricingPolicyPrompt } from "./pricingPolicy.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -604,9 +603,10 @@ app.use("/api/", limiter); // Apply to all API routes
         "Step 2. 원단 '촉감' 파악\n" +
         "품목을 대답하면, 어떤 원단 느낌을 원하는지 묻습니다. 과한 칭찬 없이 바로 본론으로, 전문 용어 대신 일상적인 단어를 사용하세요.\n" +
         "(예: 'For the fabric, what kind of feel are you looking for? (e.g., Soft & lightweight, Heavy & sturdy, or Moisture-wicking stretchy?)')\n\n" +
-        "Step 3. 수량(MOQ) 파악\n" +
-        "원단을 대답하면, 생각하는 총 생산 수량을 묻습니다. 샘플은 1장부터 가능하고, 벌크(대량생산) MOQ는 50장부터라는 점을 안내하세요.\n" +
-        "(예: 'We have suitable premium fabrics for that in our Busan factory. Roughly how many pieces are you planning to produce? (Samples start from 1 pc, and bulk MOQs from 50 pcs.)')\n\n" +
+        "Step 3. 수량 파악\n" +
+        "원단을 대답하면, 생각하는 총 생산 수량을 묻습니다. 최소 주문 수량은 1장입니다 — 몇 장이든 제작 가능합니다.\n" +
+        "50장·100장은 최소 수량이 아니라 장당 단가가 낮아지는 구간일 뿐입니다. 수량이 적다는 이유로 거절하거나 더 주문하라고 요구하지 마세요.\n" +
+        "(예: 'We have suitable premium fabrics for that in our Busan factory. Roughly how many pieces are you planning to produce? There is no minimum — we produce from a single piece, and the unit price comes down at 50 and 100 pcs.')\n\n" +
         "Step 4. 작업지시서\n" +
         "주문하실 품목의 작업지시서(Tech Pack)가 있는지 물어봐야 합니다.\n\n" +
         "Step 5. 샘플이미지\n" +
@@ -650,88 +650,15 @@ app.use("/api/", limiter); // Apply to all API routes
         // 가격 자료는 api/pricingPolicy.ts에서 관리한다. 단가가 바뀌면 그 파일만 고치면 된다.
         pricingPolicyPrompt();
 
-      // 원단을 찾는 일만 모델에게 맡기고, 가격은 서버가 계산해서 돌려준다.
-      // 모델이 직접 웹을 뒤지게 하면 SKU는 맞히면서 가격을 지어낸다(fabricSource.ts 주석 참고).
-      const searchFabricsTool = {
-        functionDeclarations: [
-          {
-            name: "search_fabrics",
-            description:
-              "Search the supplier catalogue for fabrics matching a customer's description and get the " +
-              "per-piece selling price at each quantity tier. Call this before quoting any garment price. " +
-              "Query in English with material, weight and feel, e.g. 'soft lightweight cotton jersey'.",
-            parameters: {
-              type: Type.OBJECT,
-              properties: {
-                description: {
-                  type: Type.STRING,
-                  description: "Fabric description in English: material, weight, texture.",
-                },
-              },
-              required: ["description"],
-            },
-          },
-        ],
-      };
-
-      const callConfig = {
-        systemInstruction: systemInstruction,
-        temperature: 0.6,
-        tools: [searchFabricsTool],
-      };
-
       // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
-      const MODEL = "gemini-3.1-flash-lite";
-      let response = await client.models.generateContent({ model: MODEL, contents, config: callConfig });
-
-      // 원단 검색 → 결과 반영 → 답변. 한 턴에 두 번까지만 돌려 무한 호출을 막는다.
-      for (let hop = 0; hop < 2; hop++) {
-        const calls = response.functionCalls;
-        if (!calls?.length) break;
-
-        const parts: any[] = [];
-        for (const call of calls) {
-          const query = String((call.args as any)?.description ?? "").trim();
-          let fabrics = query ? await searchFabrics(query, 6) : [];
-
-          // 검색이 비면(공급처 장애나 API 변경) 카테고리 목록으로 버틴다.
-          // 이 조회는 여기서만 일어나므로 평소 대화에는 얹히지 않는다.
-          if (!fabrics.length && query) {
-            const groups = await Promise.all(
-              (["tshirt", "activewear", "shirt", "outerwear"] as CategoryKey[]).map(async (category) => ({
-                category,
-                fabrics: await fetchCategoryFabrics(category),
-              }))
-            );
-            fabrics = groups.flatMap((g) => g.fabrics).slice(0, 6);
-          }
-          parts.push({
-            functionResponse: {
-              name: call.name,
-              response: {
-                fabrics: fabrics.map((f) => ({
-                  name: f.name,
-                  composition: f.composition ?? null,
-                  gsm: f.gsm ?? null,
-                  // 서버가 끝까지 계산한 장당 판매가. 모델은 읽기만 한다.
-                  pricePerPiece: {
-                    "100+": quoteFor(100, undefined, f.bulkUsdPerYard).priceUsdPerPiece,
-                    "50-99": quoteFor(50, undefined, f.bulkUsdPerYard).priceUsdPerPiece,
-                    "under50": quoteFor(30, undefined, f.bulkUsdPerYard).priceUsdPerPiece,
-                  },
-                })),
-              },
-            },
-          });
-        }
-
-        // 모델이 돌려준 content를 그대로 되돌려줘야 한다. functionCall을 다시 만들어 넣으면
-        // thought_signature가 빠져 다음 호출이 400으로 떨어진다.
-        const modelTurn = response.candidates?.[0]?.content;
-        contents.push(modelTurn ?? { role: "model", parts: calls.map((c) => ({ functionCall: c })) });
-        contents.push({ role: "user", parts });
-        response = await client.models.generateContent({ model: MODEL, contents, config: callConfig });
-      }
+      const response = await client.models.generateContent({
+        model: "gemini-3.1-flash-lite",
+        contents,
+        config: {
+          systemInstruction: systemInstruction,
+          temperature: 0.6,
+        },
+      });
 
       let replyText = response.text || "I was unable to generate a response. Please try again.";
 

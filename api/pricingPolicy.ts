@@ -27,12 +27,43 @@ const LABOR_KRW_TIERS = [
 
 /**
  * 원단 사다리 — 야드 기준 (USD/야드). 장수가 아니다.
- * SwatchOn 조회가 실패했을 때 쓰는 기본값이다.
+ * 아래 FABRICS에 없는 소재를 물어왔을 때 쓰는 기본값이다.
  */
 const FABRIC_USD_PER_YARD_TIERS = [
   { minYards: 100, usdPerYard: 7.14 },
   { minYards: 50, usdPerYard: 8.93 },
   { minYards: 0, usdPerYard: 11.90 },
+];
+
+/**
+ * 대표 원단과 대량 기준 야드 단가(USD).
+ *
+ * 공급처 사이트를 실시간으로 조회하던 것을 접고 이 표로 대체했다. 조회는 약관이
+ * 금지하는 자동 수집이었고, 실제로 서버 요청이 403으로 막혔다.
+ * 여기 값은 그전에 공급처에서 실제로 확인한 가격이며, 정확한 호가가 아니라
+ * 상담용 개략치다. 단가가 바뀌면 이 표만 고치면 된다.
+ *
+ * estimated: true 는 실측하지 못해 비슷한 원단에서 미뤄 잡은 값이다.
+ */
+export interface FabricOption {
+  name: string;
+  spec: string;
+  bulkUsdPerYard: number;
+  estimated?: boolean;
+}
+
+export const FABRICS: FabricOption[] = [
+  { name: "Cotton Single Jersey (lightweight)", spec: "Cotton 100% · 130-150gsm", bulkUsdPerYard: 4.98 },
+  { name: "Cotton Single Jersey (midweight)", spec: "Cotton 100% · 180-220gsm", bulkUsdPerYard: 6.80 },
+  { name: "Cotton-blend Single Jersey", spec: "Cotton 60% Poly 40% · 218gsm", bulkUsdPerYard: 4.08 },
+  { name: "Cotton Rib", spec: "Cotton 100% · 200-240gsm", bulkUsdPerYard: 4.53 },
+  { name: "Cotton Pique (polo)", spec: "Cotton 100% · 200-240gsm", bulkUsdPerYard: 6.50, estimated: true },
+  { name: "Cotton French Terry (midweight)", spec: "Cotton 100% · 250-370gsm", bulkUsdPerYard: 6.34 },
+  { name: "Cotton French Terry (heavyweight)", spec: "Cotton 100% · 420-480gsm", bulkUsdPerYard: 8.34 },
+  { name: "Polyester Performance Knit", spec: "Poly 100% · 110-170gsm", bulkUsdPerYard: 3.26 },
+  { name: "Poly/Spandex Wicking Mesh", spec: "Poly 95% Spandex 5% · 92-140gsm", bulkUsdPerYard: 4.08 },
+  { name: "Linen-blend Jersey", spec: "Linen/Cotton · 160gsm", bulkUsdPerYard: 4.53 },
+  { name: "Wool / Wool-blend", spec: "Wool · 170-320gsm", bulkUsdPerYard: 21.0 },
 ];
 
 /**
@@ -139,30 +170,30 @@ export function quoteFor(
 /**
  * 마크 에이전트의 시스템 프롬프트 뒤에 덧붙이는 가격 참조 블록.
  *
- * 원단 목록은 여기에 싣지 않는다. 예전에는 96개 표를 매 요청 프롬프트에 넣느라
- * 채팅 한 번마다 공급처를 4번 조회했는데, 서버리스는 콜드스타트마다 캐시가 비어
- * 그 조회가 그대로 응답 시간에 얹혔다(Vercel 10초 제한에 9.4초까지 갔다).
- * 이제 원단이 필요한 순간에만 search_fabrics가 돌고, 프롬프트는 도구 사용법만 담는다.
+ * 원단별 장당 판매가를 서버가 미리 계산해서 표로 싣는다. 모델에게 원가를 주고
+ * 계산시켰더니 산수를 틀렸고 야드 단가를 고객에게 흘렸다. 표만 주면 고를 뿐
+ * 계산할 것도, 흘릴 것도 없다. 표가 작아서(원단 11종) 프롬프트 부담도 적다.
  */
 export function pricingPolicyPrompt(): string {
+  const rows = FABRICS.map((f) => {
+    const at = (pieces: number) => quoteFor(pieces, undefined, f.bulkUsdPerYard).priceUsdPerPiece.toFixed(2);
+    return `  ${f.name} (${f.spec}) — 100장+ $${at(100)} / 50~99장 $${at(50)} / 50장미만 $${at(30)}`;
+  }).join("\n");
+
   return (
     "[가격 정책 — 내부 자료]\n" +
-    "가격을 물어보면 search_fabrics 도구로 원단을 찾아서 답하세요.\n\n" +
-    "■ 도구 사용\n" +
-    "- 가격을 말하기 전에 반드시 search_fabrics를 부르세요. 고객이 말한 소재·촉감·중량을\n" +
-    "  영어로 넘기면 됩니다 (예: 'soft lightweight cotton jersey').\n" +
-    "- 도구가 돌려주는 pricePerPiece가 이미 계산이 끝난 장당 판매가입니다. 그 숫자를 그대로 쓰세요.\n" +
-    "  100장 이상은 '100+', 50~99장은 '50-99', 50장 미만은 'under50' 값을 보세요.\n" +
-    "  45장이면 'under50'입니다.\n" +
-    "- 직접 계산하지 마세요. 도구가 준 숫자만 말하세요. 없는 가격을 지어내면 안 됩니다.\n" +
-    "- 한 대화에서 원단이 정해졌으면 다시 부를 필요 없습니다. 소재가 바뀔 때만 다시 부르세요.\n\n" +
-    "■ 원단 보유 여부를 짐작하지 마세요\n" +
-    "고객이 울·리넨·실크 등 어떤 소재를 말하든 먼저 search_fabrics로 확인하세요.\n" +
-    "결과가 나오면 취급 가능한 원단입니다. 확인도 없이 '저희는 그 소재를 취급하지 않습니다'라고\n" +
-    "답하면 안 됩니다. 결과가 비어 있을 때만 디렉터가 확인해 이메일로 보내드린다고 안내하세요.\n\n" +
-    "■ 절대 노출 금지\n" +
-    "원가, 마진, 공임, 원단 야드 단가, 공급처 이름은 회사 내부 정보입니다. 어떤 경우에도 말하지 마세요.\n" +
-    "고객에게 말할 수 있는 것은 '장당 판매가', '샘플 비용', 그리고 원단 이름·조성뿐입니다.\n\n" +
+    "아래 표는 원단별·수량별 '장당 판매가(USD)'입니다. 계산이 끝난 값이니 그대로 읽어서 답하세요.\n\n" +
+    "■ 규칙\n" +
+    "- 고객이 말한 촉감·소재에 가장 가까운 원단을 표에서 하나 고르고, 수량에 맞는 칸의 값을 쓰세요.\n" +
+    "- 직접 계산하지 마세요. 표에 있는 숫자만 말하세요. 없는 가격을 지어내면 안 됩니다.\n" +
+    "- 구간은 단가가 낮아지는 지점일 뿐 최소 주문 수량이 아닙니다. 최소 주문은 1장이고,\n" +
+    "  5장이든 20장이든 제작 가능합니다. 수량이 적다고 거절하거나 50장을 채우라고 하지 마세요.\n" +
+    "  50장 미만은 전부 '50장미만' 칸을 쓰면 됩니다.\n" +
+    "- 표에 없는 특수 소재(실크, 캐시미어 등)를 원하면 지어내지 말고, 취급은 가능하니\n" +
+    "  디렉터가 원단을 확인해 정확한 견적을 이메일로 보내드린다고 안내하세요.\n" +
+    "- 고객에게는 원단 이름과 조성만 말하세요. 야드 단가, 원가, 마진은 어떤 경우에도 말하지 마세요.\n\n" +
+    "■ 원단별 장당 판매가 (장당 " + DEFAULT_YARDS_PER_PIECE + "야드 기준, USD)\n" +
+    rows + "\n\n" +
     "■ 샘플\n" +
     "샘플 1장 $" + SAMPLE.listPriceUsd + ". 패턴 배치 때문에 원단을 최소 " + SAMPLE.yards + "야드 끊어야 해서 벌크보다 비쌉니다.\n" +
     "샘플비는 벌크 주문 시 환급됩니다 — 50장 이상 50%, 100장 이상 100%.\n\n" +
