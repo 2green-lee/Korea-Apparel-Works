@@ -77,7 +77,7 @@ export default function App() {
   const [messages, setMessages] = useState<{ role: "user" | "model"; text: string; imageUrl?: string }[]>([
     {
       role: "model",
-      text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
+      text: "Hello! I am BBally, your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
     }
   ]);
 
@@ -97,7 +97,7 @@ export default function App() {
         setMessages([
           {
             role: "model",
-            text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
+            text: "Hello! I am BBally, your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
           }
         ]);
         setCurrentView("client");
@@ -288,7 +288,7 @@ export default function App() {
       setMessages([
         {
           role: "model",
-          text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
+          text: "Hello! I am BBally, your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
         }
       ]);
       setCurrentSlide(0); // 홈(메인) 화면으로 확실하게 이동
@@ -299,7 +299,7 @@ export default function App() {
     setMessages([
       {
         role: "model",
-        text: "Hello! I am your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
+        text: "Hello! I am BBally, your Korea Apparel Works virtual manufacture coordinator. Ask me about our 30-year veteran Korean sewing ateliers, premium technical fabrics, design pattern drafting, or low-MOQ (1pcs) luxury apparel services."
       }
     ]);
   }, []);
