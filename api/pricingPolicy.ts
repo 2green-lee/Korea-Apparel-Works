@@ -1,207 +1,260 @@
-// 가격 정책 단일 소스.
+// 가격 정책 단일 소스 — "숫자"만 모아 둔 파일.
 //
-// 마크 에이전트의 대화 지침(api/index.ts의 systemInstruction)과는 분리되어 있다.
-// 단가·환율·마진이 바뀌면 이 파일의 상수만 고치면 되고, 프롬프트 본문은 건드릴 필요가 없다.
+// 계산 로직은 api/quoteEngine.ts, 마크의 대화 지침은 api/index.ts에 있다.
+// 단가·환율·마진이 바뀌면 이 파일의 표만 고치면 된다.
+//
+// 표의 confirmed/estimated 표시를 꼭 지킬 것:
+//   confirmed: true  → 실제로 공장·공급처에서 확인한 값. 마크가 그대로 안내.
+//   confirmed: false → 아직 미뤄 잡은 값. 견적은 내되 "디렉터 확인 필요" 플래그가 붙고
+//                      텔레그램으로 알림이 간다. 확인되면 true로 바꿀 것.
+//
+// 외주(타 공장) 단가는 넣지 않는다. 여기 있는 건 전부 자체 생산(1호 공장) 기준이다.
 //
 // 주의 — 원단과 공임은 티어 기준이 서로 다르다:
-//   원단 티어 = f(총 야드수)   ← 수량 × 장당 소요 야드
-//   공임 티어 = g(총 장수)
-// 예: 45장을 주문하면 장수로는 "50장 미만"이라 공임은 23,000원이지만,
-//     원단은 45 × 1.2 = 54야드라서 50야드 티어에 걸려 $8.93/yd가 적용된다.
-//     이 둘을 한 덩어리로 묶어 계산하면 견적이 $3 이상 비싸게 나온다.
+//   원단 티어 = f(컬러별 야드수)  ← 같은 원단이라도 컬러가 다르면 따로 끊는다
+//   공임 티어 = g(스타일 총 장수)
 
 export const FX_KRW_PER_USD = 1400;
 
-/** 기본 원단 소요량(야드/장). 품목이 다르면 호출 시 덮어쓴다. */
-export const DEFAULT_YARDS_PER_PIECE = 1.2;
-
-/** 원가 대비 마크업. 원가 × (1 + MARKUP) = 권장 판매가. */
+/** 원가 대비 마크업. 원가 × (1 + MARKUP) = 견적 하한. */
 export const MARKUP = 0.10;
 
-/** 공임 사다리 — 장수 기준 (원/장). */
-const LABOR_KRW_TIERS = [
+/**
+ * 견적 범위 폭. 견적 상한 = 하한 × (1 + ESTIMATE_SPREAD).
+ * 원단 로스·사양 변경 여지를 고객에게 미리 보여 주는 용도.
+ */
+export const ESTIMATE_SPREAD = 0.10;
+
+/** 컬러 하나당 최소로 끊어야 하는 원단 길이(야드). 패턴 배치 때문에 이보다 적게는 못 산다. */
+export const MIN_CUT_YARDS_PER_COLOR = 2;
+
+// ─── 품목 ──────────────────────────────────────────────────────────
+
+export type GarmentKey =
+  | "tee"
+  | "long_sleeve_tee"
+  | "polo"
+  | "womens_sleeveless_top"
+  | "sweatshirt"
+  | "hoodie"
+  | "quarter_zip"
+  | "joggers"
+  | "shorts"
+  | "skirt_skort"
+  | "cap_hat"
+  | "outerwear_woven"
+  | "dress"
+  | "denim"
+  | "other";
+
+export type Scope =
+  /** 1호 공장에서 바로 견적·생산 */
+  | "in_house"
+  /** 생산은 가능하나 디렉터 확인 후 확정 (카테고리 경계) */
+  | "confirm"
+  /** 1호 공장에서 하지 않음 — 숫자를 내지 않는다 */
+  | "not_in_house";
+
+export interface GarmentSpec {
+  label: string;
+  scope: Scope;
+  /** 장당 원단 소요(야드). 58~60인치 폭 기준. */
+  yardsPerPiece: number;
+  yardsConfirmed: boolean;
+  /** 기본(티셔츠) 공임 사다리 대비 배수. */
+  laborFactor: number;
+  laborConfirmed: boolean;
+  /** scope가 in_house가 아닐 때 고객에게 할 말의 요지(영문). */
+  scopeNote?: string;
+}
+
+/**
+ * 요척은 아직 전부 추정치다(실제 재단 후 실측으로 바꿀 것).
+ * 공임 배수: 티 15,000원(50장) 기준. 폴로·여성 탑 17,000원은 Unstrung 원가 시트 확정가.
+ */
+export const GARMENTS: Record<GarmentKey, GarmentSpec> = {
+  tee: { label: "T-shirt", scope: "in_house", yardsPerPiece: 1.1, yardsConfirmed: false, laborFactor: 1, laborConfirmed: true },
+  long_sleeve_tee: { label: "Long-sleeve T-shirt", scope: "in_house", yardsPerPiece: 1.4, yardsConfirmed: false, laborFactor: 1.1, laborConfirmed: false },
+  polo: { label: "Polo", scope: "in_house", yardsPerPiece: 1.3, yardsConfirmed: false, laborFactor: 17000 / 15000, laborConfirmed: true },
+  womens_sleeveless_top: { label: "Women's sleeveless top", scope: "in_house", yardsPerPiece: 0.7, yardsConfirmed: false, laborFactor: 17000 / 15000, laborConfirmed: true },
+  sweatshirt: { label: "Crewneck sweatshirt", scope: "in_house", yardsPerPiece: 1.6, yardsConfirmed: false, laborFactor: 1.2, laborConfirmed: false },
+  hoodie: { label: "Hoodie", scope: "in_house", yardsPerPiece: 2.0, yardsConfirmed: false, laborFactor: 1.4, laborConfirmed: false },
+  quarter_zip: { label: "Quarter-zip pullover", scope: "in_house", yardsPerPiece: 1.7, yardsConfirmed: false, laborFactor: 1.5, laborConfirmed: false },
+  joggers: { label: "Joggers", scope: "in_house", yardsPerPiece: 1.6, yardsConfirmed: false, laborFactor: 1.2, laborConfirmed: false },
+  shorts: { label: "Knit shorts", scope: "in_house", yardsPerPiece: 0.9, yardsConfirmed: false, laborFactor: 0.9, laborConfirmed: false },
+  skirt_skort: {
+    label: "Skirt / skort", scope: "confirm", yardsPerPiece: 1.2, yardsConfirmed: false, laborFactor: 17000 / 15000, laborConfirmed: false,
+    scopeNote: "Skirts and skorts sit outside our core knit tops line; our production director confirms construction (liners, built-in shorts) before quoting.",
+  },
+  cap_hat: {
+    label: "Cap / hat", scope: "not_in_house", yardsPerPiece: 0, yardsConfirmed: false, laborFactor: 0, laborConfirmed: false,
+    scopeNote: "Caps are made in a separate specialist factory, not our cut-and-sew line, so we can't price them here. Our director can advise by email.",
+  },
+  outerwear_woven: {
+    label: "Outerwear / woven", scope: "not_in_house", yardsPerPiece: 0, yardsConfirmed: false, laborFactor: 0, laborConfirmed: false,
+    scopeNote: "We specialise in knit tops and sportswear; woven outerwear is outside our production line.",
+  },
+  dress: {
+    label: "Dress", scope: "not_in_house", yardsPerPiece: 0, yardsConfirmed: false, laborFactor: 0, laborConfirmed: false,
+    scopeNote: "We specialise in knit tops and sportswear; dresses are outside our production line.",
+  },
+  denim: {
+    label: "Denim", scope: "not_in_house", yardsPerPiece: 0, yardsConfirmed: false, laborFactor: 0, laborConfirmed: false,
+    scopeNote: "Denim needs a dedicated woven/wash facility, which we don't run.",
+  },
+  other: {
+    label: "Other", scope: "confirm", yardsPerPiece: 1.2, yardsConfirmed: false, laborFactor: 1.2, laborConfirmed: false,
+    scopeNote: "This item isn't in our standard list; our director will confirm feasibility and price.",
+  },
+};
+
+// ─── 공임 ──────────────────────────────────────────────────────────
+
+/** 기본 공임 사다리 — 티셔츠 기준, 스타일 총 장수 기준 (원/장). */
+export const LABOR_KRW_TIERS = [
   { minPieces: 100, krwPerPiece: 9000 },
   { minPieces: 50, krwPerPiece: 15000 },
   { minPieces: 0, krwPerPiece: 23000 },
 ];
 
-/**
- * 원단 사다리 — 야드 기준 (USD/야드). 장수가 아니다.
- * 아래 FABRICS에 없는 소재를 물어왔을 때 쓰는 기본값이다.
- */
-const FABRIC_USD_PER_YARD_TIERS = [
-  { minYards: 100, usdPerYard: 7.14 },
-  { minYards: 50, usdPerYard: 8.93 },
-  { minYards: 0, usdPerYard: 11.90 },
-];
+// ─── 원단 ──────────────────────────────────────────────────────────
 
-/**
- * 대표 원단과 대량 기준 야드 단가(USD).
- *
- * 공급처 사이트를 실시간으로 조회하던 것을 접고 이 표로 대체했다. 조회는 약관이
- * 금지하는 자동 수집이었고, 실제로 서버 요청이 403으로 막혔다.
- * 여기 값은 그전에 공급처에서 실제로 확인한 가격이며, 정확한 호가가 아니라
- * 상담용 개략치다. 단가가 바뀌면 이 표만 고치면 된다.
- *
- * estimated: true 는 실측하지 못해 비슷한 원단에서 미뤄 잡은 값이다.
- */
 export interface FabricOption {
+  key: string;
   name: string;
   spec: string;
   bulkUsdPerYard: number;
   estimated?: boolean;
 }
 
+/**
+ * 대표 원단과 대량 기준 야드 단가(USD). 공급처에서 실제로 확인한 가격이며 상담용 개략치다.
+ * estimated: true 는 비슷한 원단에서 미뤄 잡은 값.
+ */
 export const FABRICS: FabricOption[] = [
-  { name: "Cotton Single Jersey (lightweight)", spec: "Cotton 100% · 130-150gsm", bulkUsdPerYard: 4.98 },
-  { name: "Cotton Single Jersey (midweight)", spec: "Cotton 100% · 180-220gsm", bulkUsdPerYard: 6.80 },
-  { name: "Cotton-blend Single Jersey", spec: "Cotton 60% Poly 40% · 218gsm", bulkUsdPerYard: 4.08 },
-  { name: "Cotton Rib", spec: "Cotton 100% · 200-240gsm", bulkUsdPerYard: 4.53 },
-  { name: "Cotton Pique (polo)", spec: "Cotton 100% · 200-240gsm", bulkUsdPerYard: 6.50, estimated: true },
-  { name: "Cotton French Terry (midweight)", spec: "Cotton 100% · 250-370gsm", bulkUsdPerYard: 6.34 },
-  { name: "Cotton French Terry (heavyweight)", spec: "Cotton 100% · 420-480gsm", bulkUsdPerYard: 8.34 },
-  { name: "Polyester Performance Knit", spec: "Poly 100% · 110-170gsm", bulkUsdPerYard: 3.26 },
-  { name: "Poly/Spandex Wicking Mesh", spec: "Poly 95% Spandex 5% · 92-140gsm", bulkUsdPerYard: 4.08 },
-  { name: "Linen-blend Jersey", spec: "Linen/Cotton · 160gsm", bulkUsdPerYard: 4.53 },
-  { name: "Wool / Wool-blend", spec: "Wool · 170-320gsm", bulkUsdPerYard: 21.0 },
+  { key: "cotton_jersey_light", name: "Cotton Single Jersey (lightweight)", spec: "Cotton 100% · 130-150gsm", bulkUsdPerYard: 4.98 },
+  { key: "cotton_jersey_mid", name: "Cotton Single Jersey (midweight)", spec: "Cotton 100% · 180-220gsm", bulkUsdPerYard: 6.80 },
+  { key: "cotton_blend_jersey", name: "Cotton-blend Single Jersey", spec: "Cotton 60% Poly 40% · 218gsm", bulkUsdPerYard: 4.08 },
+  { key: "cotton_rib", name: "Cotton Rib", spec: "Cotton 100% · 200-240gsm", bulkUsdPerYard: 4.53 },
+  { key: "cotton_pique", name: "Cotton Pique (polo)", spec: "Cotton 100% · 200-240gsm", bulkUsdPerYard: 6.50, estimated: true },
+  { key: "french_terry_mid", name: "Cotton French Terry (midweight)", spec: "Cotton 100% · 250-370gsm", bulkUsdPerYard: 6.34 },
+  { key: "french_terry_heavy", name: "Cotton French Terry (heavyweight)", spec: "Cotton 100% · 420-480gsm", bulkUsdPerYard: 8.34 },
+  { key: "poly_performance", name: "Polyester Performance Knit", spec: "Poly 100% · 110-170gsm", bulkUsdPerYard: 3.26 },
+  { key: "poly_spandex_mesh", name: "Poly/Spandex Wicking Mesh", spec: "Poly 95% Spandex 5% · 92-140gsm", bulkUsdPerYard: 4.08 },
+  { key: "linen_blend_jersey", name: "Linen-blend Jersey", spec: "Linen/Cotton · 160gsm", bulkUsdPerYard: 4.53 },
+  { key: "wool_blend", name: "Wool / Wool-blend", spec: "Wool · 170-320gsm", bulkUsdPerYard: 21.0 },
 ];
 
+/** 표에 없는 소재일 때 쓰는 대량가. (기존 기본 사다리의 100야드+ 값) */
+export const UNLISTED_FABRIC_BULK_USD_PER_YARD = 7.14;
+
 /**
- * 대량가(SwatchOn 표시가) 대비 소량 구간 할증률.
- * 기본 사다리 7.14 / 8.93 / 11.90의 비율(1 / 1.25 / 1.667)을 그대로 가져온 것이고,
- * SwatchOn 실제 상세 페이지의 lowPrice→highPrice 배수와도 일치한다.
+ * 대량가 대비 소량 구간 할증률 — 컬러별 야드수 기준.
+ * SwatchOn 상세 페이지의 lowPrice→highPrice 배수와 일치.
  */
-const FABRIC_YARD_MULTIPLIERS = [
+export const FABRIC_YARD_MULTIPLIERS = [
   { minYards: 100, multiplier: 1 },
   { minYards: 50, multiplier: 1.25 },
   { minYards: 0, multiplier: 1.667 },
 ];
 
-export function fabricYardMultiplier(totalYards: number): number {
-  const tier =
-    FABRIC_YARD_MULTIPLIERS.find((t) => totalYards >= t.minYards) ??
-    FABRIC_YARD_MULTIPLIERS[FABRIC_YARD_MULTIPLIERS.length - 1];
-  return tier.multiplier;
-}
+// ─── 기본 부자재 (케어라벨·재봉사·무지 폴리백 등) ─────────────────────
 
-/** 부자재 — 장수 기준 (USD/장). */
-const TRIM_USD_TIERS = [
+/** 스타일 총 장수 기준 (USD/장). */
+export const BASIC_TRIM_USD_TIERS = [
   { minPieces: 100, usd: 0.93 },
   { minPieces: 50, usd: 1.29 },
   { minPieces: 0, usd: 1.43 },
 ];
 
-/** 샘플 1장. 패턴을 배치하려면 원단을 1.2야드로 끊을 수 없어 최소 2야드를 산다. */
-export const SAMPLE = {
-  yards: 2,
-  fabricUsdPerYard: 11.90,
-  laborKrw: 23000,
-  trimUsd: 1.43,
-  surchargeUsd: 60,
-  /** 계산 원가 $101.66을 반올림해 제시하는 값. */
-  listPriceUsd: 100,
+// ─── 장식 (로고·프린트) ────────────────────────────────────────────
+
+export type DecorationMethod =
+  | "embroidery"
+  | "heat_seal_embroidery"
+  | "screen_print"
+  | "silicone_patch"
+  | "heat_transfer"
+  | "digital_print"
+  | "sublimation_allover"
+  | "other";
+
+export interface DecorationSpec {
+  label: string;
+  /** 위치 1곳당 원가(USD/장). null 이면 단가 미확정 → 견적에서 빼고 디렉터 확인. */
+  usdPerPlacement: number | null;
+  /** 장식 셋업비(판비·자수 펀칭 등, USD). 주문 전체에 한 번. */
+  setupUsd: number;
+}
+
+/**
+ * 확정 단가가 들어간 건 실리콘 로고뿐이다(Unstrung 견적 기준).
+ * 나머지는 일광산업 등에서 단가를 받으면 채울 것 — 그전까지는 "별도 견적"으로 안내된다.
+ */
+export const DECORATIONS: Record<DecorationMethod, DecorationSpec> = {
+  embroidery: { label: "Embroidery", usdPerPlacement: null, setupUsd: 0 },
+  heat_seal_embroidery: { label: "Heat-seal embroidered patch", usdPerPlacement: null, setupUsd: 0 },
+  screen_print: { label: "Screen print", usdPerPlacement: null, setupUsd: 0 },
+  silicone_patch: { label: "Silicone logo", usdPerPlacement: 0.40, setupUsd: 0 },
+  heat_transfer: { label: "Heat transfer", usdPerPlacement: null, setupUsd: 0 },
+  digital_print: { label: "Digital print (DTP)", usdPerPlacement: null, setupUsd: 0 },
+  sublimation_allover: { label: "All-over sublimation", usdPerPlacement: null, setupUsd: 0 },
+  other: { label: "Other decoration", usdPerPlacement: null, setupUsd: 0 },
 };
 
-const round2 = (n: number) => Math.round(n * 100) / 100;
+// ─── 브랜드 부자재 (최소 발주량이 있는 것) ───────────────────────────
 
-export function laborUsdPerPiece(pieces: number): number {
-  const tier = LABOR_KRW_TIERS.find((t) => pieces >= t.minPieces) ?? LABOR_KRW_TIERS[LABOR_KRW_TIERS.length - 1];
-  return round2(tier.krwPerPiece / FX_KRW_PER_USD);
-}
+export type BrandedTrimKey = "woven_label" | "hang_tag" | "printed_neck_tape" | "custom_polybag";
 
-export function fabricUsdPerYard(totalYards: number): number {
-  const tier =
-    FABRIC_USD_PER_YARD_TIERS.find((t) => totalYards >= t.minYards) ??
-    FABRIC_USD_PER_YARD_TIERS[FABRIC_USD_PER_YARD_TIERS.length - 1];
-  return tier.usdPerYard;
-}
-
-export function trimUsdPerPiece(pieces: number): number {
-  const tier = TRIM_USD_TIERS.find((t) => pieces >= t.minPieces) ?? TRIM_USD_TIERS[TRIM_USD_TIERS.length - 1];
-  return tier.usd;
-}
-
-export interface Quote {
-  pieces: number;
-  yardsPerPiece: number;
-  totalYards: number;
-  fabricUsdPerYard: number;
-  fabricUsdPerPiece: number;
-  laborUsdPerPiece: number;
-  trimUsdPerPiece: number;
-  /** 내부 원가. 고객에게 노출 금지. */
-  costUsdPerPiece: number;
-  /** 원가에 마크업을 얹은 권장 판매가. */
-  priceUsdPerPiece: number;
+export interface BrandedTrimSpec {
+  label: string;
+  /** 최소 발주 수량(장/매/야드) */
+  moq: number;
+  /** 최소 발주 수량을 샀을 때 총액(원) */
+  moqTotalKrw: number;
+  /** 의류 1장당 몇 단위가 드는지 (넥테이프는 야드) */
+  unitsPerGarment: number;
+  /** 고객에게 안내할 대안(영문) */
+  cheaperAlternative: string;
 }
 
 /**
- * @param bulkUsdPerYard SwatchOn에서 조회한 해당 원단의 대량 야드 단가.
- *                       생략하면 기본 사다리를 쓴다.
+ * 2026.09 부자재 업체 안내 단가 기준(VAT 별도, 1종·1도).
+ * 최소 발주량이 있어서 소량 주문에서는 장당 단가가 크게 튄다 — 엔진이 MOQ 총액을 수량으로 나눠 배분한다.
  */
-export function quoteFor(
-  pieces: number,
-  yardsPerPiece: number = DEFAULT_YARDS_PER_PIECE,
-  bulkUsdPerYard?: number
-): Quote {
-  const totalYards = pieces * yardsPerPiece;
-  const fabricYard =
-    bulkUsdPerYard != null
-      ? round2(bulkUsdPerYard * fabricYardMultiplier(totalYards))
-      : fabricUsdPerYard(totalYards);
-  const fabric = round2(fabricYard * yardsPerPiece);
-  const labor = laborUsdPerPiece(pieces);
-  const trim = trimUsdPerPiece(pieces);
-  const cost = round2(fabric + labor + trim);
+export const BRANDED_TRIMS: Record<BrandedTrimKey, BrandedTrimSpec> = {
+  woven_label: {
+    label: "Custom woven neck label", moq: 1000, moqTotalKrw: 270000, unitsPerGarment: 1,
+    cheaperAlternative: "a printed care/brand label, or reusing one label batch across future orders",
+  },
+  hang_tag: {
+    label: "Custom hang tag", moq: 200, moqTotalKrw: 150000, unitsPerGarment: 1,
+    cheaperAlternative: "skipping hang tags for the first run",
+  },
+  printed_neck_tape: {
+    label: "Printed neck tape", moq: 1000, moqTotalKrw: 210000, unitsPerGarment: 0.5,
+    cheaperAlternative: "a plain neck tape",
+  },
+  custom_polybag: {
+    label: "Custom printed polybag", moq: 10000, moqTotalKrw: 850000, unitsPerGarment: 1,
+    cheaperAlternative: "plain polybags with a branded sticker",
+  },
+};
 
-  return {
-    pieces,
-    yardsPerPiece,
-    totalYards: round2(totalYards),
-    fabricUsdPerYard: fabricYard,
-    fabricUsdPerPiece: fabric,
-    laborUsdPerPiece: labor,
-    trimUsdPerPiece: trim,
-    costUsdPerPiece: cost,
-    priceUsdPerPiece: round2(cost * (1 + MARKUP)),
-  };
-}
+/** 브랜드 부자재 장당 원가가 이 값(USD)을 넘으면 고객에게 대안을 함께 안내한다. */
+export const TRIM_HEAVY_USD_PER_PIECE = 1.5;
 
-/**
- * 마크 에이전트의 시스템 프롬프트 뒤에 덧붙이는 가격 참조 블록.
- *
- * 원단별 장당 판매가를 서버가 미리 계산해서 표로 싣는다. 모델에게 원가를 주고
- * 계산시켰더니 산수를 틀렸고 야드 단가를 고객에게 흘렸다. 표만 주면 고를 뿐
- * 계산할 것도, 흘릴 것도 없다. 표가 작아서(원단 11종) 프롬프트 부담도 적다.
- */
-export function pricingPolicyPrompt(): string {
-  const rows = FABRICS.map((f) => {
-    const at = (pieces: number) => quoteFor(pieces, undefined, f.bulkUsdPerYard).priceUsdPerPiece.toFixed(2);
-    return `  ${f.name} (${f.spec}) — 100장+ $${at(100)} / 50~99장 $${at(50)} / 50장미만 $${at(30)}`;
-  }).join("\n");
+// ─── 샘플 ──────────────────────────────────────────────────────────
 
-  return (
-    "[가격 정책 — 내부 자료]\n" +
-    "아래 표는 원단별·수량별 '장당 판매가(USD)'입니다. 계산이 끝난 값이니 그대로 읽어서 답하세요.\n\n" +
-    "■ 규칙\n" +
-    "- 고객이 말한 촉감·소재에 가장 가까운 원단을 표에서 하나 고르고, 수량에 맞는 칸의 값을 쓰세요.\n" +
-    "- 직접 계산하지 마세요. 표에 있는 숫자만 말하세요. 없는 가격을 지어내면 안 됩니다.\n" +
-    "- 구간은 단가가 낮아지는 지점일 뿐 최소 주문 수량이 아닙니다. 최소 주문은 1장이고,\n" +
-    "  5장이든 20장이든 제작 가능합니다. 수량이 적다고 거절하거나 50장을 채우라고 하지 마세요.\n" +
-    "  50장 미만은 전부 '50장미만' 칸을 쓰면 됩니다.\n" +
-    "- 표에 없는 특수 소재(실크, 캐시미어 등)를 원하면 지어내지 말고, 취급은 가능하니\n" +
-    "  디렉터가 원단을 확인해 정확한 견적을 이메일로 보내드린다고 안내하세요.\n" +
-    "- 고객에게는 원단 이름과 조성만 말하세요. 야드 단가, 원가, 마진은 어떤 경우에도 말하지 마세요.\n\n" +
-    "■ 원단별 장당 판매가 (장당 " + DEFAULT_YARDS_PER_PIECE + "야드 기준, USD)\n" +
-    rows + "\n\n" +
-    "■ 샘플\n" +
-    "샘플 1장 $" + SAMPLE.listPriceUsd + ". 패턴 배치 때문에 원단을 최소 " + SAMPLE.yards + "야드 끊어야 해서 벌크보다 비쌉니다.\n" +
-    "샘플비는 벌크 주문 시 환급됩니다 — 50장 이상 50%, 100장 이상 100%.\n\n" +
-    "■ 답변 방식\n" +
-    "가격을 숨기지 말고 알려주세요. 다만 확정가로 말하면 안 됩니다. 가격을 말할 때마다:\n" +
-    "  (1) 개략적인 견적이다 (a broad estimate)\n" +
-    "  (2) 원단·사양·디테일을 저희와 상의하는 과정에서 조정될 수 있다\n" +
-    "이 두 가지를 반드시 함께 전달하고, 정식 견적서는 생산 총괄 디렉터가 이메일로 보내드린다고\n" +
-    "안내하며 이메일을 받으세요."
-  );
-}
+/** 샘플 1장. 패턴 배치 때문에 원단을 최소 2야드 끊는다. 계산 원가 $101.66을 반올림해 제시. */
+export const SAMPLE = {
+  listPriceUsd: 100,
+  /** 샘플 단계 리드타임 안내 */
+  leadTime: "about 2–3 weeks per sample round (each revision adds about 2 weeks)",
+};
+
+/** 샘플비 환급 정책 (고객 안내용) */
+export const SAMPLE_CREDIT_POLICY = "Sample fees are credited back on a bulk order: 50% at 50+ pcs, 100% at 100+ pcs.";
+
+/** 생산 리드타임 안내 (Unstrung 계약 기준으로 늘려 잡은 값) */
+export const PRODUCTION_LEAD_TIME = "about 3 weeks of production after sample approval, plus 3–5 weeks by sea (air is faster, quoted separately)";

@@ -7,7 +7,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import hpp from "hpp";
-import { pricingPolicyPrompt } from "./pricingPolicy.js";
+import { calculateQuote, quoteToolDeclaration, quotingPolicyPrompt, QUOTE_TOOL_NAME, QuoteInput, QuoteResult } from "./quoteEngine.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -39,6 +39,53 @@ async function sendTelegram(text: string) {
   } catch (err) {
     console.error("Telegram notification failed:", err);
   }
+}
+
+// ─── 마크 견적 기록 ──────────────────────────────────────────────
+// 마크가 견적을 낼 때마다 원가 내역을 텔레그램으로 보내고, quote_estimates 테이블에 남긴다.
+// (테이블이 없으면 조용히 건너뜀 — supabase_quote_estimates.sql 참고)
+// 나중에 실제 원가와 비교해 pricingPolicy.ts 단가를 고치는 근거가 된다.
+const fmtUsd = (n: number) => `$${n.toFixed(2)}`;
+
+function recordQuote(sessionId: string, userEmail: string | undefined, input: QuoteInput, result: QuoteResult) {
+  const { customer, internal } = result;
+
+  const itemLines = customer.items.map((c, i) => {
+    const cost = internal.items.find((x) => x.item === c.item && x.quantity === c.quantity);
+    const price = c.price_per_piece_usd ? `${fmtUsd(c.price_per_piece_usd.low)}–${fmtUsd(c.price_per_piece_usd.high)}` : "견적 제외";
+    const costLine = cost
+      ? `\n   원가 ${fmtUsd(cost.cost_usd_per_piece)} = 원단 ${fmtUsd(cost.fabric_usd_per_piece)} + 공임 ${fmtUsd(cost.labor_usd_per_piece)} + 부자재 ${fmtUsd(cost.basic_trim_usd_per_piece)} + 장식 ${fmtUsd(cost.decoration_usd_per_piece)} + 브랜드부자재 ${fmtUsd(cost.branded_trim_usd_per_piece)}`
+      : "";
+    return `${i + 1}. ${escapeHtml(c.item)} ${c.quantity}장 (${c.colors}컬러) — 장당 ${price}${costLine}`;
+  });
+
+  const flagLines = internal.flags.map((f) => `${f.severity === "blocker" ? "⛔" : f.severity === "confirm" ? "⚠️" : "ℹ️"} ${escapeHtml(f.internal_note)}`);
+  const total = customer.order_total_usd ? `${fmtUsd(customer.order_total_usd.low)}–${fmtUsd(customer.order_total_usd.high)}` : "-";
+
+  sendTelegram(
+    `🧮 <b>마크 견적 ${internal.needs_director ? "(디렉터 확인 필요)" : ""}</b>\n\n` +
+    `${input.order_type === "sample" ? "샘플" : "생산"} · 총 ${total}\n` +
+    itemLines.join("\n") +
+    (flagLines.length ? `\n\n${flagLines.join("\n")}` : "") +
+    (userEmail ? `\n\n고객: ${escapeHtml(userEmail)}` : "") +
+    `\n세션: ${escapeHtml(String(sessionId).substring(0, 8))}`
+  );
+
+  supabase
+    .from("quote_estimates")
+    .insert([{
+      session_id: sessionId,
+      order_type: input.order_type,
+      input,
+      customer_quote: customer,
+      internal_breakdown: internal,
+      total_low_usd: customer.order_total_usd?.low ?? null,
+      total_high_usd: customer.order_total_usd?.high ?? null,
+      needs_director: internal.needs_director,
+    }])
+    .then(({ error }) => {
+      if (error) console.warn("quote_estimates insert skipped:", error.message);
+    });
 }
 
 // Lazy initialize Gemini client to prevent crash if not configured
@@ -592,7 +639,8 @@ app.use("/api/", limiter); // Apply to all API routes
         "그들이 만들고 싶어 하는 옷의 1) 종류, 2) 원단 촉감, 3) 수량을 파악한 뒤, 최종적으로 견적서를 보내기 위한 4) '이메일 주소'를 수집하는 것입니다.\n\n" +
         "[절대 지켜야 할 핵심 규칙]\n" +
         "- 짧고 명확하게: 한 번에 하나의 질문만 하세요. 절대 길게 설명하지 마세요. (최대 2~3문장 이내)\n" +
-        "- 가격 안내: 바이어가 가격을 물어보면 아래 [가격 정책] 자료를 근거로 장당 가격을 안내하세요. 단, 그 가격은 '개략적인 견적(broad estimate)'이며, 원단·사양·디테일을 저희와 상의하는 과정에서 조정될 수 있다는 점을 반드시 함께 말하세요. 확정 가격처럼 말하지 마세요. 이어서 정식 견적서는 생산 총괄 디렉터가 이메일로 보내드린다고 안내하며 이메일을 수집하세요.\n" +
+        "- 가격 안내: 바이어가 가격을 물어보면 반드시 calculate_quote 도구를 호출해 나온 숫자로만 장당 가격 범위를 안내하세요(아래 [견적 규칙] 참고). 그 가격은 '개략적인 견적(broad estimate)'이며, 원단·사양·디테일을 저희와 상의하는 과정에서 조정될 수 있다는 점을 반드시 함께 말하세요. 확정 가격처럼 말하지 마세요. 이어서 정식 견적서는 생산 총괄 디렉터가 이메일로 보내드린다고 안내하며 이메일을 수집하세요.\n" +
+        "- 하지 않는 일을 했다고 말하지 마세요: 공장 확인, 원단 재고 확인, 샘플 착수 같은 내부 절차를 '확인했다/진행했다'고 말하면 안 됩니다. 그런 일은 디렉터가 이메일 견적 단계에서 합니다.\n" +
         "- 타겟 품목 유도: 우리의 주력 품목은 '상의(티셔츠, 맨투맨, 후디, 카라티 등)와 스포츠웨어'입니다. 바이어가 너무 복잡한 드레스나 아우터를 요구하면, '저희는 상의와 스포츠웨어의 소량 생산에 가장 특화되어 있습니다.'라고 안내하세요.\n" +
         "- 과한 칭찬 금지: 'Great choice!', 'Excellent!' 같은 과장된 칭찬이나 아부성 표현을 남발하지 마세요. 꼭 필요한 경우 절제된 긍정 표현 한 번이면 충분합니다. 차분하고 신뢰감 있는 전문가 톤을 유지하세요.\n" +
         "- 언어: 사용자가 질문하는 언어(영어, 한국어, 태국어 등)에 맞춰서 자연스럽게 대답하되, 어조는 매우 전문적이고 친절하며 환영하는 태도여야 합니다.\n\n" +
@@ -606,7 +654,11 @@ app.use("/api/", limiter); // Apply to all API routes
         "Step 3. 수량 파악\n" +
         "원단을 대답하면, 생각하는 총 생산 수량을 묻습니다. 최소 주문 수량은 1장입니다 — 몇 장이든 제작 가능합니다.\n" +
         "50장·100장은 최소 수량이 아니라 장당 단가가 낮아지는 구간일 뿐입니다. 수량이 적다는 이유로 거절하거나 더 주문하라고 요구하지 마세요.\n" +
-        "(예: 'We have suitable premium fabrics for that in our Busan factory. Roughly how many pieces are you planning to produce? There is no minimum — we produce from a single piece, and the unit price comes down at 50 and 100 pcs.')\n\n" +
+        "(예: 'Got it. Roughly how many pieces are you planning to produce? There is no minimum — we produce from a single piece, and the unit price comes down at 50 and 100 pcs.')\n\n" +
+        "Step 3-1. 컬러·로고·브랜드 부자재 (견적 정확도용)\n" +
+        "수량을 들으면, 한 번에 하나씩 짧게 확인하세요: ① 컬러가 몇 가지이고 컬러별로 몇 장인지 ② 로고/프린트를 어떤 방식(자수·실리콘·프린트 등)으로 몇 군데 넣는지 ③ 브랜드 넥라벨·행택·전용 폴리백이 필요한지.\n" +
+        "고객이 귀찮아하거나 모른다고 하면 더 묻지 말고 가정(1컬러, 가슴 로고 1곳, 브랜드 부자재 없음)으로 넘어가세요.\n" +
+        "특정 Pantone 색을 원하면 custom_dye로 표시하세요 — 소량은 승화·디지털 프린트나 가장 가까운 기성 원단색으로 맞추고, 원하면 염색도 가능하다는 방침입니다.\n\n" +
         "Step 4. 작업지시서\n" +
         "주문하실 품목의 작업지시서(Tech Pack)가 있는지 물어봐야 합니다.\n\n" +
         "Step 5. 샘플이미지\n" +
@@ -624,6 +676,7 @@ app.use("/api/", limiter); // Apply to all API routes
         "고객이 연락처 확인 및 확정을 마치면 진심을 담아 감사하다고 하고, 1영업일 이내로 생산 총괄 디렉터가 상세 견적을 보내드릴 예정이라고 안내하며 대화를 마무리합니다.\n\n" +
         "[마무리 시 JSON 출력 규칙]\n" +
         "대화가 완전히 마무리되면(고객이 이메일을 남기고 상담이 종료될 때), 메시지의 맨 끝에 아래 형식의 JSON 블록을 반드시 추가하세요:\n" +
+        "- colors = 컬러 수와 컬러별 수량, decoration = 로고/프린트 방식과 위치, branded_trims = 브랜드 라벨·행택·폴리백 요청, estimate = 마지막으로 안내한 견적 범위(장당·총액, USD). 모르면 '미정'.\n" +
         "- CRITICAL: JSON의 모든 항목 값(value)은 고객이 외국어로 답변했더라도, 한국 공장 생산팀이 바로 읽을 수 있도록 반드시 '한국어'로 번역하여 작성해야 합니다. (예: 'Cotton 100%' -> '면 100%')\n" +
         "```json\n" +
         "{\n" +
@@ -633,6 +686,11 @@ app.use("/api/", limiter); // Apply to all API routes
         "  \"fabric_preference\": \"...\",\n" +
         "  \"quantity\": \"...\",\n" +
         "  \"has_tech_pack\": \"...\",\n" +
+        "  \"colors\": \"...\",\n" +
+        "  \"decoration\": \"...\",\n" +
+        "  \"branded_trims\": \"...\",\n" +
+        "  \"ship_to_country\": \"...\",\n" +
+        "  \"estimate\": \"...\",\n" +
         "  \"sample_image_urls\": \"...\",\n" +
         "  \"additional_requests\": \"Provide a concise, bullet-point summary of all other requests, design details, fit, and important context in KOREAN. Do NOT just dump the raw chat log.\"\n" +
         "}\n" +
@@ -647,20 +705,64 @@ app.use("/api/", limiter); // Apply to all API routes
         "- Keep responses SHORT (2-3 sentences max per turn).\n" +
         "- Maintain a sophisticated, premium, welcoming, and professional B2B advisor persona.\n" +
         "- Do NOT overuse compliments, flattery, or exclamation marks. Stay calm, measured, and professional — one restrained positive remark is enough when genuinely warranted.\n\n" +
-        // 가격 자료는 api/pricingPolicy.ts에서 관리한다. 단가가 바뀌면 그 파일만 고치면 된다.
-        pricingPolicyPrompt();
+        // 단가는 api/pricingPolicy.ts, 계산은 api/quoteEngine.ts. 마크는 도구를 호출할 뿐 계산하지 않는다.
+        quotingPolicyPrompt();
 
-      // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
-      const response = await client.models.generateContent({
-        model: "gemini-3.1-flash-lite",
-        contents,
-        config: {
-          systemInstruction: systemInstruction,
-          temperature: 0.6,
-        },
-      });
+      // 마크가 calculate_quote를 부르면 서버가 계산해서 돌려주고, 마크가 그 결과로 답을 마무리한다.
+      const MAX_TOOL_ROUNDS = 3;
+      let lastQuote: { input: QuoteInput; result: QuoteResult } | null = null;
+      let response: any;
 
-      let replyText = response.text || "I was unable to generate a response. Please try again.";
+      for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
+        // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
+        response = await client.models.generateContent({
+          model: "gemini-3.1-flash-lite",
+          contents,
+          config: {
+            systemInstruction: systemInstruction,
+            temperature: 0.6,
+            tools: [{ functionDeclarations: [quoteToolDeclaration] }],
+          },
+        });
+
+        const calls = response.functionCalls || [];
+        if (!calls.length || round === MAX_TOOL_ROUNDS) break;
+
+        // 모델의 함수 호출 턴을 그대로(thought signature 포함) 대화에 붙인다
+        const modelContent = response.candidates?.[0]?.content;
+        if (modelContent) contents.push(modelContent);
+
+        const responseParts: any[] = [];
+        for (const call of calls) {
+          if (call.name !== QUOTE_TOOL_NAME) {
+            responseParts.push({ functionResponse: { id: call.id, name: call.name, response: { error: "Unknown tool" } } });
+            continue;
+          }
+          try {
+            const quoteInput = call.args as QuoteInput;
+            const result = calculateQuote(quoteInput);
+            lastQuote = { input: quoteInput, result };
+            // 마크에게는 고객용 결과만 넘긴다 (원가 내역은 넘기지 않음)
+            responseParts.push({ functionResponse: { id: call.id, name: call.name, response: { output: result.customer } } });
+          } catch (err: any) {
+            console.error("calculate_quote failed:", err);
+            responseParts.push({
+              functionResponse: {
+                id: call.id,
+                name: call.name,
+                response: { error: "Quote could not be calculated. Tell the buyer our director will send the estimate by email." },
+              },
+            });
+          }
+        }
+        contents.push({ role: "user", parts: responseParts });
+      }
+
+      if (lastQuote) {
+        recordQuote(sessionId, userEmail, lastQuote.input, lastQuote.result);
+      }
+
+      let replyText = response?.text || "I was unable to generate a response. Please try again.";
 
       // Extract JSON if present
       const jsonRegex = /```json\s*([\s\S]*?)\s*```/;
@@ -678,6 +780,14 @@ app.use("/api/", limiter); // Apply to all API routes
             if (poData.fabric_preference && poData.fabric_preference !== '...') specParts.push(`원단: ${poData.fabric_preference}`);
             if (poData.quantity && poData.quantity !== '...') specParts.push(`수량: ${poData.quantity}`);
             if (poData.has_tech_pack && poData.has_tech_pack !== '...') specParts.push(`테크팩: ${poData.has_tech_pack}`);
+            const extraFields: [string, string][] = [
+              ["colors", "컬러"], ["decoration", "장식"], ["branded_trims", "브랜드 부자재"],
+              ["ship_to_country", "배송국가"], ["estimate", "안내 견적"],
+            ];
+            for (const [key, label] of extraFields) {
+              const v = poData[key];
+              if (v && v !== '...') specParts.push(`${label}: ${v}`);
+            }
             const fullSpecs = specParts.length > 0 ? specParts.join(' | ') : (poData.manufacturing_specs || "미정");
 
             const poPayload = {
