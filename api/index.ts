@@ -41,8 +41,8 @@ async function sendTelegram(text: string) {
   }
 }
 
-// ─── 마크 견적 기록 ──────────────────────────────────────────────
-// 마크가 견적을 낼 때마다 원가 내역을 텔레그램으로 보내고, quote_estimates 테이블에 남긴다.
+// ─── BBally 견적 기록 ──────────────────────────────────────────────
+// BBally가 견적을 낼 때마다 원가 내역을 텔레그램으로 보내고, quote_estimates 테이블에 남긴다.
 // (테이블이 없으면 조용히 건너뜀 — supabase_quote_estimates.sql 참고)
 // 나중에 실제 원가와 비교해 pricingPolicy.ts 단가를 고치는 근거가 된다.
 const fmtUsd = (n: number) => `$${n.toFixed(2)}`;
@@ -63,7 +63,7 @@ function recordQuote(sessionId: string, userEmail: string | undefined, input: Qu
   const total = customer.order_total_usd ? `${fmtUsd(customer.order_total_usd.low)}–${fmtUsd(customer.order_total_usd.high)}` : "-";
 
   sendTelegram(
-    `🧮 <b>마크 견적 ${internal.needs_director ? "(디렉터 확인 필요)" : ""}</b>\n\n` +
+    `🧮 <b>BBally 견적 ${internal.needs_director ? "(디렉터 확인 필요)" : ""}</b>\n\n` +
     `${input.order_type === "sample" ? "샘플" : "생산"} · 총 ${total}\n` +
     itemLines.join("\n") +
     (flagLines.length ? `\n\n${flagLines.join("\n")}` : "") +
@@ -632,7 +632,7 @@ app.use("/api/", limiter); // Apply to all API routes
 
       const systemInstruction =
         "[System Instructions] K-Fashion 플랫폼 리드 수집 챗봇\n\n" +
-        "당신은 한국의 부산에 위치한 30년 한국 전통의 프리미엄 의류 제조 공장(Korea Apparel Works)의 글로벌 소싱 어시스턴트인 'Mark'입니다.\n" +
+        "당신은 한국의 부산에 위치한 30년 한국 전통의 프리미엄 의류 제조 공장(Korea Apparel Works)의 글로벌 소싱 어시스턴트인 'BBally'입니다.\n" +
         "부산(한국 섬유 산업의 허브이자 대형 항만 물류 중심지) 스토리는 첫인사에서 언급하지 마세요. 원단을 논의할 때나 생산/배송 관련 질문이 나올 때, 신뢰를 더하는 한 문장으로만 자연스럽게 언급하세요.\n\n" +
         "[당신의 유일한 최종 목표]\n" +
         "웹사이트에 방문한 해외 바이어(주로 미국, 동남아 신진 브랜드 창업자)와 짧고 친절하게 대화하여, " +
@@ -646,8 +646,8 @@ app.use("/api/", limiter); // Apply to all API routes
         "- 언어: 사용자가 질문하는 언어(영어, 한국어, 태국어 등)에 맞춰서 자연스럽게 대답하되, 어조는 매우 전문적이고 친절하며 환영하는 태도여야 합니다.\n\n" +
         "[대화 시나리오 흐름 (이 순서를 반드시 따르세요)]\n\n" +
         "Step 1. 환영 + 가치 제안 + 품목/사진 유도\n" +
-        "사용자가 먼저 말을 걸면: ① 한 문장으로 본인('Mark from Korea Apparel Works')과 특화 분야(상의·스포츠웨어)를 소개하고, ② 핵심 가치(샘플 1장부터 제작, 24시간 내 견적)를 전달한 뒤, ③ 만들고 싶은 품목을 물으면서 '참고할 디자인 사진이 있으면 지금 바로 올려달라'고 명시적으로 유도하세요. 부산/공장 입지 소개는 이 단계에서 하지 마세요.\n" +
-        "(예: 'Hello, I\\'m Mark from Korea Apparel Works — we specialize in premium tops and sportswear, with samples from just 1 pc and quotes within 24 hours. What are you looking to produce? If you have a design photo, just upload it here and I\\'ll take it from there.')\n\n" +
+        "사용자가 먼저 말을 걸면: ① 한 문장으로 본인('BBally from Korea Apparel Works')과 특화 분야(상의·스포츠웨어)를 소개하고, ② 핵심 가치(샘플 1장부터 제작, 24시간 내 견적)를 전달한 뒤, ③ 만들고 싶은 품목을 물으면서 '참고할 디자인 사진이 있으면 지금 바로 올려달라'고 명시적으로 유도하세요. 부산/공장 입지 소개는 이 단계에서 하지 마세요.\n" +
+        "(예: 'Hello, I\\'m BBally from Korea Apparel Works — we specialize in premium tops and sportswear, with samples from just 1 pc and quotes within 24 hours. What are you looking to produce? If you have a design photo, just upload it here and I\\'ll take it from there.')\n\n" +
         "Step 2. 원단 '촉감' 파악\n" +
         "품목을 대답하면, 어떤 원단 느낌을 원하는지 묻습니다. 과한 칭찬 없이 바로 본론으로, 전문 용어 대신 일상적인 단어를 사용하세요.\n" +
         "(예: 'For the fabric, what kind of feel are you looking for? (e.g., Soft & lightweight, Heavy & sturdy, or Moisture-wicking stretchy?)')\n\n" +
@@ -705,10 +705,10 @@ app.use("/api/", limiter); // Apply to all API routes
         "- Keep responses SHORT (2-3 sentences max per turn).\n" +
         "- Maintain a sophisticated, premium, welcoming, and professional B2B advisor persona.\n" +
         "- Do NOT overuse compliments, flattery, or exclamation marks. Stay calm, measured, and professional — one restrained positive remark is enough when genuinely warranted.\n\n" +
-        // 단가는 api/pricingPolicy.ts, 계산은 api/quoteEngine.ts. 마크는 도구를 호출할 뿐 계산하지 않는다.
+        // 단가는 api/pricingPolicy.ts, 계산은 api/quoteEngine.ts. BBally는 도구를 호출할 뿐 계산하지 않는다.
         quotingPolicyPrompt();
 
-      // 마크가 calculate_quote를 부르면 서버가 계산해서 돌려주고, 마크가 그 결과로 답을 마무리한다.
+      // BBally가 calculate_quote를 부르면 서버가 계산해서 돌려주고, BBally가 그 결과로 답을 마무리한다.
       const MAX_TOOL_ROUNDS = 3;
       let lastQuote: { input: QuoteInput; result: QuoteResult } | null = null;
       let response: any;
@@ -742,7 +742,7 @@ app.use("/api/", limiter); // Apply to all API routes
             const quoteInput = call.args as QuoteInput;
             const result = calculateQuote(quoteInput);
             lastQuote = { input: quoteInput, result };
-            // 마크에게는 고객용 결과만 넘긴다 (원가 내역은 넘기지 않음)
+            // BBally에게는 고객용 결과만 넘긴다 (원가 내역은 넘기지 않음)
             responseParts.push({ functionResponse: { id: call.id, name: call.name, response: { output: result.customer } } });
           } catch (err: any) {
             console.error("calculate_quote failed:", err);

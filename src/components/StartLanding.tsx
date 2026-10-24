@@ -40,7 +40,7 @@ export default function StartLanding() {
     return () => document.removeEventListener('click', handler, true);
   }, []);
 
-  // Sequential reveal of the chat thread: photo bubble first, then Mark's reply
+  // Sequential reveal of the chat thread: photo bubble first, then BBally's reply
   const [chatReveal, setChatReveal] = useState(0);
   useEffect(() => {
     const t1 = setTimeout(() => setChatReveal(1), 1000);
@@ -210,7 +210,7 @@ export default function StartLanding() {
               </div>
             </div>
 
-            {/* Right: Hero image + Mark chat overlay */}
+            {/* Right: Hero image + BBally chat overlay */}
             <div className="relative mt-4 lg:mt-0 max-w-[614px] mx-auto w-full flex flex-col">
               <div className="relative hidden overflow-hidden shadow-2xl shadow-blue-900/10 border border-white/60 aspect-[4/3] sm:aspect-[3/2] lg:aspect-[4/3]">
                 {heroImages.map((src, idx) => (
@@ -241,13 +241,13 @@ export default function StartLanding() {
                   </div>
                 </div>
 
-                {/* Mark reply */}
+                {/* BBally reply */}
                 <div className={`flex items-start gap-2.5 transition-all duration-500 ease-out ${chatReveal >= 2 ? 'opacity-100' : 'opacity-0'}`}>
                   <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
                     <User size={16} />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-xs font-semibold text-neutral-900 mb-1">Mark</div>
+                    <div className="text-xs font-semibold text-neutral-900 mb-1">BBally</div>
                     <div className="inline-block bg-white/95 backdrop-blur-md border border-neutral-100 shadow-sm rounded-2xl rounded-tl-md px-4 py-3 max-w-[280px]">
                       <p className="text-[13px] text-neutral-600 leading-snug">
                         Great design! MOQ starts at just <b className="text-neutral-900">1&nbsp;pc</b>, and we can have a sample ready in <b className="text-neutral-900">3–14 days</b>.
@@ -261,7 +261,7 @@ export default function StartLanding() {
                   <div className="w-9 h-9 rounded-full flex items-center justify-center text-neutral-500 group-hover:text-blue-500 transition-colors shrink-0">
                     <ImagePlus size={18} />
                   </div>
-                  <span className="flex-1 text-[14px] text-neutral-400 group-hover:text-neutral-500 transition-colors truncate select-none">Message Mark…</span>
+                  <span className="flex-1 text-[14px] text-neutral-400 group-hover:text-neutral-500 transition-colors truncate select-none">Message BBally…</span>
                   <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 group-hover:bg-blue-500 transition-colors">
                     <ArrowUp size={18} />
                   </div>

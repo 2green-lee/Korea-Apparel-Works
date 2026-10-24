@@ -1,4 +1,4 @@
--- 마크 견적 로그 테이블.
+-- BBally 견적 로그 테이블.
 -- Supabase SQL Editor에서 한 번 실행하면 된다. 없어도 사이트는 정상 동작한다(로그만 안 남음).
 -- 오더가 끝나면 actual_cost_usd_per_piece / actual_note 를 채워서, 견적 원가와 실제 원가를 비교한다.
 

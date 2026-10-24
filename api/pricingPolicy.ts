@@ -1,10 +1,10 @@
 // 가격 정책 단일 소스 — "숫자"만 모아 둔 파일.
 //
-// 계산 로직은 api/quoteEngine.ts, 마크의 대화 지침은 api/index.ts에 있다.
+// 계산 로직은 api/quoteEngine.ts, BBally의 대화 지침은 api/index.ts에 있다.
 // 단가·환율·마진이 바뀌면 이 파일의 표만 고치면 된다.
 //
 // 표의 confirmed/estimated 표시를 꼭 지킬 것:
-//   confirmed: true  → 실제로 공장·공급처에서 확인한 값. 마크가 그대로 안내.
+//   confirmed: true  → 실제로 공장·공급처에서 확인한 값. BBally가 그대로 안내.
 //   confirmed: false → 아직 미뤄 잡은 값. 견적은 내되 "디렉터 확인 필요" 플래그가 붙고
 //                      텔레그램으로 알림이 간다. 확인되면 true로 바꿀 것.
 //

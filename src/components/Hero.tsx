@@ -518,7 +518,7 @@ export default function Hero({
                   </div>
                 )}
 
-                {/* 대화 시작 전에도 마크의 인사를 띄워 둔다. 빈 입력창만 있을 때보다
+                {/* 대화 시작 전에도 BBally의 인사를 띄워 둔다. 빈 입력창만 있을 때보다
                     이미 상담이 열려 있는 것처럼 보여 말을 걸기 쉬워진다. */}
                 {messages.length === 1 && messages[0].role === "model" && (
                   <div className="flex gap-3 justify-start mb-4 select-text">

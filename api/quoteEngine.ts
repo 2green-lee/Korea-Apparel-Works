@@ -1,8 +1,8 @@
 // 견적 계산 엔진.
 //
-// 마크(LLM)는 숫자를 계산하지 않는다. 고객에게서 받은 사양을 calculate_quote 도구로 넘기면
+// BBally(LLM)는 숫자를 계산하지 않는다. 고객에게서 받은 사양을 calculate_quote 도구로 넘기면
 // 이 파일이 api/pricingPolicy.ts의 표만 보고 계산해서 돌려준다.
-// - 마크에게는 고객용 결과(판매가 범위, 포함/제외 항목, 플래그 문구)만 간다.
+// - BBally에게는 고객용 결과(판매가 범위, 포함/제외 항목, 플래그 문구)만 간다.
 // - 원가 내역(internal)은 텔레그램·DB 로그로만 간다. 고객에게 절대 노출하지 않는다.
 
 import {
@@ -71,7 +71,7 @@ export type FlagSeverity =
 export interface QuoteFlag {
   code: string;
   severity: FlagSeverity;
-  /** 고객에게 전달할 요지 (영문 — 마크가 고객 언어로 옮긴다) */
+  /** 고객에게 전달할 요지 (영문 — BBally가 고객 언어로 옮긴다) */
   customer_message: string;
   /** 디렉터용 메모 (한국어) */
   internal_note: string;
@@ -98,7 +98,7 @@ export interface CustomerQuote {
   branded_trims_included: string[];
   flags: { severity: FlagSeverity; message: string }[];
   terms: string[];
-  /** 마크가 고객에게 꼭 함께 말할 것 */
+  /** BBally가 고객에게 꼭 함께 말할 것 */
   must_say: string[];
 }
 
@@ -409,7 +409,7 @@ export function calculateQuote(input: QuoteInput): QuoteResult {
   };
 }
 
-// ─── 마크용 도구 선언 ─────────────────────────────────────────────
+// ─── BBally용 도구 선언 ─────────────────────────────────────────────
 
 export const QUOTE_TOOL_NAME = "calculate_quote";
 
