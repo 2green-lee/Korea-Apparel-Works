@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Camera, Mic, ArrowUp, RefreshCw, History, FileText, Menu, X, Home, Factory, Shirt, User, LogOut } from "lucide-react";
 import { useChat, Message } from "../../lib/useChat";
-import ChatText from "../ChatText";
+import ChatText, { BBallyAvatar, BBallyName } from "../ChatText";
 
 interface MobileChatViewProps {
   messages: Message[];
@@ -156,9 +156,13 @@ export default function MobileChatView({
 
           {/* 데스크톱과 마찬가지로, 말을 걸기 전에도 BBally의 인사를 띄워 둔다. */}
           {messages[0]?.role === "model" && (
-            <div className="w-full flex justify-start mt-7">
-              <div className="max-w-[85%] rounded-[20px] bg-neutral-100 px-4 py-3 text-[14px] leading-relaxed text-neutral-700 text-left">
-                {messages[0].text}
+            <div className="w-full flex gap-2 items-start justify-start mt-7">
+              <BBallyAvatar size={32} />
+              <div className="min-w-0 text-left">
+                <BBallyName />
+                <div className="rounded-[20px] rounded-tl-sm bg-neutral-100 px-4 py-3 text-[14px] leading-[1.65] text-neutral-700">
+                  <ChatText text={messages[0].text} />
+                </div>
               </div>
             </div>
           )}
@@ -169,12 +173,13 @@ export default function MobileChatView({
           className="flex-1 overflow-y-auto px-4 py-6 space-y-5 scrollbar-thin scroll-smooth"
         >
           {messages.map((msg, index) => (
-            <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div key={index} className={`flex gap-2 items-start ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              {msg.role === "model" && <BBallyAvatar size={28} />}
               <div
                 className={`max-w-[85%] rounded-[20px] px-4 py-3 leading-relaxed text-[15px] ${
                   msg.role === "user"
                     ? "bg-neutral-950 text-white rounded-tr-sm font-light"
-                    : "bg-white text-neutral-800 border border-neutral-200/60 rounded-tl-sm whitespace-pre-wrap shadow-sm"
+                    : "bg-white text-neutral-800 leading-[1.65] border border-neutral-200/60 rounded-tl-sm shadow-sm"
                 }`}
               >
                 {msg.imageUrl && (
@@ -202,8 +207,9 @@ export default function MobileChatView({
           ))}
 
           {isGenerating && (
-            <div className="flex justify-start animate-pulse">
-              <div className="bg-white text-neutral-500 max-w-[85%] rounded-[20px] px-4 py-3 shadow-sm border border-neutral-200/60 rounded-tl-sm flex items-center space-x-2">
+            <div className="flex gap-2 items-start justify-start">
+              <BBallyAvatar size={28} />
+              <div className="animate-pulse bg-white text-neutral-500 max-w-[85%] rounded-[20px] px-4 py-3 shadow-sm border border-neutral-200/60 rounded-tl-sm flex items-center space-x-2">
                 <span className="flex space-x-1">
                   <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                   <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>

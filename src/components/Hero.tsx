@@ -20,7 +20,7 @@ interface HeroProps {
 }
 
 import { useChat } from "../lib/useChat";
-import ChatText from "./ChatText";
+import ChatText, { BBallyAvatar, BBallyName } from "./ChatText";
 
 const SLIDES = [
   {
@@ -473,11 +473,12 @@ export default function Hero({
                       className="flex-1 overflow-y-auto overscroll-contain touch-pan-y space-y-4 pr-1 text-[15px] text-left scrollbar-thin pb-2"
                     >
                       {messages.map((msg, index) => (
-                        <div key={index} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                        <div key={index} className={`flex gap-2.5 items-start ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                          {msg.role === "model" && <BBallyAvatar />}
                           <div className={`max-w-[85%] sm:max-w-[75%] rounded-[18px] px-4 py-3 leading-relaxed font-light ${
                             msg.role === "user"
                               ? "bg-neutral-950 text-white rounded-tr-none font-light"
-                              : "bg-neutral-100 text-neutral-800 shadow-3xs border border-neutral-200/60 rounded-tl-none whitespace-pre-wrap"
+                              : "bg-neutral-100 text-neutral-800 font-normal leading-[1.65] shadow-3xs border border-neutral-200/60 rounded-tl-none"
                           }`}>
                             {msg.imageUrl && (
                               <div className="mb-2">
@@ -505,8 +506,9 @@ export default function Hero({
                       ))}
 
                       {isGenerating && (
-                        <div className="flex justify-start animate-pulse">
-                          <div className="bg-neutral-100 text-neutral-500 max-w-[85%] rounded-[18px] px-4 py-3 shadow-3xs border border-neutral-200/60 rounded-tl-none flex items-center space-x-2">
+                        <div className="flex gap-2.5 items-start justify-start">
+                          <BBallyAvatar />
+                          <div className="animate-pulse bg-neutral-100 text-neutral-500 max-w-[85%] rounded-[18px] px-4 py-3 shadow-3xs border border-neutral-200/60 rounded-tl-none flex items-center space-x-2">
                             <span className="flex space-x-1">
                               <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                               <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
@@ -522,9 +524,13 @@ export default function Hero({
                 {/* 대화 시작 전에도 BBally의 인사를 띄워 둔다. 빈 입력창만 있을 때보다
                     이미 상담이 열려 있는 것처럼 보여 말을 걸기 쉬워진다. */}
                 {messages.length === 1 && messages[0].role === "model" && (
-                  <div className="flex gap-3 justify-start mb-4 select-text">
-                    <div className="max-w-[85%] rounded-[18px] bg-neutral-50 border border-neutral-200/70 px-4 py-3 text-[14px] leading-relaxed text-neutral-700 font-light text-left">
-                      {messages[0].text}
+                  <div className="flex gap-2.5 items-start justify-start mb-4 select-text">
+                    <BBallyAvatar size={36} />
+                    <div className="min-w-0 text-left">
+                      <BBallyName />
+                      <div className="max-w-[85%] sm:max-w-[520px] rounded-[18px] rounded-tl-none bg-neutral-50 border border-neutral-200/70 px-4 py-3 text-[14px] leading-[1.65] text-neutral-700">
+                        <ChatText text={messages[0].text} />
+                      </div>
                     </div>
                   </div>
                 )}

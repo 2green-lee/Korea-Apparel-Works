@@ -66,3 +66,22 @@ export default function ChatText({ text }: { text: string }) {
 
   return <div className="space-y-2.5">{blocks}</div>;
 }
+
+/** BBally 프로필 아이콘("B"). 대화 말풍선 왼쪽에 붙여 BBally가 직접 말하는 것처럼 보이게 한다. */
+export function BBallyAvatar({ size = 32 }: { size?: number }) {
+  return (
+    <div
+      role="img"
+      aria-label="BBally"
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.47) }}
+      className="rounded-full shrink-0 bg-blue-900 text-white font-semibold flex items-center justify-center select-none leading-none"
+    >
+      B
+    </div>
+  );
+}
+
+/** 인사말처럼 이름까지 보여 줄 때 쓰는 머리말 */
+export function BBallyName() {
+  return <div className="text-[12px] font-semibold text-neutral-900 mb-1">BBally</div>;
+}
