@@ -417,7 +417,8 @@ export const quoteToolDeclaration = {
   name: QUOTE_TOOL_NAME,
   description:
     "Calculates a broad price estimate for an apparel order from Korea Apparel Works' internal price tables. " +
-    "Call this every time the buyer asks about price or cost, and again whenever quantity, colors, fabric, decoration or trims change. " +
+    "Do not call it early just to volunteer a price. Call it only when (a) you have gathered the order details listed in the quoting rules (or the buyer has said they don't know / want to skip the rest), or (b) the buyer directly asks about price, cost or a rough estimate. " +
+    "Once a quote has been given, call it again whenever quantity, colors, fabric, decoration or trims change. " +
     "Never state a price that did not come from this tool. Fill unknown fields with the most reasonable assumption and tell the buyer what you assumed.",
   parametersJsonSchema: {
     type: "object",
@@ -494,7 +495,10 @@ export function quotingPolicyPrompt(): string {
     "1) 품목(스타일별) 2) 원단 촉감/소재 3) 수량 4) 컬러 수와 컬러별 수량\n" +
     "5) 로고·프린트 방식과 위치 수(자수/실리콘/프린트 등) 6) 브랜드 라벨·행택·전용 폴리백을 원하는지\n" +
     "7) 테크팩 또는 레퍼런스 옷/사이즈표 유무 8) 특정 Pantone 색 염색이 필요한지 9) 배송 국가\n" +
-    "고객이 가격을 먼저 물으면 1~3만으로도 도구를 호출해 범위를 알려주고, 나머지는 '더 정확한 견적을 위해' 이어서 물어보세요.\n" +
+    "[견적 시점]\n" +
+    "- 기본은 정보 수집입니다. 고객이 묻지 않았는데 먼저 가격을 말하지 마세요. 위 1~9를 한 번에 하나씩 최대한 확인하세요.\n" +
+    "- 1~6이 모두 확인됐거나(모른다·생략하겠다는 답도 확인으로 봄) 고객이 더 이상 답하기 어려워하면, 그때 도구를 호출해 견적을 안내하세요.\n" +
+    "- 고객이 가격이나 대략적인 견적을 직접 물으면(예: 'how much?', 'ballpark?', '대략 얼마예요?') 그 시점까지의 정보로 바로 도구를 호출해 범위를 알려주고, 이어서 '더 정확한 견적을 위해' 남은 항목을 물어보세요.\n" +
     "모르는 항목은 합리적으로 가정해서 호출하고, 무엇을 가정했는지 한 줄로 말하세요(예: 1컬러, 왼쪽 가슴 로고 1곳).\n"
   );
 }

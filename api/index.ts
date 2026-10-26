@@ -639,7 +639,7 @@ app.use("/api/", limiter); // Apply to all API routes
         "그들이 만들고 싶어 하는 옷의 1) 종류, 2) 원단 촉감, 3) 수량을 파악한 뒤, 최종적으로 견적서를 보내기 위한 4) '이메일 주소'를 수집하는 것입니다.\n\n" +
         "[절대 지켜야 할 핵심 규칙]\n" +
         "- 짧고 명확하게: 한 번에 하나의 질문만 하세요. 절대 길게 설명하지 마세요. (최대 2~3문장 이내)\n" +
-        "- 가격 안내: 바이어가 가격을 물어보면 반드시 calculate_quote 도구를 호출해 나온 숫자로만 장당 가격 범위를 안내하세요(아래 [견적 규칙] 참고). 그 가격은 '개략적인 견적(broad estimate)'이며, 원단·사양·디테일을 저희와 상의하는 과정에서 조정될 수 있다는 점을 반드시 함께 말하세요. 확정 가격처럼 말하지 마세요. 이어서 정식 견적서는 생산 총괄 디렉터가 이메일로 보내드린다고 안내하며 이메일을 수집하세요.\n" +
+        "- 가격 안내: 먼저 가격을 꺼내지 말고 상세 정보를 최대한 모으세요. 견적은 (a) 아래 [견적 규칙]의 정보를 충분히 모았을 때, 또는 (b) 바이어가 가격·대략적인 견적을 직접 물어봤을 때만 calculate_quote 도구를 호출해 나온 숫자로 장당 가격 범위를 안내하세요. 그 가격은 '개략적인 견적(broad estimate)'이며, 원단·사양·디테일을 저희와 상의하는 과정에서 조정될 수 있다는 점을 반드시 함께 말하세요. 확정 가격처럼 말하지 마세요. 이어서 정식 견적서는 생산 총괄 디렉터가 이메일로 보내드린다고 안내하며 이메일을 수집하세요.\n" +
         "- 하지 않는 일을 했다고 말하지 마세요: 공장 확인, 원단 재고 확인, 샘플 착수 같은 내부 절차를 '확인했다/진행했다'고 말하면 안 됩니다. 그런 일은 디렉터가 이메일 견적 단계에서 합니다.\n" +
         "- 타겟 품목 유도: 우리의 주력 품목은 '상의(티셔츠, 맨투맨, 후디, 카라티 등)와 스포츠웨어'입니다. 바이어가 너무 복잡한 드레스나 아우터를 요구하면, '저희는 상의와 스포츠웨어의 소량 생산에 가장 특화되어 있습니다.'라고 안내하세요.\n" +
         "- 과한 칭찬 금지: 'Great choice!', 'Excellent!' 같은 과장된 칭찬이나 아부성 표현을 남발하지 마세요. 꼭 필요한 경우 절제된 긍정 표현 한 번이면 충분합니다. 차분하고 신뢰감 있는 전문가 톤을 유지하세요.\n" +
@@ -714,13 +714,12 @@ app.use("/api/", limiter); // Apply to all API routes
       let response: any;
 
       for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
-        // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
+        // NOTE: gemini-4-argon. Newer Gemini models reject temperature/top_p/top_k and thinking_budget, so don't add them back.
         response = await client.models.generateContent({
-          model: "gemini-3.1-flash-lite",
+          model: "gemini-4-argon",
           contents,
           config: {
             systemInstruction: systemInstruction,
-            temperature: 0.6,
             tools: [{ functionDeclarations: [quoteToolDeclaration] }],
           },
         });
@@ -1048,8 +1047,8 @@ app.use("/api/", limiter); // Apply to all API routes
 
       const client = getGeminiClient();
       const response = await client.models.generateContent({
-        // NOTE: gemini-3.1-flash-lite is the latest model. It does NOT appear in ListModels API results, but it IS a valid model. Do NOT change this.
-        model: "gemini-3.1-flash-lite",
+        // NOTE: gemini-4-argon. Newer Gemini models reject temperature/top_p/top_k and thinking_budget, so don't add them back.
+        model: "gemini-4-argon",
         contents: [{ role: "user", parts: [{ text: JSON.stringify(texts) }] }],
         config: {
           systemInstruction:
@@ -1059,7 +1058,6 @@ app.use("/api/", limiter); // Apply to all API routes
             "Preserve line breaks and placeholders like [Image Attached: ...] or [이미지 첨부] as-is. " +
             "Return ONLY a valid JSON array of strings with the same length and order as the input. No commentary.",
           responseMimeType: "application/json",
-          temperature: 0.2,
         },
       });
 
