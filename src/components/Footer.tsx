@@ -29,7 +29,7 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide, curre
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
 
             {/* Brand & Manifesto */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-6">
               <div className="flex items-center mb-5">
                 <img
                   src="/logo1234.png"
@@ -49,7 +49,19 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide, curre
             </div>
 
             {/* Info columns */}
-            <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-10 lg:gap-8 lg:pt-4">
+            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-10 lg:gap-8 lg:pt-4">
+              {/* 사업자 정보 — 해외 바이어가 실제 한국 법인인지 확인할 수 있게 */}
+              <div>
+                <div className={`text-[11px] font-medium uppercase tracking-[0.22em] mb-4 select-none ${microLabelClass}`}>
+                  Company
+                </div>
+                <p className={`text-[14px] font-light leading-[1.8] font-dm-sans ${textDescClass}`}>
+                  KAW Inc.<br />
+                  CEO 이근일<br />
+                  Business Reg. No.<br />
+                  179-86-04548
+                </p>
+              </div>
               <div>
                 <div className={`text-[11px] font-medium uppercase tracking-[0.22em] mb-4 select-none ${microLabelClass}`}>
                   Office
