@@ -250,7 +250,7 @@ export default function StartLanding() {
                     <div className="text-xs font-semibold text-neutral-900 mb-1">BBally</div>
                     <div className="inline-block bg-white/95 backdrop-blur-md border border-neutral-100 shadow-sm rounded-2xl rounded-tl-md px-4 py-3 max-w-[280px]">
                       <p className="text-[13px] text-neutral-600 leading-snug">
-                        Great design! MOQ starts at just <b className="text-neutral-900">1&nbsp;pc</b>, and we can have a sample ready in <b className="text-neutral-900">3–14 days</b>.
+                        Great design! MOQ starts at just <b className="text-neutral-900">1&nbsp;pc</b>, and we can have a sample ready in <b className="text-neutral-900">7–14 business days</b>.
                       </p>
                     </div>
                   </div>

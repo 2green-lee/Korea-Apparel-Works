@@ -395,7 +395,8 @@ export const TRIM_HEAVY_USD_PER_PIECE = 1.5;
 export const SAMPLE = {
   listPriceUsd: 100,
   /** 샘플 단계 리드타임 안내 */
-  leadTime: "about 2–3 weeks per sample round (each revision adds about 2 weeks)",
+  /** 샘플비 입금일 기준 7~14영업일(약 2~3주) (2026.10 확정) */
+  leadTime: "about 7–14 business days (roughly 2–3 weeks) from the day we receive the sample payment",
 };
 
 /** 샘플비 환급 정책 (고객 안내용) */

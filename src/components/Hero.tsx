@@ -20,6 +20,7 @@ interface HeroProps {
 }
 
 import { useChat } from "../lib/useChat";
+import ChatText from "./ChatText";
 
 const SLIDES = [
   {
@@ -495,7 +496,7 @@ export default function Hero({
                                 )}
                               </div>
                             )}
-                            {!msg.imageUrl && msg.text}
+                            {!msg.imageUrl && (msg.role === "model" ? <ChatText text={msg.text} /> : msg.text)}
                             {msg.imageUrl && !msg.imageUrl.endsWith('.pdf') && (
                               <span className="text-[11px] opacity-60">{msg.text}</span>
                             )}

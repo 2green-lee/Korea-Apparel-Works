@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Camera, Mic, ArrowUp, RefreshCw, History, FileText, Menu, X, Home, Factory, Shirt, User, LogOut } from "lucide-react";
 import { useChat, Message } from "../../lib/useChat";
+import ChatText from "../ChatText";
 
 interface MobileChatViewProps {
   messages: Message[];
@@ -192,7 +193,7 @@ export default function MobileChatView({
                     )}
                   </div>
                 )}
-                {!msg.imageUrl && msg.text}
+                {!msg.imageUrl && (msg.role === "model" ? <ChatText text={msg.text} /> : msg.text)}
                 {msg.imageUrl && !msg.imageUrl.endsWith(".pdf") && (
                   <span className="text-[11px] opacity-60 block mt-1">{msg.text}</span>
                 )}
