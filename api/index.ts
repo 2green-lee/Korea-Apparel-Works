@@ -54,7 +54,7 @@ function recordQuote(sessionId: string, userEmail: string | undefined, input: Qu
     const cost = internal.items.find((x) => x.item === c.item && x.quantity === c.quantity);
     const price = c.price_per_piece_usd ? `${fmtUsd(c.price_per_piece_usd.low)}–${fmtUsd(c.price_per_piece_usd.high)}` : "견적 제외";
     const costLine = cost
-      ? `\n   원가 ${fmtUsd(cost.cost_usd_per_piece)} = 원단 ${fmtUsd(cost.fabric_usd_per_piece)} + 공임 ${fmtUsd(cost.labor_usd_per_piece)} + 부자재 ${fmtUsd(cost.basic_trim_usd_per_piece)} + 장식 ${fmtUsd(cost.decoration_usd_per_piece)} + 브랜드부자재 ${fmtUsd(cost.branded_trim_usd_per_piece)}`
+      ? `\n   원가 ${fmtUsd(cost.cost_usd_per_piece)} = 원단 ${fmtUsd(cost.fabric_usd_per_piece)} + 공임 ${fmtUsd(cost.labor_usd_per_piece)} + 부자재 ${fmtUsd(cost.basic_trim_usd_per_piece)} + 부속 ${fmtUsd(cost.garment_parts_usd_per_piece)} + 장식 ${fmtUsd(cost.decoration_usd_per_piece)} + 브랜드부자재 ${fmtUsd(cost.branded_trim_usd_per_piece)}`
       : "";
     return `${i + 1}. ${escapeHtml(c.item)} ${c.quantity}장 (${c.colors}컬러) — 장당 ${price}${costLine}`;
   });
@@ -656,7 +656,7 @@ app.use("/api/", limiter); // Apply to all API routes
         "50장·100장은 최소 수량이 아니라 장당 단가가 낮아지는 구간일 뿐입니다. 수량이 적다는 이유로 거절하거나 더 주문하라고 요구하지 마세요.\n" +
         "(예: 'Got it. Roughly how many pieces are you planning to produce? There is no minimum — we produce from a single piece, and the unit price comes down at 50 and 100 pcs.')\n\n" +
         "Step 3-1. 컬러·로고·브랜드 부자재 (견적 정확도용)\n" +
-        "수량을 들으면, 한 번에 하나씩 짧게 확인하세요: ① 컬러가 몇 가지이고 컬러별로 몇 장인지 ② 로고/프린트를 어떤 방식(자수·실리콘·프린트 등)으로 몇 군데 넣는지 ③ 브랜드 넥라벨·행택·전용 폴리백이 필요한지.\n" +
+        "수량을 들으면, 한 번에 하나씩 짧게 확인하세요: ① 컬러가 몇 가지이고 컬러별로 몇 장인지 ② 로고/프린트를 어떤 방식(자수·실리콘·프린트 등)으로 몇 군데 넣는지 — 나염이면 위치마다 몇 도(색 수)·어느 크기(10×10cm/A4/A3)인지 ③ 브랜드 넥라벨·행택·전용 폴리백이 필요한지.\n" +
         "고객이 귀찮아하거나 모른다고 하면 더 묻지 말고 가정(1컬러, 가슴 로고 1곳, 브랜드 부자재 없음)으로 넘어가세요.\n" +
         "특정 Pantone 색을 원하면 custom_dye로 표시하세요 — 소량은 승화·디지털 프린트나 가장 가까운 기성 원단색으로 맞추고, 원하면 염색도 가능하다는 방침입니다.\n\n" +
         "Step 4. 작업지시서\n" +

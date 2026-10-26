@@ -11,15 +11,21 @@ import {
   BrandedTrimKey,
   DECORATIONS,
   DecorationMethod,
+  PRINT_SIZE_LABELS,
+  PrintSize,
   ESTIMATE_SPREAD,
   FABRICS,
   FABRIC_YARD_MULTIPLIERS,
   FX_KRW_PER_USD,
   GARMENTS,
+  GARMENT_PARTS,
+  GARMENT_PART_USAGE,
   GarmentKey,
   LABOR_KRW_TIERS,
   MARKUP,
   MIN_CUT_YARDS_PER_COLOR,
+  poloLaborKrw,
+  ROUND_TEE_LABOR_DISCOUNT_KRW,
   PRODUCTION_LEAD_TIME,
   SAMPLE,
   SAMPLE_CREDIT_POLICY,
@@ -40,7 +46,16 @@ export interface QuoteItemInput {
   fabric_note?: string;
   /** 컬러별 수량. 컬러 1개 50장이면 [50], 2컬러 50장씩이면 [50, 50]. */
   quantity_per_color: number[];
-  decorations?: { method: DecorationMethod; placements?: number }[];
+  decorations?: {
+    method: DecorationMethod;
+    placements?: number;
+    /** 나염: 도수(색 수) */
+    colors?: number;
+    /** 나염: 인쇄 크기 */
+    size?: PrintSize;
+  }[];
+  /** 라운드넥이어도 요꼬카라(플랫니트 칼라)가 들어가면 true — 폴로 공임과 요꼬카라 부속이 붙는다 */
+  flat_knit_collar?: boolean;
   /** 원단을 PMS 지정색으로 새로 염색해야 하는지 */
   custom_dye?: boolean;
   /** 색이 있는 원단 위에 승화 전사를 원하는지 */
@@ -109,6 +124,7 @@ export interface InternalItemBreakdown {
   fabric_detail: { color_qty: number; yards_bought: number; usd_per_yard: number }[];
   labor_usd_per_piece: number;
   basic_trim_usd_per_piece: number;
+  garment_parts_usd_per_piece: number;
   decoration_usd_per_piece: number;
   branded_trim_usd_per_piece: number;
   cost_usd_per_piece: number;
@@ -129,19 +145,69 @@ export interface QuoteResult {
 
 // ─── 사다리 조회 ───────────────────────────────────────────────────
 
-function laborUsdPerPiece(garment: GarmentKey, stylePieces: number): number {
-  const tier = LABOR_KRW_TIERS.find((t) => stylePieces >= t.minPieces) ?? LABOR_KRW_TIERS[LABOR_KRW_TIERS.length - 1];
-  return krwToUsd(tier.krwPerPiece * GARMENTS[garment].laborFactor);
+/**
+ * 사 오는 것(원단·부자재·부속·승화)은 업체 구간 단가대로 계단식. 흥정할 수 없으니 원가도 실제로 계단으로 움직인다.
+ * 경계 바로 아래 수량은 calculateQuote의 price_break 안내로 "몇 장 더 하면 싸진다"를 알려 준다.
+ */
+function stepTier(tiers: { min: number; value: number }[], x: number): number {
+  const desc = [...tiers].sort((a, b) => b.min - a.min);
+  return (desc.find((t) => x >= t.min) ?? desc[desc.length - 1]).value;
+}
+
+/**
+ * 공임(우리 공장 비용)만 구간 사이를 직선으로 잇는다. 99장과 100장 사이처럼 경계에서 값이 툭 떨어지지 않게.
+ * - 각 구간 값은 그 구간이 시작하는 지점(min)에서 표의 값과 정확히 같다.
+ * - 맨 아래 구간(min 0)은 다음 경계의 절반 지점에 놓고, 그보다 적으면 평평하게 그 값.
+ * - 맨 위 구간이 시작한 뒤로도 평평하게 그 값.
+ */
+function smoothTier(tiers: { min: number; value: number }[], x: number): number {
+  const asc = [...tiers].sort((a, b) => a.min - b.min);
+  const pts = asc.map((t, i) => ({ x: t.min === 0 && asc[i + 1] ? asc[i + 1].min / 2 : t.min, y: t.value }));
+  if (x <= pts[0].x) return pts[0].y;
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1];
+    const b = pts[i];
+    if (x <= b.x) return a.y + ((b.y - a.y) * (x - a.x)) / (b.x - a.x);
+  }
+  return pts[pts.length - 1].y;
+}
+
+function laborUsdPerPiece(garment: GarmentKey, stylePieces: number, flatKnitCollar = false): number {
+  const g = GARMENTS[garment];
+  // 요꼬카라가 들어가면 넥 모양과 상관없이 폴로 공정이다
+  if (g.laborCurve === "polo" || (flatKnitCollar && g.laborCurve === "round_tee")) return krwToUsd(poloLaborKrw(stylePieces));
+  if (g.laborCurve === "round_tee") return krwToUsd(poloLaborKrw(stylePieces) - ROUND_TEE_LABOR_DISCOUNT_KRW);
+  const krw = smoothTier(LABOR_KRW_TIERS.map((t) => ({ min: t.minPieces, value: t.krwPerPiece })), stylePieces);
+  return krwToUsd(krw * g.laborFactor);
+}
+
+function krwYardTier(tiers: { minYards: number; krw: number }[], yards: number): number {
+  return stepTier(tiers.map((t) => ({ min: t.minYards, value: t.krw })), yards);
 }
 
 function fabricMultiplier(yards: number): number {
-  const tier = FABRIC_YARD_MULTIPLIERS.find((t) => yards >= t.minYards) ?? FABRIC_YARD_MULTIPLIERS[FABRIC_YARD_MULTIPLIERS.length - 1];
-  return tier.multiplier;
+  return stepTier(FABRIC_YARD_MULTIPLIERS.map((t) => ({ min: t.minYards, value: t.multiplier })), yards);
+}
+
+/** 요꼬·단추·지퍼 등 품목별 부속. 단가는 스타일 총 장수 구간으로 정한다. */
+function garmentPartsUsd(garment: GarmentKey, stylePieces: number, flatKnitCollar = false) {
+  let usd = 0;
+  const labels: string[] = [];
+  const estimated: string[] = [];
+  const usage = [...(GARMENT_PART_USAGE[garment] || [])];
+  if (flatKnitCollar && !usage.some((u) => u.part === "flat_knit_collar")) usage.push({ part: "flat_knit_collar", units: 1 });
+  for (const { part, units } of usage) {
+    const spec = GARMENT_PARTS[part];
+    const krw = stepTier(spec.krwTiers.map((t) => ({ min: t.minPieces, value: t.krwPerUnit })), stylePieces);
+    usd += krwToUsd(krw * units);
+    labels.push(units > 1 && part === "button" ? `${spec.label} ×${units}` : spec.label);
+    if (!spec.confirmed) estimated.push(spec.label);
+  }
+  return { usd, labels, estimated };
 }
 
 function basicTrimUsd(stylePieces: number): number {
-  const tier = BASIC_TRIM_USD_TIERS.find((t) => stylePieces >= t.minPieces) ?? BASIC_TRIM_USD_TIERS[BASIC_TRIM_USD_TIERS.length - 1];
-  return tier.usd;
+  return stepTier(BASIC_TRIM_USD_TIERS.map((t) => ({ min: t.minPieces, value: t.usd })), stylePieces);
 }
 
 /** MOQ가 있는 부자재: 주문 수량이 MOQ 이하면 MOQ 총액을 그대로 사야 한다. */
@@ -155,7 +221,41 @@ function brandedTrimTotalUsd(key: BrandedTrimKey, garments: number): number {
 
 // ─── 메인 ──────────────────────────────────────────────────────────
 
-export function calculateQuote(input: QuoteInput): QuoteResult {
+/** 다음 단가 구간을 찾아볼 범위: 지금 수량의 +20% 또는 +10장 중 큰 쪽까지. */
+const PRICE_BREAK_LOOKAHEAD = { ratio: 0.2, minPieces: 10 };
+/** 1장 늘렸을 때 장당 단가가 이만큼(비율) 이상 툭 떨어지면 구간 경계로 본다. 공임 곡선의 완만한 하락은 걸리지 않는다. */
+const PRICE_BREAK_STEP = 0.01;
+/** 지금 단가 대비 이만큼(비율) 이상 내려가야 안내한다. */
+const PRICE_BREAK_MIN_DROP = 0.02;
+
+/**
+ * 계단식 원가 때문에 경계 바로 아래 수량이 손해일 때, 조금 더 주문하면 장당 단가가 얼마로 내려가는지 찾는다.
+ * 컬러가 여러 개면 컬러별 비율을 유지한 채 늘린다.
+ */
+function findPriceBreak(input: QuoteInput, index: number, base: CustomerItemQuote) {
+  if (!base.price_per_piece_usd) return null;
+  const item = input.items[index];
+  const qty = base.quantity;
+  const maxQty = qty + Math.max(PRICE_BREAK_LOOKAHEAD.minPieces, Math.ceil(qty * PRICE_BREAK_LOOKAHEAD.ratio));
+  const colors = item.quantity_per_color.length ? item.quantity_per_color : [qty];
+  let prevLow = base.price_per_piece_usd.low;
+  for (let q = qty + 1; q <= maxQty; q++) {
+    // 컬러별 비율 유지: 늘어난 장수를 앞 컬러부터 나눠 붙인다
+    const scaled = colors.map((c) => Math.floor((c * q) / qty));
+    for (let i = 0, rest = q - scaled.reduce((a, b) => a + b, 0); rest > 0; i = (i + 1) % scaled.length, rest--) scaled[i]++;
+    const trial = calculateQuote({ ...input, items: [{ ...item, quantity_per_color: scaled }] }, { priceBreaks: false });
+    const price = trial.customer.items[0].price_per_piece_usd;
+    if (!price) return null;
+    const isStep = price.low <= prevLow * (1 - PRICE_BREAK_STEP);
+    if (isStep && price.low <= base.price_per_piece_usd.low * (1 - PRICE_BREAK_MIN_DROP)) {
+      return { quantity: q, price, total: trial.customer.items[0].line_total_usd! };
+    }
+    prevLow = price.low;
+  }
+  return null;
+}
+
+export function calculateQuote(input: QuoteInput, opts: { priceBreaks?: boolean } = {}): QuoteResult {
   const flags: QuoteFlag[] = [];
   const addFlag = (f: QuoteFlag) => {
     if (!flags.some((x) => x.code === f.code && x.customer_message === f.customer_message)) flags.push(f);
@@ -276,23 +376,56 @@ export function calculateQuote(input: QuoteInput): QuoteResult {
     const bulk = fabricOpt?.bulkUsdPerYard ?? UNLISTED_FABRIC_BULK_USD_PER_YARD;
     const fabricDetail = it.quantity_per_color.map((cq) => {
       const yards = Math.max(cq * g.yardsPerPiece, MIN_CUT_YARDS_PER_COLOR);
-      const usdPerYard = bulk * fabricMultiplier(yards);
+      const usdPerYard = fabricOpt?.krwPerYardTiers
+        ? krwToUsd(krwYardTier(fabricOpt.krwPerYardTiers, yards))
+        : bulk * fabricMultiplier(yards);
       return { color_qty: cq, yards_bought: round2(yards), usd_per_yard: round2(usdPerYard), total: yards * usdPerYard };
     });
     const fabricPerPiece = fabricDetail.reduce((s, d) => s + d.total, 0) / qty;
 
-    const labor = laborUsdPerPiece(it.garment, qty);
+    const labor = laborUsdPerPiece(it.garment, qty, it.flat_knit_collar);
     const basicTrim = basicTrimUsd(qty);
+    const parts = garmentPartsUsd(it.garment, qty, it.flat_knit_collar);
+    if (parts.estimated.length) {
+      addFlag({
+        code: "parts_estimated",
+        severity: "confirm",
+        customer_message: `Trim parts for the ${g.label.toLowerCase()} (${parts.estimated.join(", ").toLowerCase()}) use typical costs; the exact figure comes with the formal quote.`,
+        internal_note: `${g.label} 부속 추정치: ${parts.estimated.join(", ")} — pricingPolicy.ts GARMENT_PARTS 확정 필요`,
+      });
+    }
 
     // 장식
     let decorationPerPiece = 0;
     let decorationSetup = 0;
     const includes: string[] = [`${fabricLabel}`, "cut & sew", "basic trims (thread, care label, plain polybag)"];
+    if (parts.labels.length) includes.push(parts.labels.join(", ").toLowerCase());
     const notIncluded: string[] = [];
     for (const d of it.decorations || []) {
       const spec = DECORATIONS[d.method] ?? DECORATIONS.other;
       const placements = Math.max(1, Math.round(d.placements ?? 1));
-      if (spec.usdPerPlacement == null) {
+      if (spec.krwPerFabricYard != null) {
+        // 승화전사처럼 원단 야드로 매기는 장식 — 컬러별로 산 원단 야드 전체에 찍는다
+        const yards = fabricDetail.reduce((s, f) => s + f.yards_bought, 0);
+        decorationPerPiece += krwToUsd(yards * spec.krwPerFabricYard) / qty;
+        includes.push(spec.label);
+      } else if (spec.screenPrint) {
+        // 나염 — 도수·크기별 판비(주문 전체 한 번) + 인쇄비(장당)
+        const size: PrintSize = d.size && spec.screenPrint[d.size] ? d.size : "a4";
+        const colors = Math.max(1, Math.round(d.colors ?? 1));
+        const rate = spec.screenPrint[size];
+        decorationPerPiece += krwToUsd(rate.krwPerColorPerPiece * colors * placements);
+        decorationSetup += krwToUsd(rate.setupKrwPerColor * colors * placements);
+        includes.push(`${spec.label} ${colors}-color, ${PRINT_SIZE_LABELS[size]} ×${placements}`);
+        if (d.colors == null || !d.size) {
+          addFlag({
+            code: "screen_print_assumed",
+            severity: "info",
+            customer_message: `Screen print is priced as ${colors}-color, ${PRINT_SIZE_LABELS[size]} per placement; the number of colors and print size change the setup and print cost.`,
+            internal_note: `${g.label} 나염 도수/크기 미확인 — ${colors}도·${size} 가정`,
+          });
+        }
+      } else if (spec.usdPerPlacement == null) {
         notIncluded.push(`${spec.label} (${placements} placement${placements > 1 ? "s" : ""}) — quoted separately`);
         addFlag({
           code: "decoration_unpriced",
@@ -311,7 +444,7 @@ export function calculateQuote(input: QuoteInput): QuoteResult {
     const brandedForItem = isSample ? 0 : brandedPerPiece;
     if (brandedForItem > 0) includes.push("your branded trims (see list)");
 
-    const cost = fabricPerPiece + labor + basicTrim + decorationPerPiece + brandedForItem;
+    const cost = fabricPerPiece + labor + basicTrim + parts.usd + decorationPerPiece + brandedForItem;
 
     let low: number;
     let high: number;
@@ -342,6 +475,7 @@ export function calculateQuote(input: QuoteInput): QuoteResult {
       fabric_detail: fabricDetail.map(({ total, ...rest }) => rest),
       labor_usd_per_piece: round2(labor),
       basic_trim_usd_per_piece: round2(basicTrim),
+      garment_parts_usd_per_piece: round2(parts.usd),
       decoration_usd_per_piece: round2(decorationPerPiece),
       branded_trim_usd_per_piece: round2(brandedForItem),
       cost_usd_per_piece: round2(cost),
@@ -380,6 +514,23 @@ export function calculateQuote(input: QuoteInput): QuoteResult {
     );
   }
   if (input.ship_to_country) terms.push(`Shipping to ${input.ship_to_country} will be added in the formal quote.`);
+
+  // 경계 바로 아래 수량이면 "몇 장 더 하면 단가가 내려간다" 안내 (샘플은 제외)
+  if (!isSample && opts.priceBreaks !== false) {
+    customerItems.forEach((c, i) => {
+      const br = findPriceBreak({ ...input, items }, i, c);
+      if (!br || !c.line_total_usd) return;
+      const sameOrLess = br.total.low <= c.line_total_usd.low;
+      addFlag({
+        code: "price_break",
+        severity: "info",
+        customer_message:
+          `${c.item}: ordering ${br.quantity} pcs instead of ${c.quantity} brings the price to about $${br.price.low}–$${br.price.high} per piece ` +
+          `($${br.total.low}–$${br.total.high} total)` + (sameOrLess ? " — about the same total or less, for more pieces." : "."),
+        internal_note: `${c.item} ${c.quantity}장 → ${br.quantity}장이면 장당 $${c.price_per_piece_usd!.low} → $${br.price.low} (구간 단가)`,
+      });
+    });
+  }
 
   const needsDirector = flags.some((f) => f.severity !== "info");
 
@@ -453,11 +604,18 @@ export const quoteToolDeclaration = {
                 properties: {
                   method: { type: "string", enum: Object.keys(DECORATIONS) },
                   placements: { type: "integer", description: "Number of logo/print positions with this method." },
+                  colors: { type: "integer", description: "Screen print only: number of ink colors in the artwork (도수). Count them from the buyer's image if there is one." },
+                  size: {
+                    type: "string",
+                    enum: Object.keys(PRINT_SIZE_LABELS),
+                    description: "Screen print only: print size per placement. small = up to 10×10cm (chest logo), a4 = up to A4, a3 = up to A3 (large front/back print).",
+                  },
                 },
                 required: ["method"],
               },
             },
             custom_dye: { type: "boolean", description: "True if the buyer needs fabric dyed to a specific Pantone color." },
+            flat_knit_collar: { type: "boolean", description: "True if the garment has a flat-knit (yoko) collar even though it is not a polo, e.g. a pique crew-neck with a knit collar band. Polos already include it." },
             sublimation_on_colored_fabric: { type: "boolean", description: "True if the buyer wants sublimation printed on a non-white fabric." },
           },
           required: ["garment", "fabric", "quantity_per_color"],
@@ -494,6 +652,9 @@ export function quotingPolicyPrompt(): string {
     "[정확한 견적을 위해 대화 중 확인할 것 — 한 번에 하나씩, 자연스럽게]\n" +
     "1) 품목(스타일별) 2) 원단 촉감/소재 3) 수량 4) 컬러 수와 컬러별 수량\n" +
     "5) 로고·프린트 방식과 위치 수(자수/실리콘/프린트 등) 6) 브랜드 라벨·행택·전용 폴리백을 원하는지\n" +
+    "   - 나염(screen_print)이면 위치마다 도수(색 수)와 크기(10×10cm 이내 / A4 이내 / A3 이내)를 꼭 확인하세요. 사진이 있으면 사진에서 색 수와 크기를 먼저 추정해 말하고 맞는지 물어보세요.\n" +
+    "   - 승화전사(sublimation_allover)는 원단 야드 단위라 크기·도수를 물을 필요 없습니다.\n" +
+    "   - 피케 원단에 요꼬카라(니트 칼라)가 들어가는 라운드넥은 flat_knit_collar를 true로 하세요.\n" +
     "7) 테크팩 또는 레퍼런스 옷/사이즈표 유무 8) 특정 Pantone 색 염색이 필요한지 9) 배송 국가\n" +
     "[견적 시점]\n" +
     "- 기본은 정보 수집입니다. 고객이 묻지 않았는데 먼저 가격을 말하지 마세요. 위 1~9를 한 번에 하나씩 최대한 확인하세요.\n" +

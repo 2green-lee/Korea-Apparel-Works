@@ -63,6 +63,12 @@ export interface GarmentSpec {
   yardsConfirmed: boolean;
   /** 기본(티셔츠) 공임 사다리 대비 배수. */
   laborFactor: number;
+  /**
+   * 공임 곡선을 직접 받은 품목. 있으면 laborFactor·LABOR_KRW_TIERS 대신 이 곡선을 쓴다.
+   *   polo      → POLO_LABOR_KRW_POINTS 그대로
+   *   round_tee → 폴로 곡선 − ROUND_TEE_LABOR_DISCOUNT_KRW
+   */
+  laborCurve?: "polo" | "round_tee";
   laborConfirmed: boolean;
   /** scope가 in_house가 아닐 때 고객에게 할 말의 요지(영문). */
   scopeNote?: string;
@@ -73,10 +79,10 @@ export interface GarmentSpec {
  * 공임 배수: 티 15,000원(50장) 기준. 폴로·여성 탑 17,000원은 Unstrung 원가 시트 확정가.
  */
 export const GARMENTS: Record<GarmentKey, GarmentSpec> = {
-  tee: { label: "T-shirt", scope: "in_house", yardsPerPiece: 1.1, yardsConfirmed: false, laborFactor: 1, laborConfirmed: true },
-  long_sleeve_tee: { label: "Long-sleeve T-shirt", scope: "in_house", yardsPerPiece: 1.4, yardsConfirmed: false, laborFactor: 1.1, laborConfirmed: false },
-  polo: { label: "Polo", scope: "in_house", yardsPerPiece: 1.3, yardsConfirmed: false, laborFactor: 17000 / 15000, laborConfirmed: true },
-  womens_sleeveless_top: { label: "Women's sleeveless top", scope: "in_house", yardsPerPiece: 0.7, yardsConfirmed: false, laborFactor: 17000 / 15000, laborConfirmed: true },
+  tee: { label: "T-shirt", scope: "in_house", yardsPerPiece: 1.1, yardsConfirmed: false, laborFactor: 1, laborConfirmed: true, laborCurve: "round_tee" },
+  long_sleeve_tee: { label: "Long-sleeve T-shirt", scope: "in_house", yardsPerPiece: 1.4, yardsConfirmed: false, laborFactor: 1, laborConfirmed: true, laborCurve: "polo" },
+  polo: { label: "Polo", scope: "in_house", yardsPerPiece: 1.3, yardsConfirmed: false, laborFactor: 1, laborConfirmed: true, laborCurve: "polo" },
+  womens_sleeveless_top: { label: "Women's sleeveless top", scope: "in_house", yardsPerPiece: 0.7, yardsConfirmed: false, laborFactor: 1, laborConfirmed: true, laborCurve: "polo" },
   sweatshirt: { label: "Crewneck sweatshirt", scope: "in_house", yardsPerPiece: 1.6, yardsConfirmed: false, laborFactor: 1.2, laborConfirmed: false },
   hoodie: { label: "Hoodie", scope: "in_house", yardsPerPiece: 2.0, yardsConfirmed: false, laborFactor: 1.4, laborConfirmed: false },
   quarter_zip: { label: "Quarter-zip pullover", scope: "in_house", yardsPerPiece: 1.7, yardsConfirmed: false, laborFactor: 1.5, laborConfirmed: false },
@@ -111,6 +117,34 @@ export const GARMENTS: Record<GarmentKey, GarmentSpec> = {
 // ─── 공임 ──────────────────────────────────────────────────────────
 
 /** 기본 공임 사다리 — 티셔츠 기준, 스타일 총 장수 기준 (원/장). */
+/**
+ * 폴로 공임 (원/장, 2026.10 확정). 점 사이는 직선으로 이어서 계산한다 — 구간 경계에서 값이 튀지 않게.
+ *   50장 이하는 무조건 17,000원, 300장 이상은 무조건 8,000원.
+ *   예: 51장 16,940원 / 75장 15,500원 / 150장 12,500원
+ * 라운드 티는 여기서 2,000원 뺀 값. 긴팔티·여성 민소매 탑 등 나머지 티류는 폴로와 같다.
+ */
+export const POLO_LABOR_KRW_POINTS = [
+  { pieces: 50, krw: 17000 },
+  { pieces: 100, krw: 14000 },
+  { pieces: 200, krw: 11000 },
+  { pieces: 300, krw: 8000 },
+];
+
+export const ROUND_TEE_LABOR_DISCOUNT_KRW = 2000;
+
+/** 장수에 맞는 폴로 공임(원). 첫 점 이하·마지막 점 이상은 끝값으로 고정, 그 사이는 직선 보간. */
+export function poloLaborKrw(pieces: number): number {
+  const pts = POLO_LABOR_KRW_POINTS;
+  if (pieces <= pts[0].pieces) return pts[0].krw;
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1];
+    const b = pts[i];
+    if (pieces <= b.pieces) return Math.round(a.krw + ((b.krw - a.krw) * (pieces - a.pieces)) / (b.pieces - a.pieces));
+  }
+  return pts[pts.length - 1].krw;
+}
+
+/** 공임 곡선이 없는 품목(맨투맨·후디 등)이 쓰는 기존 사다리 × laborFactor. */
 export const LABOR_KRW_TIERS = [
   { minPieces: 100, krwPerPiece: 9000 },
   { minPieces: 50, krwPerPiece: 15000 },
@@ -125,7 +159,19 @@ export interface FabricOption {
   spec: string;
   bulkUsdPerYard: number;
   estimated?: boolean;
+  /**
+   * 원화 야드 단가를 직접 받은 원단. 있으면 bulkUsdPerYard × 할증률 대신 이 구간을 쓴다.
+   * 구간 기준은 컬러별 야드수.
+   */
+  krwPerYardTiers?: { minYards: number; krw: number }[];
 }
+
+/** 폴리 원단 공장 매입가 3,000~4,000원/야드 (2026.10 확인). 100야드 이상 하단, 50야드 미만 상단. */
+export const POLY_KRW_PER_YARD_TIERS = [
+  { minYards: 100, krw: 3000 },
+  { minYards: 50, krw: 3500 },
+  { minYards: 0, krw: 4000 },
+];
 
 /**
  * 대표 원단과 대량 기준 야드 단가(USD). 공급처에서 실제로 확인한 가격이며 상담용 개략치다.
@@ -139,7 +185,8 @@ export const FABRICS: FabricOption[] = [
   { key: "cotton_pique", name: "Cotton Pique (polo)", spec: "Cotton 100% · 200-240gsm", bulkUsdPerYard: 6.50, estimated: true },
   { key: "french_terry_mid", name: "Cotton French Terry (midweight)", spec: "Cotton 100% · 250-370gsm", bulkUsdPerYard: 6.34 },
   { key: "french_terry_heavy", name: "Cotton French Terry (heavyweight)", spec: "Cotton 100% · 420-480gsm", bulkUsdPerYard: 8.34 },
-  { key: "poly_performance", name: "Polyester Performance Knit", spec: "Poly 100% · 110-170gsm", bulkUsdPerYard: 3.26 },
+  { key: "poly_performance", name: "Polyester Performance Knit", spec: "Poly 100% · 110-170gsm", bulkUsdPerYard: 3000 / FX_KRW_PER_USD, krwPerYardTiers: POLY_KRW_PER_YARD_TIERS },
+  { key: "poly_pique", name: "Polyester Pique (polo)", spec: "Poly 100% · 160-200gsm", bulkUsdPerYard: 3000 / FX_KRW_PER_USD, krwPerYardTiers: POLY_KRW_PER_YARD_TIERS },
   { key: "poly_spandex_mesh", name: "Poly/Spandex Wicking Mesh", spec: "Poly 95% Spandex 5% · 92-140gsm", bulkUsdPerYard: 4.08 },
   { key: "linen_blend_jersey", name: "Linen-blend Jersey", spec: "Linen/Cotton · 160gsm", bulkUsdPerYard: 4.53 },
   { key: "wool_blend", name: "Wool / Wool-blend", spec: "Wool · 170-320gsm", bulkUsdPerYard: 21.0 },
@@ -167,6 +214,77 @@ export const BASIC_TRIM_USD_TIERS = [
   { minPieces: 0, usd: 1.43 },
 ];
 
+// ─── 품목별 부속 (요꼬·단추·지퍼·끈 등) ─────────────────────────────
+
+export type GarmentPartKey =
+  | "flat_knit_collar"
+  | "flat_knit_cuff"
+  | "button"
+  | "quarter_zipper"
+  | "drawcord"
+  | "eyelet"
+  | "waist_elastic"
+  | "rib_trim";
+
+export interface GarmentPartSpec {
+  label: string;
+  /** 스타일 총 장수 기준 단가 (원/개). 위에서부터 먼저 맞는 구간을 쓴다. */
+  krwTiers: { minPieces: number; krwPerUnit: number }[];
+  confirmed: boolean;
+}
+
+/**
+ * 출처 (2026.10.26, 원/개, 세금 별도):
+ *   확정     — 요꼬카라 (공장 확인가)
+ *   ApparelX — kr.apparel-x.com 회원가 그대로. 소량 소매가라 국내 대량 단가보다 비쌀 수 있다.
+ *   추정     — ApparelX에도 없거나 사양이 안 맞아 미뤄 잡은 값. confirmed: false → 디렉터 확인 플래그.
+ * 실제 발주 단가를 받으면 숫자를 바꾸고 confirmed: true로 할 것.
+ */
+export const GARMENT_PARTS: Record<GarmentPartKey, GarmentPartSpec> = {
+  /** 확정 */
+  flat_knit_collar: {
+    label: "Flat-knit collar",
+    /** 299장까지 2,000원, 300장부터 1,500원 (2026.10 확정) */
+    krwTiers: [{ minPieces: 300, krwPerUnit: 1500 }, { minPieces: 0, krwPerUnit: 2000 }],
+    confirmed: true,
+  },
+  /** 추정 — ApparelX에 없음. 소매 요꼬 한 쌍, 카라 단가의 60% */
+  flat_knit_cuff: {
+    label: "Flat-knit sleeve cuffs (pair)",
+    krwTiers: [{ minPieces: 300, krwPerUnit: 900 }, { minPieces: 0, krwPerUnit: 1200 }],
+    confirmed: false,
+  },
+  /** ApparelX SE-2708 4구멍 폴리 단추 ₩190 (30개 이하 ₩380). 폴로 3개 기준 → 10장 이하면 30개 이하 */
+  button: { label: "Buttons", krwTiers: [{ minPieces: 11, krwPerUnit: 190 }, { minPieces: 0, krwPerUnit: 380 }], confirmed: true },
+  /** ApparelX YKK 3CFC 코일 지퍼 클로즈드 20cm ₩680 (10개 이상 ₩570) */
+  quarter_zipper: { label: "Zipper", krwTiers: [{ minPieces: 10, krwPerUnit: 570 }, { minPieces: 0, krwPerUnit: 680 }], confirmed: true },
+  /**
+   * ApparelX 3091 폴리 코드 5mm ₩1,100/m × 1.3m = ₩1,430.
+   * 100장 이상은 롤 구매(미터 재단의 절반 단가)로 보고 ₩720.
+   */
+  drawcord: { label: "Drawcord", krwTiers: [{ minPieces: 100, krwPerUnit: 720 }, { minPieces: 0, krwPerUnit: 1430 }], confirmed: true },
+  /** ApparelX SE300 아일렛 9mm ₩300/세트 (200세트 이상 ₩80). 장당 2개 → 100장이면 200세트 */
+  eyelet: { label: "Eyelets", krwTiers: [{ minPieces: 100, krwPerUnit: 80 }, { minPieces: 0, krwPerUnit: 300 }], confirmed: true },
+  /**
+   * 추정 — ApparelX 1100-WH 평직 고무밴드 ₩1,950–4,480/m 중 허리용 폭(25~30mm)을 ₩3,000/m로 보고 × 0.8m.
+   * 100장 이상은 롤 단가(절반).
+   */
+  waist_elastic: { label: "Waist elastic", krwTiers: [{ minPieces: 100, krwPerUnit: 1200 }, { minPieces: 0, krwPerUnit: 2400 }], confirmed: false },
+  /** 추정 — ApparelX에 없음. 소매·밑단 시보리(립) 원단, 요척에 안 들어간 몫 */
+  rib_trim: { label: "Rib cuffs & hem", krwTiers: [{ minPieces: 0, krwPerUnit: 500 }], confirmed: false },
+};
+
+/** 품목별로 들어가는 부속과 장당 개수. 없는 품목은 부속 없음. 개수는 추정치. */
+export const GARMENT_PART_USAGE: Partial<Record<GarmentKey, { part: GarmentPartKey; units: number }[]>> = {
+  polo: [{ part: "flat_knit_collar", units: 1 }, { part: "flat_knit_cuff", units: 1 }, { part: "button", units: 3 }],
+  sweatshirt: [{ part: "rib_trim", units: 1 }],
+  hoodie: [{ part: "rib_trim", units: 1 }, { part: "drawcord", units: 1 }, { part: "eyelet", units: 2 }],
+  quarter_zip: [{ part: "rib_trim", units: 1 }, { part: "quarter_zipper", units: 1 }],
+  joggers: [{ part: "rib_trim", units: 1 }, { part: "waist_elastic", units: 1 }, { part: "drawcord", units: 1 }, { part: "eyelet", units: 2 }],
+  shorts: [{ part: "waist_elastic", units: 1 }, { part: "drawcord", units: 1 }, { part: "eyelet", units: 2 }],
+  skirt_skort: [{ part: "waist_elastic", units: 1 }],
+};
+
 // ─── 장식 (로고·프린트) ────────────────────────────────────────────
 
 export type DecorationMethod =
@@ -185,7 +303,22 @@ export interface DecorationSpec {
   usdPerPlacement: number | null;
   /** 장식 셋업비(판비·자수 펀칭 등, USD). 주문 전체에 한 번. */
   setupUsd: number;
+  /**
+   * 원단 야드 단위로 매기는 장식(승화전사). 있으면 위치 수 대신, 그 옷을 만들려고 끊은 원단 야드 전체에
+   * 이 단가를 곱한다. 디자인 크기·비율과 상관없이 야드 단위로 한 번 찍는 값.
+   */
+  krwPerFabricYard?: number;
+  /** 나염(실크스크린)처럼 도수·크기로 매기는 장식. 판비는 도당·위치당 주문 전체에 한 번, 인쇄비는 도당·위치당·장당. */
+  screenPrint?: Record<PrintSize, { setupKrwPerColor: number; krwPerColorPerPiece: number }>;
 }
+
+/** 나염 인쇄 크기 구분 */
+export type PrintSize = "small" | "a4" | "a3";
+export const PRINT_SIZE_LABELS: Record<PrintSize, string> = {
+  small: "up to 10×10cm",
+  a4: "up to A4",
+  a3: "up to A3",
+};
 
 /**
  * 확정 단가가 들어간 건 실리콘 로고뿐이다(Unstrung 견적 기준).
@@ -194,11 +327,23 @@ export interface DecorationSpec {
 export const DECORATIONS: Record<DecorationMethod, DecorationSpec> = {
   embroidery: { label: "Embroidery", usdPerPlacement: null, setupUsd: 0 },
   heat_seal_embroidery: { label: "Heat-seal embroidered patch", usdPerPlacement: null, setupUsd: 0 },
-  screen_print: { label: "Screen print", usdPerPlacement: null, setupUsd: 0 },
+  /**
+   * 나염 — 티모자 공개 단가 기준(도당 판비 + 도당 장당 인쇄비). 2도면 둘 다 두 배.
+   * 거래 나염 공장 단가를 받으면 바꿀 것.
+   */
+  screen_print: {
+    label: "Screen print", usdPerPlacement: null, setupUsd: 0,
+    screenPrint: {
+      small: { setupKrwPerColor: 20000, krwPerColorPerPiece: 200 },
+      a4: { setupKrwPerColor: 30000, krwPerColorPerPiece: 300 },
+      a3: { setupKrwPerColor: 60000, krwPerColorPerPiece: 600 },
+    },
+  },
   silicone_patch: { label: "Silicone logo", usdPerPlacement: 0.40, setupUsd: 0 },
   heat_transfer: { label: "Heat transfer", usdPerPlacement: null, setupUsd: 0 },
   digital_print: { label: "Digital print (DTP)", usdPerPlacement: null, setupUsd: 0 },
-  sublimation_allover: { label: "All-over sublimation", usdPerPlacement: null, setupUsd: 0 },
+  /** 승화전사 야드당 3,500원 (2026.10 확정). 수량·디자인 크기와 상관없이, 끊은 원단 야드 전체에 찍는다. */
+  sublimation_allover: { label: "Sublimation print", usdPerPlacement: null, setupUsd: 0, krwPerFabricYard: 3500 },
   other: { label: "Other decoration", usdPerPlacement: null, setupUsd: 0 },
 };
 
