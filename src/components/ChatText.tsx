@@ -74,7 +74,7 @@ export function BBallyAvatar({ size = 32 }: { size?: number }) {
       role="img"
       aria-label="BBally"
       style={{ width: size, height: size, fontSize: Math.round(size * 0.47) }}
-      className="rounded-full shrink-0 bg-blue-900 text-white font-semibold flex items-center justify-center select-none leading-none"
+      className="rounded-full shrink-0 bg-neutral-950 text-white font-semibold flex items-center justify-center select-none leading-none"
     >
       B
     </div>
