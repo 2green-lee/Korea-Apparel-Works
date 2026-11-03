@@ -23,8 +23,10 @@ import {
   Eye,
   Languages,
   RotateCcw,
-  XCircle
+  XCircle,
+  Factory,
 } from "lucide-react";
+import SupplierManager from "./admin/SupplierManager";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 interface SubmissionItem {
@@ -48,7 +50,7 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [currentAdmin, setCurrentAdmin] = useState<{ email: string; name: string; role: "master" | "admin" } | null>(null);
+  const [currentAdmin, setCurrentAdmin] = useState<{ email: string; name: string; role: "master" | "admin"; token?: string } | null>(null);
   
   const [submissions, setSubmissions] = useState<SubmissionItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +58,7 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"all" | "quote" | "preorder">("all");
 
-  const [activeMainTab, setActiveMainTab] = useState<"dashboard" | "pageEdit" | "adminManagement" | "chats" | "orders" | "trash">("dashboard");
+  const [activeMainTab, setActiveMainTab] = useState<"dashboard" | "pageEdit" | "adminManagement" | "chats" | "orders" | "suppliers" | "trash">("dashboard");
 
   // Chats & Orders State
   const [chatData, setChatData] = useState<{ sessions: any[], messages: any[] }>({ sessions: [], messages: [] });
@@ -645,6 +647,18 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
           >
             <ShoppingCart className="w-4 h-4" />
             <span>발주서 목록(PO)</span>
+          </button>
+
+          <button
+            onClick={() => setActiveMainTab("suppliers")}
+            className={`text-left px-4 py-3 rounded-xl transition duration-200 cursor-pointer text-sm font-semibold flex items-center space-x-3.5 border border-transparent ${
+              activeMainTab === "suppliers"
+                ? "bg-white text-black border-white/10"
+                : "text-neutral-400 hover:text-white hover:bg-neutral-900 border-transparent"
+            }`}
+          >
+            <Factory className="w-4 h-4" />
+            <span>협력 업체</span>
           </button>
 
           <button
@@ -2039,6 +2053,8 @@ export default function AdminDashboard({ onExit }: AdminDashboardProps) {
           </div>
         </>
       ) : null}
+
+      {activeMainTab === "suppliers" ? <SupplierManager token={currentAdmin?.token} /> : null}
 
       {activeMainTab === "pageEdit" ? (
         <div className="bg-neutral-900 border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[50vh] text-center">

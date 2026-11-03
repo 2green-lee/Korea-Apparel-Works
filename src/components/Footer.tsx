@@ -66,10 +66,10 @@ const Footer = React.memo(function Footer({ onAdminClick, setCurrentSlide, curre
               <div>
                 <div className={`text-[11px] font-medium uppercase tracking-[0.22em] mb-3 select-none ${microLabelClass}`}>Contact</div>
                 <a
-                  href="mailto:contact@koreaapparel.works"
+                  href="mailto:contact@k-apparel.works"
                   className={`underline-offset-4 hover:underline transition-colors break-all ${linkHoverClass}`}
                 >
-                  contact@koreaapparel.works
+                  contact@k-apparel.works
                 </a>
               </div>
             </div>

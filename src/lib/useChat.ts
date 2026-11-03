@@ -7,6 +7,45 @@ export interface Message {
   imageUrl?: string;
 }
 
+// ─── 협력 업체 답변 받아오기 ───────────────────────────────────────
+// BBally가 업체에 문의를 넣으면 문의 번호를 브라우저에 적어 두고, 답이 오면 채팅창에 BBally 메시지로 붙인다.
+// 새로고침해서 세션이 바뀌어도, 다시 들어오면 받아 온다(메일로도 따로 간다).
+const PENDING_KEY = "kaw_pending_inquiries";
+const PENDING_TTL_MS = 14 * 24 * 60 * 60 * 1000;
+const POLL_MS = 30_000;
+
+interface PendingInquiry {
+  id: number;
+  sessionId: string;
+  at: number;
+}
+
+function readPending(): PendingInquiry[] {
+  try {
+    const list = JSON.parse(localStorage.getItem(PENDING_KEY) || "[]");
+    return Array.isArray(list) ? list.filter((p) => p && Date.now() - p.at < PENDING_TTL_MS) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writePending(list: PendingInquiry[]) {
+  try {
+    localStorage.setItem(PENDING_KEY, JSON.stringify(list));
+  } catch {
+    // 저장 못 해도 메일로는 간다
+  }
+}
+
+function addPending(ids: unknown, sessionId: string) {
+  if (!Array.isArray(ids) || !ids.length) return;
+  const list = readPending();
+  for (const id of ids) {
+    if (typeof id === "number" && !list.some((p) => p.id === id)) list.push({ id, sessionId, at: Date.now() });
+  }
+  writePending(list);
+}
+
 interface UseChatProps {
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -54,6 +93,54 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
 
       recognitionRef.current = recognition;
     }
+  }, []);
+
+  const [pendingCount, setPendingCount] = useState(() => (typeof window === "undefined" ? 0 : readPending().length));
+
+  useEffect(() => {
+    if (!pendingCount) return;
+    let stopped = false;
+    const check = async () => {
+      const pending = readPending();
+      if (!pending.length) {
+        setPendingCount(0);
+        return;
+      }
+      const bySession = new Map<string, number[]>();
+      for (const p of pending) bySession.set(p.sessionId, [...(bySession.get(p.sessionId) || []), p.id]);
+      const done = new Set<number>();
+      for (const [sessionId, ids] of bySession) {
+        try {
+          const r = await fetch(`/api/chat/updates?sessionId=${encodeURIComponent(sessionId)}&ids=${ids.join(",")}`);
+          if (!r.ok) continue;
+          const data = await r.json();
+          if (stopped) return;
+          for (const u of data.updates || []) {
+            done.add(u.id);
+            setMessages((prev) => (prev.some((m) => m.text === u.text) ? prev : [...prev, { role: "model", text: u.text }]));
+          }
+          for (const id of data.closed || []) done.add(id);
+        } catch {
+          // 다음 차례에 다시
+        }
+      }
+      if (done.size) {
+        const left = readPending().filter((p) => !done.has(p.id));
+        writePending(left);
+        setPendingCount(left.length);
+      }
+    };
+    check();
+    const timer = window.setInterval(check, POLL_MS);
+    return () => {
+      stopped = true;
+      window.clearInterval(timer);
+    };
+  }, [pendingCount, setMessages]);
+
+  const trackInquiries = useCallback((ids: unknown) => {
+    addPending(ids, sessionIdRef.current);
+    setPendingCount(readPending().length);
   }, []);
 
   const toggleListening = useCallback(() => {
@@ -130,6 +217,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         ]);
       } else {
         setMessages((prev) => [...prev, { role: "model", text: data.text }]);
+        trackInquiries(data.supplierInquiryIds);
       }
     } catch (err) {
       if (currentId !== generationIdRef.current) return;
@@ -145,7 +233,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         setIsGenerating(false);
       }
     }
-  }, [chatInput, isGenerating, messages, user, setMessages]);
+  }, [chatInput, isGenerating, messages, user, setMessages, trackInquiries]);
 
   const handleQuickCommand = useCallback(async (promptText: string) => {
     if (isGenerating) return;
@@ -163,6 +251,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         body: JSON.stringify({
           sessionId: sessionIdRef.current,
           userId: user?.id,
+          userEmail: user?.email,
           message: promptText,
           history: messages.slice(1)
         })
@@ -181,6 +270,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         ]);
       } else {
         setMessages((prev) => [...prev, { role: "model", text: data.text }]);
+        trackInquiries(data.supplierInquiryIds);
       }
     } catch (err) {
       if (currentId !== generationIdRef.current) return;
@@ -196,7 +286,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         setIsGenerating(false);
       }
     }
-  }, [isGenerating, messages, user, setMessages]);
+  }, [isGenerating, messages, user, setMessages, trackInquiries]);
 
   const handleImageSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -250,6 +340,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         body: JSON.stringify({
           sessionId: sessionIdRef.current,
           userId: user?.id,
+          userEmail: user?.email,
           message: `[Image Attached: ${imageUrl}] Please analyze this image for apparel manufacturing.`,
           imageUrl: imageUrl,
           history: messages.slice(1)
@@ -263,6 +354,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         setMessages((prev) => [...prev, { role: "model", text: `Error: ${data.error}` }]);
       } else {
         setMessages((prev) => [...prev, { role: "model", text: data.text }]);
+        trackInquiries(data.supplierInquiryIds);
       }
     } catch (err: any) {
       if (currentId !== generationIdRef.current) return;
@@ -273,7 +365,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
     } finally {
       if (currentId === generationIdRef.current) setIsGenerating(false);
     }
-  }, [isGenerating, messages, user, setMessages]);
+  }, [isGenerating, messages, user, setMessages, trackInquiries]);
 
   const handleAnalyzeImage = useCallback(() => {
     if (fileInputRef.current) {

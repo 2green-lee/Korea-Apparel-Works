@@ -8,6 +8,7 @@ import rateLimit from "express-rate-limit";
 import cors from "cors";
 import hpp from "hpp";
 import { calculateQuote, quoteToolDeclaration, quotingPolicyPrompt, QUOTE_TOOL_NAME, QuoteInput, QuoteResult } from "./quoteEngine.js";
+import { createSupplierRelay, signAdminToken, SUPPLIER_TOOL_NAME } from "./supplierRelay.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -220,6 +221,9 @@ async function readAdmins(): Promise<AdminAccount[]> {
   }
 }
 
+const CHAT_MODEL = "gemini-4-argon";
+const supplierRelay = createSupplierRelay({ supabase, getGemini: getGeminiClient, model: CHAT_MODEL });
+
 const app = express();
 
 // Apply Security Headers
@@ -276,6 +280,8 @@ app.use("/api/", limiter); // Apply to all API routes
             email: match.email,
             name: match.name,
             role: match.role,
+            // 협력 업체 API용 서명 토큰 (업체 연락처를 다루므로 서버에서 확인)
+            token: signAdminToken(match.email),
           },
         });
       } else {
@@ -630,6 +636,9 @@ app.use("/api/", limiter); // Apply to all API routes
         parts: userParts
       });
 
+      // 협력 업체가 등록된 품목(관리자가 추가한 모자·아우터 등 포함)을 BBally 도구에 반영
+      const relayTools = await supplierRelay.chatTools();
+
       const systemInstruction =
         "[System Instructions] K-Fashion 플랫폼 리드 수집 챗봇\n\n" +
         "당신은 한국의 부산에 위치한 30년 한국 전통의 프리미엄 의류 제조 공장(Korea Apparel Works)의 글로벌 소싱 어시스턴트인 'BBally'입니다.\n" +
@@ -729,21 +738,23 @@ app.use("/api/", limiter); // Apply to all API routes
         "- Maintain a sophisticated, premium, welcoming, and professional B2B advisor persona.\n" +
         "- Do NOT overuse compliments, flattery, or exclamation marks. Stay calm, measured, and professional — one restrained positive remark is enough when genuinely warranted.\n\n" +
         // 단가는 api/pricingPolicy.ts, 계산은 api/quoteEngine.ts. BBally는 도구를 호출할 뿐 계산하지 않는다.
-        quotingPolicyPrompt();
+        quotingPolicyPrompt() +
+        relayTools.prompt;
 
       // BBally가 calculate_quote를 부르면 서버가 계산해서 돌려주고, BBally가 그 결과로 답을 마무리한다.
       const MAX_TOOL_ROUNDS = 3;
       let lastQuote: { input: QuoteInput; result: QuoteResult } | null = null;
+      const supplierInquiryIds: number[] = [];
       let response: any;
 
       for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
         // NOTE: gemini-4-argon. Newer Gemini models reject temperature/top_p/top_k and thinking_budget, so don't add them back.
         response = await client.models.generateContent({
-          model: "gemini-4-argon",
+          model: CHAT_MODEL,
           contents,
           config: {
             systemInstruction: systemInstruction,
-            tools: [{ functionDeclarations: [quoteToolDeclaration] }],
+            tools: [{ functionDeclarations: [quoteToolDeclaration, relayTools.declaration] }],
           },
         });
 
@@ -756,6 +767,26 @@ app.use("/api/", limiter); // Apply to all API routes
 
         const responseParts: any[] = [];
         for (const call of calls) {
+          if (call.name === SUPPLIER_TOOL_NAME) {
+            // 모르는 견적 → 협력 업체 문의 (사장님 텔레그램 승인 후 발송)
+            try {
+              const { inquiryId } = await supplierRelay.createInquiry(sessionId, userEmail, call.args);
+              if (!supplierInquiryIds.includes(inquiryId)) supplierInquiryIds.push(inquiryId);
+              responseParts.push({
+                functionResponse: {
+                  id: call.id,
+                  name: call.name,
+                  response: { output: { status: "requested", note: "Partner workshop is being asked. The answer will appear in this chat and by email, usually within a few business hours to one business day." } },
+                },
+              });
+            } catch (err: any) {
+              console.error("request_supplier_quote failed:", err);
+              responseParts.push({
+                functionResponse: { id: call.id, name: call.name, response: { error: "Could not reach partners now. Tell the buyer our director will include it in the emailed quote." } },
+              });
+            }
+            continue;
+          }
           if (call.name !== QUOTE_TOOL_NAME) {
             responseParts.push({ functionResponse: { id: call.id, name: call.name, response: { error: "Unknown tool" } } });
             continue;
@@ -765,7 +796,19 @@ app.use("/api/", limiter); // Apply to all API routes
             const result = calculateQuote(quoteInput);
             lastQuote = { input: quoteInput, result };
             // BBally에게는 고객용 결과만 넘긴다 (원가 내역은 넘기지 않음)
-            responseParts.push({ functionResponse: { id: call.id, name: call.name, response: { output: result.customer } } });
+            // 표에 없는 항목이 있으면 BBally가 같은 턴에 업체 문의를 넣도록 다음 할 일을 붙인다
+            const needsSupplier = result.internal.flags
+              .filter((f) => ["decoration_unpriced", "fabric_unlisted", "custom_dye", "not_in_house"].includes(f.code))
+              .map((f) => f.internal_note);
+            const output = needsSupplier.length
+              ? {
+                  ...result.customer,
+                  supplier_quote_needed: needsSupplier,
+                  next_step:
+                    "Some items are not priced in our tables. If a partner category fits (see the registered list in your instructions) and you already know the details a partner needs (size, placement, colors / fabric spec / product details), call request_supplier_quote now for each item, in this same turn, and tell the buyer the partner price will follow in this chat and by email. If a key detail is missing, ask for it first. A product we don't make (not_in_house) with no fitting partner category is simply declined as before.",
+                }
+              : result.customer;
+            responseParts.push({ functionResponse: { id: call.id, name: call.name, response: { output } } });
           } catch (err: any) {
             console.error("calculate_quote failed:", err);
             responseParts.push({
@@ -859,7 +902,7 @@ app.use("/api/", limiter); // Apply to all API routes
         content: replyText
       }]);
 
-      res.json({ text: replyText });
+      res.json({ text: replyText, supplierInquiryIds });
     } catch (error: any) {
       console.error("Gemini API Error in /api/chat: ", error);
       res.status(500).json({ 
@@ -868,6 +911,9 @@ app.use("/api/", limiter); // Apply to all API routes
       });
     }
   });
+
+  // 협력 업체 견적 릴레이 (텔레그램 승인 · 업체 답변 링크 · 고객 전달 · 관리자)
+  supplierRelay.registerRoutes(app);
 
   // GDPR: Export User Data
   app.get("/api/user/data", async (req, res) => {

@@ -426,7 +426,7 @@ export default function CookieBanner() {
                   </p>
                   <div className="pl-5">
                     <span className="text-neutral-950 font-semibold font-mono text-[13px]">
-                      Email: lgi12@naver.com
+                      Email: contact@k-apparel.works
                     </span>
                   </div>
                 </div>

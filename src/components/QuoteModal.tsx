@@ -460,7 +460,7 @@ export default function QuoteModal({ isOpen, onClose, onSubmit }: QuoteModalProp
                     If you have any questions about this Privacy Policy or wish to exercise your data protection rights, please contact us at:
                   </p>
                   <ul className="list-disc list-inside mt-1.5 space-y-1 pl-1.5">
-                    <li><strong>Email:</strong> <a href="mailto:hello@koreaapparelworks.com" className="text-neutral-900 hover:underline">hello@koreaapparelworks.com</a></li>
+                    <li><strong>Email:</strong> <a href="mailto:contact@k-apparel.works" className="text-neutral-900 hover:underline">contact@k-apparel.works</a></li>
                     <li><strong>Company Name:</strong> Korea Apparel Works</li>
                     <li><strong>Location:</strong> Busan, South Korea</li>
                   </ul>

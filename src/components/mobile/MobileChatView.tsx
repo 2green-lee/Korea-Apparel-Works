@@ -141,6 +141,12 @@ export default function MobileChatView({
 
         </div>
 
+        {/* 사업자 정보 — 모바일에는 주소 없이 상호·등록번호·메일만 */}
+        <div className="shrink-0 px-6 pt-4 pb-[calc(env(safe-area-inset-bottom,0px)+20px)] border-t border-white/10 font-dm-sans font-light text-[12px] leading-[1.7] text-neutral-500">
+          KAW Inc.<br />
+          Business Reg. No. 179-86-04548<br />
+          <a href="mailto:contact@k-apparel.works" className="hover:text-neutral-300">contact@k-apparel.works</a>
+        </div>
       </div>
 
       {/* Chat Messages Area */}
@@ -286,6 +292,12 @@ export default function MobileChatView({
             </button>
           </div>
         </form>
+        {messages.length === 1 && (
+          <p className="mt-2.5 text-center font-dm-sans font-light text-[11px] leading-[1.6] text-neutral-400">
+            KAW Inc. · Business Reg. No. 179-86-04548 ·{" "}
+            <a href="mailto:contact@k-apparel.works" className="underline-offset-2 hover:underline">contact@k-apparel.works</a>
+          </p>
+        )}
       </div>
     </div>
   );
