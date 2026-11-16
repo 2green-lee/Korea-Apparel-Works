@@ -534,8 +534,7 @@ export default function WelcomePage() {
               </nav>{/* //.footer-cols */}
             </div>{/* //.footer-inner */}
             <div className="inner footer-bottom">
-              {/* TODO: 사업자등록번호 확정 */}
-              <p>Business Registration No. [000-00-00000]</p>
+              <p>Business Registration No. 179-86-04548</p>
               <p>2F, 30-1, Suyeong-ro 603beon-gil, Suyeong-gu, Busan, Korea</p>
             </div>{/* //.footer-bottom */}
           </footer>
