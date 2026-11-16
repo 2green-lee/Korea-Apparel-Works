@@ -148,6 +148,12 @@
 
 .kaw-bbally .bb-foot-note { margin-top: 12px; font-size: 12px; line-height: 1.6; text-align: center; color: var(--bb-text-mute); }
 .kaw-bbally .bb-foot-note a { color: inherit; text-underline-offset: 2px; }
+.kaw-bbally .bb-foot-link { font-size: inherit; color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.kaw-bbally.is-desktop.is-start .bb-foot-note { margin-top: 20px; }
+
+/* 답이 흘러들어오는 동안 끝에 깜빡이는 커서 */
+.kaw-bbally .bb-bubble.is-streaming > div > :last-child::after { content: ''; display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; background: var(--bb-vivid); vertical-align: -0.18em; animation: bbCaret 1s steps(1) infinite; }
+@keyframes bbCaret { 50% { opacity: 0; } }
 
 /* ---------- 데스크톱 배치 (기존 상단 바 80px 아래) ---------- */
 .kaw-bbally.is-desktop.is-start { min-height: 100vh; min-height: 100svh; padding: calc(var(--bb-header) + 96px) 0 120px; }
