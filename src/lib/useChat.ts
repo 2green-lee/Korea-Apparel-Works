@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { takeBballyHandoff } from "./bballyHandoff";
 
 export interface Message {
   role: "user" | "model";
@@ -366,6 +367,15 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
       if (currentId === generationIdRef.current) setIsGenerating(false);
     }
   }, [isGenerating, messages, user, setMessages, trackInquiries]);
+
+  // welcome 페이지 대화창에서 넘어온 첫 질문이 있으면 화면이 열리자마자 바로 보낸다
+  const handoffCheckedRef = useRef(false);
+  useEffect(() => {
+    if (handoffCheckedRef.current) return;
+    handoffCheckedRef.current = true;
+    const text = takeBballyHandoff();
+    if (text) void handleQuickCommand(text);
+  }, [handleQuickCommand]);
 
   const handleAnalyzeImage = useCallback(() => {
     if (fileInputRef.current) {

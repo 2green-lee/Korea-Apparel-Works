@@ -1,0 +1,18 @@
+/* React로 옮기면서 추가한 보정 — 원본 퍼블리싱의 링크형 입력창을 실제 입력창으로 바꿨기 때문 */
+.kaw-welcome .sec-bbally form.chat-compose { cursor: text; }
+.kaw-welcome .sec-bbally form.chat-compose:focus-within { border-color: var(--color-sky); box-shadow: 0 0 0 4px var(--color-ice), 0 12px 40px rgba(15, 18, 21, 0.08); }
+.kaw-welcome .sec-bbally textarea.compose-txt {
+  width: 100%;
+  resize: none;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  color: var(--color-text);
+}
+.kaw-welcome .sec-bbally textarea.compose-txt::placeholder { color: var(--color-text-mute); }
+.kaw-welcome .sec-bbally .compose-bar button { cursor: pointer; }
+.kaw-welcome .sec-bbally .compose-ico:hover,
+.kaw-welcome .sec-bbally .compose-chip:hover { border-color: var(--color-sky); color: var(--color-text); }
+.kaw-welcome .sec-bbally form.chat-compose:focus-within .compose-send,
+.kaw-welcome .sec-bbally .compose-send:hover { background: var(--color-vivid); }

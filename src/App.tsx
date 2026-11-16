@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
 import StartLanding from "./components/StartLanding";
-import WelcomeLanding from "./components/WelcomeLanding";
+import WelcomePage from "./components/welcome/WelcomePage";
 import MobileChatView from "./components/mobile/MobileChatView";
 const PreOrderModal = lazy(() => import("./components/PreOrderModal"));
 const AdminDashboard = lazy(() => import("./components/AdminDashboard"));
@@ -154,8 +154,8 @@ export default function App() {
         canonical = "https://k-apparel.works/start";
         break;
       case "welcome":
-        title = "Welcome to Korea Apparel Works | Premium Manufacturing Partner";
-        description = "Learn how Korea Apparel Works delivers premium custom apparel solutions with flawless details, low-MOQ, and 30-year veteran ateliers.";
+        title = "Korea Apparel Works | No brand is too small.";
+        description = "Korea-made knitwear for sports and performance brands. Tell BBally what you want to make and get pricing, MOQ and lead time from our Busan factory, from a single piece.";
         robots = "index, follow";
         canonical = "https://k-apparel.works/welcome";
         break;
@@ -334,7 +334,7 @@ export default function App() {
       ) : currentView === "start" ? (
         <StartLanding />
       ) : currentView === "welcome" ? (
-        <WelcomeLanding />
+        <WelcomePage />
       ) : isMobile && currentSlide === 0 ? (
         <MobileChatView
           messages={messages}
