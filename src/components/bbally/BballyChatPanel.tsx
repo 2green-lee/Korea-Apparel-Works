@@ -228,15 +228,11 @@ export default function BballyChatPanel(props: BballyChatPanelProps) {
         ) : (
           // 메인 첫 화면에는 footer를 두지 않으므로, 사업자 정보는 여기 한 줄로 남긴다
           <p className="bb-foot-note">
-            KAW Inc. · CEO 이근일 · Business Reg. No. 179-86-04548 · <a href="mailto:contact@k-apparel.works">contact@k-apparel.works</a>
-            {isDesktop && (
-              <>
-                {" · "}
-                <button type="button" className="bb-foot-link" onClick={() => window.dispatchEvent(new CustomEvent("open-cookie-policy"))}>
-                  Cookie Policy
-                </button>
-              </>
-            )}
+            KAW Inc. · Business Reg. No. 179-86-04548 · <a href="mailto:contact@k-apparel.works">contact@k-apparel.works</a>
+            {" · "}
+            <button type="button" className="bb-foot-link" onClick={() => window.dispatchEvent(new CustomEvent("open-cookie-policy"))}>
+              Cookie Policy
+            </button>
           </p>
         )}
       </div>
