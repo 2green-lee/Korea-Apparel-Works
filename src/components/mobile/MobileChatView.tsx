@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Camera, Mic, ArrowUp, RefreshCw, History, FileText, Menu, X, Home, Factory, Shirt, User, LogOut } from "lucide-react";
 import { useChat, Message } from "../../lib/useChat";
-import ChatText, { BBallyAvatar, BBallyName } from "../ChatText";
+import BballyChatPanel from "../bbally/BballyChatPanel";
 
 interface MobileChatViewProps {
   messages: Message[];
@@ -40,6 +40,7 @@ export default function MobileChatView({
     isListening,
     toggleListening,
     handleSendMessage,
+    handleQuickCommand,
     handleImageSelect,
     handleAnalyzeImage,
   } = useChat({ messages, setMessages, user, onOpenLogin });
@@ -149,156 +150,24 @@ export default function MobileChatView({
         </div>
       </div>
 
-      {/* Chat Messages Area */}
-      {messages.length === 1 ? (
-        <div className="flex-1 flex flex-col items-center justify-center px-6">
-          <img src="/logo1.png" alt="Korea Apparel Works Logo" className="w-[40px] h-[40px] mb-5 opacity-75 object-contain" />
-          <h2 className="font-dm-sans text-[26px] font-[450] tracking-tight text-neutral-800 leading-tight text-center">
-            Start your brand with us
-          </h2>
-          <p className="pretendard-font mt-3 text-neutral-600 text-[14px] text-center max-w-xs font-normal">
-            Upload a photo or just describe it — get pricing, MOQ, and lead time.<br />Made in Korea.
-          </p>
-
-          {/* 데스크톱과 마찬가지로, 말을 걸기 전에도 BBally의 인사를 띄워 둔다. */}
-          {messages[0]?.role === "model" && (
-            <div className="w-full flex gap-2 items-start justify-start mt-7">
-              <BBallyAvatar size={32} />
-              <div className="min-w-0 text-left">
-                <BBallyName />
-                <div className="rounded-[20px] rounded-tl-sm bg-neutral-100 px-4 py-3 text-[14px] leading-[1.65] text-neutral-700">
-                  <ChatText text={messages[0].text} />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div
-          ref={scrollRef}
-          className="flex-1 overflow-y-auto px-4 py-6 space-y-5 scrollbar-thin scroll-smooth"
-        >
-          {messages.map((msg, index) => (
-            <div key={index} className={`flex gap-2 items-start ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-              {msg.role === "model" && <BBallyAvatar size={28} />}
-              <div
-                className={`max-w-[85%] rounded-[20px] px-4 py-3 leading-relaxed text-[15px] ${
-                  msg.role === "user"
-                    ? "bg-neutral-950 text-white rounded-tr-sm font-light"
-                    : "bg-white text-neutral-800 leading-[1.65] border border-neutral-200/60 rounded-tl-sm shadow-sm"
-                }`}
-              >
-                {msg.imageUrl && (
-                  <div className="mb-2">
-                    {msg.imageUrl.endsWith(".pdf") ? (
-                      <div className="flex items-center space-x-2 bg-neutral-200/50 rounded-xl p-3">
-                        <FileText className="w-5 h-5 text-neutral-500 shrink-0" />
-                        <span className="text-xs truncate">{msg.text}</span>
-                      </div>
-                    ) : (
-                      <img
-                        src={msg.imageUrl}
-                        alt="Uploaded"
-                        className="rounded-xl max-h-[200px] w-auto object-cover border border-neutral-200/60"
-                      />
-                    )}
-                  </div>
-                )}
-                {!msg.imageUrl && (msg.role === "model" ? <ChatText text={msg.text} /> : msg.text)}
-                {msg.imageUrl && !msg.imageUrl.endsWith(".pdf") && (
-                  <span className="text-[11px] opacity-60 block mt-1">{msg.text}</span>
-                )}
-              </div>
-            </div>
-          ))}
-
-          {isGenerating && (
-            <div className="flex gap-2 items-start justify-start">
-              <BBallyAvatar size={28} />
-              <div className="animate-pulse bg-white text-neutral-500 max-w-[85%] rounded-[20px] px-4 py-3 shadow-sm border border-neutral-200/60 rounded-tl-sm flex items-center space-x-2">
-                <span className="flex space-x-1">
-                  <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                  <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                  <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce"></span>
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Input Area */}
-      <div className="px-4 pt-2 pb-[calc(env(safe-area-inset-bottom,16px)+12px)] focus-within:pb-3 shrink-0 transition-all duration-300">
-        <form onSubmit={handleSendMessage} className="bg-white/95 backdrop-blur-xl border border-neutral-200/80 rounded-[28px] px-4 py-3 flex flex-col space-y-2 shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
-          <textarea
-            ref={textareaRef}
-            value={chatInput}
-            onChange={(e) => setChatInput(e.target.value)}
-            placeholder="Tell us what you want to make..."
-            className="w-full bg-transparent resize-none overflow-hidden border-0 outline-none focus:ring-0 text-[16px] text-neutral-900 placeholder-neutral-400 font-light min-h-[44px] max-h-[120px]"
-            disabled={isGenerating}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-              }
-            }}
-          />
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageSelect}
-                accept="image/png, image/jpeg, image/webp, application/pdf"
-                className="hidden"
-              />
-              <button
-                type="button"
-                onClick={handleAnalyzeImage}
-                className="p-2 rounded-full text-neutral-500 hover:bg-neutral-100 transition-colors"
-                title="Upload"
-              >
-                <Camera className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={toggleListening}
-                className={`p-2 rounded-full transition-colors ${
-                  isListening
-                    ? "bg-red-50 text-red-500 animate-pulse"
-                    : "text-neutral-500 hover:bg-neutral-100"
-                }`}
-                title={isListening ? "녹음 중지" : "음성 입력"}
-              >
-                <Mic className="w-5 h-5" />
-              </button>
-
-
-            </div>
-
-            <button
-              type="submit"
-              disabled={!chatInput.trim() || isGenerating}
-              className={`p-2.5 rounded-full flex items-center justify-center transition-colors ${
-                chatInput.trim() && !isGenerating
-                  ? "bg-neutral-950 text-white"
-                  : "bg-neutral-200 text-neutral-400 pointer-events-none"
-              }`}
-            >
-              <ArrowUp className="w-5 h-5" strokeWidth={2.5} />
-            </button>
-          </div>
-        </form>
-        {messages.length === 1 && (
-          <p className="mt-2.5 text-center font-dm-sans font-light text-[11px] leading-[1.6] text-neutral-400">
-            KAW Inc. · Business Reg. No. 179-86-04548 ·{" "}
-            <a href="mailto:contact@k-apparel.works" className="underline-offset-2 hover:underline">contact@k-apparel.works</a>
-          </p>
-        )}
-      </div>
+      {/* 채팅 영역 — 인더엑스 시안 기반 빨리 대화 화면 (위쪽 상단 바와 메뉴는 그대로) */}
+      <BballyChatPanel
+        mode="mobile"
+        messages={messages}
+        chatInput={chatInput}
+        setChatInput={setChatInput}
+        isGenerating={isGenerating}
+        isListening={isListening}
+        textareaRef={textareaRef}
+        fileInputRef={fileInputRef}
+        scrollRef={scrollRef}
+        onSend={handleSendMessage}
+        onQuick={handleQuickCommand}
+        onToggleVoice={toggleListening}
+        onPickFile={handleAnalyzeImage}
+        onFileSelected={handleImageSelect}
+        onNewChat={onClearChat}
+      />
     </div>
   );
 }

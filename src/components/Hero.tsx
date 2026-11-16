@@ -21,6 +21,7 @@ interface HeroProps {
 
 import { useChat } from "../lib/useChat";
 import ChatText, { BBallyAvatar, BBallyName } from "./ChatText";
+import BballyChatPanel from "./bbally/BballyChatPanel";
 
 const SLIDES = [
   {
@@ -417,6 +418,29 @@ export default function Hero({
   const handleNextSlide = useCallback(() => {
     setCurrentSlide((prev: number) => (prev < SLIDES.length - 1 ? prev + 1 : 0));
   }, [setCurrentSlide]);
+
+  // 첫 화면(Home): 인더엑스 시안 기반 빨리 대화 화면. 상단 바(Header)는 App에서 그대로 그린다.
+  if (currentSlide === 0) {
+    return (
+      <BballyChatPanel
+        mode="desktop"
+        messages={messages}
+        chatInput={chatInput}
+        setChatInput={setChatInput}
+        isGenerating={isGenerating}
+        isListening={isListening}
+        textareaRef={textareaRef}
+        fileInputRef={fileInputRef}
+        scrollRef={scrollRef}
+        onSend={handleSendMessage}
+        onQuick={handleQuickCommand}
+        onToggleVoice={toggleListening}
+        onPickFile={handleAnalyzeImage}
+        onFileSelected={handleImageSelect}
+        onNewChat={onClearChat}
+      />
+    );
+  }
 
   return (
     <section className={`relative w-full flex flex-col justify-center items-center overflow-x-clip overflow-y-visible z-10 px-0 lg:px-8 transition-all duration-500 min-h-[100vh] pt-20 pb-0 ${currentSlide === 0 ? '' : 'bg-white'}`}>
