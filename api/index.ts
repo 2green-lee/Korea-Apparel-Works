@@ -557,11 +557,30 @@ app.use("/api/", limiter); // Apply to all API routes
   });
 
   // API Route for AI Chat regarding Korean Apparel Manufacturing
-  app.post("/api/chat", async (req, res) => {
+  // /api/chat: 답을 다 만든 뒤 한 번에 JSON으로 (기존)
+  // /api/chat/stream: 답을 만드는 대로 글자 단위로 흘려보냄 (Server-Sent Events)
+  // 둘은 같은 처리 과정을 쓰고, 보내는 방식만 다르다.
+  const handleChat = async (req: express.Request, res: express.Response, stream: boolean) => {
+    // 스트리밍: "data: {...}\n\n" 한 줄씩. {t}=글자 조각, {done}=최종 답, {error}=실패
+    const emit = (payload: Record<string, unknown>) => {
+      if (!stream || res.writableEnded) return;
+      res.write(`data: ${JSON.stringify(payload)}\n\n`);
+      (res as any).flush?.();
+    };
     try {
       const { sessionId, userId, userEmail, message, imageUrl, history } = req.body;
       if (!message || !sessionId) {
         return res.status(400).json({ error: "Message and sessionId are required" });
+      }
+      if (stream) {
+        res.status(200);
+        res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+        res.setHeader("Cache-Control", "no-cache, no-transform");
+        res.setHeader("Connection", "keep-alive");
+        res.setHeader("X-Accel-Buffering", "no");
+        res.flushHeaders?.();
+        // 연결이 바로 열렸다는 신호 (프록시가 버퍼링하지 않게 첫 바이트를 일찍 보낸다)
+        res.write(": open\n\n");
       }
 
       // Ensure session exists
@@ -747,22 +766,62 @@ app.use("/api/", limiter); // Apply to all API routes
       const supplierInquiryIds: number[] = [];
       let response: any;
 
-      for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
+      // 한 라운드 = 모델 한 번 호출. 스트리밍이면 글자 조각을 받는 대로 브라우저로 흘려보낸다.
+      // 반환: 이번 라운드 글(text), 도구 호출(calls), 대화에 다시 붙일 모델 턴(content, thought signature 포함)
+      let streamedText = "";
+      const runRound = async (): Promise<{ text: string; calls: any[]; content: any }> => {
         // NOTE: gemini-4-argon. Newer Gemini models reject temperature/top_p/top_k and thinking_budget, so don't add them back.
-        response = await client.models.generateContent({
+        const params = {
           model: CHAT_MODEL,
           contents,
           config: {
             systemInstruction: systemInstruction,
             tools: [{ functionDeclarations: [quoteToolDeclaration, relayTools.declaration] }],
           },
-        });
+        };
+        if (!stream) {
+          response = await client.models.generateContent(params);
+          return {
+            text: response?.text || "",
+            calls: response.functionCalls || [],
+            content: response.candidates?.[0]?.content,
+          };
+        }
+        const chunks = await client.models.generateContentStream(params);
+        const parts: any[] = [];
+        const calls: any[] = [];
+        let text = "";
+        let separated = false;
+        for await (const chunk of chunks) {
+          for (const part of chunk.candidates?.[0]?.content?.parts || []) {
+            parts.push(part);
+            if (part.functionCall) calls.push(part.functionCall);
+            if (typeof part.text === "string" && part.text && !part.thought) {
+              // 앞 라운드에서 이미 글을 보냈으면 문단을 나눠서 이어 붙인다
+              if (!separated && streamedText && !streamedText.endsWith("\n")) {
+                streamedText += "\n\n";
+                emit({ t: "\n\n" });
+              }
+              separated = true;
+              text += part.text;
+              streamedText += part.text;
+              emit({ t: part.text });
+            }
+          }
+        }
+        return { text, calls, content: parts.length ? { role: "model", parts } : undefined };
+      };
 
-        const calls = response.functionCalls || [];
+      let lastText = "";
+      for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
+        const roundResult = await runRound();
+        lastText = roundResult.text;
+
+        const calls = roundResult.calls;
         if (!calls.length || round === MAX_TOOL_ROUNDS) break;
 
         // 모델의 함수 호출 턴을 그대로(thought signature 포함) 대화에 붙인다
-        const modelContent = response.candidates?.[0]?.content;
+        const modelContent = roundResult.content;
         if (modelContent) contents.push(modelContent);
 
         const responseParts: any[] = [];
@@ -827,7 +886,8 @@ app.use("/api/", limiter); // Apply to all API routes
         recordQuote(sessionId, userEmail, lastQuote.input, lastQuote.result);
       }
 
-      let replyText = response?.text || "I was unable to generate a response. Please try again.";
+      // 기존 방식은 마지막 라운드의 글, 스트리밍은 화면에 흘려보낸 글 전체를 최종 답으로 쓴다
+      let replyText = (stream ? streamedText.trim() : lastText) || "I was unable to generate a response. Please try again.";
 
       // Extract JSON if present
       const jsonRegex = /```json\s*([\s\S]*?)\s*```/;
@@ -902,15 +962,29 @@ app.use("/api/", limiter); // Apply to all API routes
         content: replyText
       }]);
 
-      res.json({ text: replyText, supplierInquiryIds });
+      if (stream) {
+        // 최종 답(주문 JSON 블록을 뺀 깨끗한 글)으로 화면의 말풍선을 마무리한다
+        emit({ done: true, text: replyText, supplierInquiryIds });
+        res.end();
+      } else {
+        res.json({ text: replyText, supplierInquiryIds });
+      }
     } catch (error: any) {
-      console.error("Gemini API Error in /api/chat: ", error);
+      console.error(`Gemini API Error in /api/chat${stream ? "/stream" : ""}: `, error);
+      if (stream && res.headersSent) {
+        emit({ error: "Failed to communicate with AI." });
+        res.end();
+        return;
+      }
       res.status(500).json({ 
         error: "Failed to communicate with AI.",
         details: error.message || error 
       });
     }
-  });
+  };
+
+  app.post("/api/chat", (req, res) => handleChat(req, res, false));
+  app.post("/api/chat/stream", (req, res) => handleChat(req, res, true));
 
   // 협력 업체 견적 릴레이 (텔레그램 승인 · 업체 답변 링크 · 고객 전달 · 관리자)
   supplierRelay.registerRoutes(app);

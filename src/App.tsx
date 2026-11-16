@@ -389,7 +389,10 @@ export default function App() {
           </main>
 
           {/* 5. Standalone Premium legal bottom (home renders the transparent variant) */}
-          <Footer currentSlide={currentSlide} onAdminClick={() => handleSetView("admin")} setCurrentSlide={setCurrentSlide} />
+          {/* 메인 첫 화면(빨리 채팅)에서는 footer를 숨긴다 — 사업자 정보는 입력창 아래 한 줄로 */}
+          {currentSlide !== 0 && (
+            <Footer currentSlide={currentSlide} onAdminClick={() => handleSetView("admin")} setCurrentSlide={setCurrentSlide} />
+          )}
         </>
       )}
 

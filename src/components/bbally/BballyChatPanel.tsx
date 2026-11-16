@@ -63,6 +63,8 @@ export default function BballyChatPanel(props: BballyChatPanelProps) {
   useKawFonts();
 
   const chatting = messages.length > 1;
+  // 답이 글자 단위로 들어오기 시작하면 '입력 중' 점 대신 말풍선이 바로 자란다
+  const replyStreaming = !!messages[messages.length - 1]?.streaming;
   const canSend = chatInput.trim().length > 0 && !isGenerating;
   const isDesktop = mode === "desktop";
 
@@ -127,7 +129,7 @@ export default function BballyChatPanel(props: BballyChatPanelProps) {
                   <Avatar />
                   <div className="bb-body">
                     {(i === 0 || messages[i - 1]?.role !== "model") && <strong className="bb-name">BBally</strong>}
-                    <div className="bb-bubble">
+                    <div className={`bb-bubble${msg.streaming ? " is-streaming" : ""}`}>
                       <Attachment msg={msg} />
                       {msg.imageUrl ? null : <ChatText text={msg.text} />}
                     </div>
@@ -149,7 +151,7 @@ export default function BballyChatPanel(props: BballyChatPanelProps) {
             );
           })}
 
-          {isGenerating && (
+          {isGenerating && !replyStreaming && (
             <div className="bb-row is-model">
               <Avatar />
               <div className="bb-body">
@@ -224,11 +226,14 @@ export default function BballyChatPanel(props: BballyChatPanelProps) {
         {chatting ? (
           <p className="bb-foot-note">BBally gives quick estimates. Every quote is confirmed by our team before production.</p>
         ) : (
-          !isDesktop && (
-            <p className="bb-foot-note">
-              KAW Inc. · Business Reg. No. 179-86-04548 · <a href="mailto:contact@k-apparel.works">contact@k-apparel.works</a>
-            </p>
-          )
+          // 메인 첫 화면에는 footer를 두지 않으므로, 사업자 정보는 여기 한 줄로 남긴다
+          <p className="bb-foot-note">
+            KAW Inc. · Business Reg. No. 179-86-04548 · <a href="mailto:contact@k-apparel.works">contact@k-apparel.works</a>
+            {" · "}
+            <button type="button" className="bb-foot-link" onClick={() => window.dispatchEvent(new CustomEvent("open-cookie-policy"))}>
+              Cookie Policy
+            </button>
+          </p>
         )}
       </div>
     </div>

@@ -6,6 +6,86 @@ export interface Message {
   role: "user" | "model";
   text: string;
   imageUrl?: string;
+  /** 빨리 답변이 아직 흘러들어오는 중 */
+  streaming?: boolean;
+}
+
+// ─── 빨리 답변 스트리밍 ────────────────────────────────────────────
+// /api/chat/stream 으로 받아 글자 단위로 말풍선에 채운다. 그 통로가 없거나(예전 서버) 열리지 않으면
+// 기존 /api/chat 으로 한 번에 받는다. 주문 JSON 블록(```json)은 흘러오는 동안에도 화면에 보이지 않게 자른다.
+function visibleText(raw: string) {
+  const cut = raw.indexOf("```json");
+  return (cut >= 0 ? raw.slice(0, cut) : raw).replace(/`{1,3}$/, "").trimEnd();
+}
+
+type ReplyResult = { ok: true; text: string; supplierInquiryIds?: unknown } | { ok: false; error: string; offline?: boolean };
+
+async function readJsonReply(body: unknown): Promise<ReplyResult> {
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  if (data.error) return { ok: false, error: data.error };
+  return { ok: true, text: data.text, supplierInquiryIds: data.supplierInquiryIds };
+}
+
+async function streamReply(body: unknown, onText: (text: string) => void): Promise<ReplyResult> {
+  let response: Response;
+  try {
+    response = await fetch("/api/chat/stream", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    return readJsonReply(body);
+  }
+  const type = response.headers.get("content-type") || "";
+  if (!response.ok || !response.body || !type.includes("text/event-stream")) {
+    // 스트리밍 통로가 없는 서버 → 기존 방식
+    return readJsonReply(body);
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let raw = "";
+  let final: ReplyResult | null = null;
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let sep: number;
+      while ((sep = buffer.indexOf("\n\n")) >= 0) {
+        const block = buffer.slice(0, sep);
+        buffer = buffer.slice(sep + 2);
+        const line = block.split("\n").find((l) => l.startsWith("data:"));
+        if (!line) continue;
+        let evt: any;
+        try {
+          evt = JSON.parse(line.slice(5).trim());
+        } catch {
+          continue;
+        }
+        if (typeof evt.t === "string") {
+          raw += evt.t;
+          onText(visibleText(raw));
+        } else if (evt.done) {
+          final = { ok: true, text: evt.text, supplierInquiryIds: evt.supplierInquiryIds };
+        } else if (evt.error) {
+          final = { ok: false, error: evt.error };
+        }
+      }
+    }
+  } catch {
+    // 연결이 중간에 끊김 — 받은 데까지라도 보여 준다
+  }
+  if (final) return final;
+  if (raw.trim()) return { ok: true, text: visibleText(raw) };
+  return { ok: false, error: "offline", offline: true };
 }
 
 // ─── 협력 업체 답변 받아오기 ───────────────────────────────────────
@@ -144,6 +224,44 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
     setPendingCount(readPending().length);
   }, []);
 
+  // 빨리에게 보내고 답을 말풍선 하나로 채운다 (흘러오는 동안 계속 갱신, 끝나면 최종 글로 확정)
+  const fetchBballyReply = useCallback(
+    async (body: Record<string, unknown>, currentId: number): Promise<ReplyResult> => {
+      let started = false;
+      const result = await streamReply(body, (text) => {
+        if (currentId !== generationIdRef.current || !text) return;
+        setMessages((prev) => {
+          if (!started) {
+            started = true;
+            return [...prev, { role: "model", text, streaming: true }];
+          }
+          const next = [...prev];
+          next[next.length - 1] = { role: "model", text, streaming: true };
+          return next;
+        });
+      });
+      if (currentId !== generationIdRef.current) return result;
+      if (result.ok) {
+        setMessages((prev) => {
+          const next = [...prev];
+          if (started) next[next.length - 1] = { role: "model", text: result.text };
+          else next.push({ role: "model", text: result.text });
+          return next;
+        });
+      } else if (started) {
+        // 글이 오다가 실패하면 받은 부분은 남기고 '흘러오는 중' 표시만 끈다
+        setMessages((prev) => {
+          const next = [...prev];
+          const last = next[next.length - 1];
+          if (last?.streaming) next[next.length - 1] = { role: "model", text: last.text };
+          return next;
+        });
+      }
+      return result;
+    },
+    [setMessages]
+  );
+
   const toggleListening = useCallback(() => {
     if (!recognitionRef.current) {
       alert("현재 브라우저는 음성 인식을 지원하지 않습니다. 최신 크롬(Chrome)을 사용해주세요.");
@@ -193,32 +311,29 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
     setIsGenerating(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const result = await fetchBballyReply(
+        {
           sessionId: sessionIdRef.current,
           userId: user?.id,
           userEmail: user?.email,
           message: userMsg,
-          history: messages.slice(1)
-        })
-      });
-
-      const data = await response.json();
+          history: messages.slice(1),
+        },
+        currentId
+      );
       if (currentId !== generationIdRef.current) return;
 
-      if (data.error) {
+      if (!result.ok && result.offline) throw new Error("offline");
+      if (!result.ok) {
         setMessages((prev) => [
           ...prev,
           {
             role: "model",
-            text: `Query error: ${data.error}. Please ensure your Gemini API key is configured under Settings > Secrets.`
+            text: `Query error: ${result.error}. Please ensure your Gemini API key is configured under Settings > Secrets.`
           }
         ]);
       } else {
-        setMessages((prev) => [...prev, { role: "model", text: data.text }]);
-        trackInquiries(data.supplierInquiryIds);
+        trackInquiries(result.supplierInquiryIds);
       }
     } catch (err) {
       if (currentId !== generationIdRef.current) return;
@@ -234,7 +349,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         setIsGenerating(false);
       }
     }
-  }, [chatInput, isGenerating, messages, user, setMessages, trackInquiries]);
+  }, [chatInput, isGenerating, messages, user, setMessages, trackInquiries, fetchBballyReply]);
 
   const handleQuickCommand = useCallback(async (promptText: string) => {
     if (isGenerating) return;
@@ -246,32 +361,29 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
     setIsGenerating(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const result = await fetchBballyReply(
+        {
           sessionId: sessionIdRef.current,
           userId: user?.id,
           userEmail: user?.email,
           message: promptText,
-          history: messages.slice(1)
-        })
-      });
-
-      const data = await response.json();
+          history: messages.slice(1),
+        },
+        currentId
+      );
       if (currentId !== generationIdRef.current) return;
 
-      if (data.error) {
+      if (!result.ok && result.offline) throw new Error("offline");
+      if (!result.ok) {
         setMessages((prev) => [
           ...prev,
           {
             role: "model",
-            text: `Query error: ${data.error}. Please configure your API key.`
+            text: `Query error: ${result.error}. Please configure your API key.`
           }
         ]);
       } else {
-        setMessages((prev) => [...prev, { role: "model", text: data.text }]);
-        trackInquiries(data.supplierInquiryIds);
+        trackInquiries(result.supplierInquiryIds);
       }
     } catch (err) {
       if (currentId !== generationIdRef.current) return;
@@ -287,7 +399,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         setIsGenerating(false);
       }
     }
-  }, [isGenerating, messages, user, setMessages, trackInquiries]);
+  }, [isGenerating, messages, user, setMessages, trackInquiries, fetchBballyReply]);
 
   const handleImageSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -335,27 +447,24 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
         return newMsgs;
       });
 
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const result = await fetchBballyReply(
+        {
           sessionId: sessionIdRef.current,
           userId: user?.id,
           userEmail: user?.email,
           message: `[Image Attached: ${imageUrl}] Please analyze this image for apparel manufacturing.`,
           imageUrl: imageUrl,
-          history: messages.slice(1)
-        })
-      });
-
-      const data = await response.json();
+          history: messages.slice(1),
+        },
+        currentId
+      );
       if (currentId !== generationIdRef.current) return;
 
-      if (data.error) {
-        setMessages((prev) => [...prev, { role: "model", text: `Error: ${data.error}` }]);
+      if (!result.ok && result.offline) throw new Error("Connection lost");
+      if (!result.ok) {
+        setMessages((prev) => [...prev, { role: "model", text: `Error: ${result.error}` }]);
       } else {
-        setMessages((prev) => [...prev, { role: "model", text: data.text }]);
-        trackInquiries(data.supplierInquiryIds);
+        trackInquiries(result.supplierInquiryIds);
       }
     } catch (err: any) {
       if (currentId !== generationIdRef.current) return;
@@ -366,7 +475,7 @@ export function useChat({ messages, setMessages, user, onOpenLogin }: UseChatPro
     } finally {
       if (currentId === generationIdRef.current) setIsGenerating(false);
     }
-  }, [isGenerating, messages, user, setMessages, trackInquiries]);
+  }, [isGenerating, messages, user, setMessages, trackInquiries, fetchBballyReply]);
 
   // welcome 페이지 대화창에서 넘어온 첫 질문이 있으면 화면이 열리자마자 바로 보낸다
   const handoffCheckedRef = useRef(false);
