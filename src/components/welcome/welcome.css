@@ -1,0 +1,944 @@
+/* 인더엑스 퍼블리싱 스타일 — .kaw-welcome 안에서만 적용되도록 자동 변환 (원본: k_apparel/assets/css) */
+/* ---- reset.css ---- */
+/* ============================================
+   RESET
+   ============================================ */
+.kaw-welcome *, .kaw-welcome *::before, .kaw-welcome *::after { box-sizing: border-box; }
+.kaw-welcome, .kaw-welcome, .kaw-welcome div, .kaw-welcome span, .kaw-welcome h1, .kaw-welcome h2, .kaw-welcome h3, .kaw-welcome h4, .kaw-welcome h5, .kaw-welcome h6, .kaw-welcome p, .kaw-welcome blockquote, .kaw-welcome a, .kaw-welcome img, .kaw-welcome strong, .kaw-welcome em, .kaw-welcome dl, .kaw-welcome dt, .kaw-welcome dd, .kaw-welcome ol, .kaw-welcome ul, .kaw-welcome li, .kaw-welcome figure, .kaw-welcome figcaption, .kaw-welcome form, .kaw-welcome label, .kaw-welcome table, .kaw-welcome tr, .kaw-welcome th, .kaw-welcome td, .kaw-welcome article, .kaw-welcome aside, .kaw-welcome footer, .kaw-welcome header, .kaw-welcome nav, .kaw-welcome section, .kaw-welcome main, .kaw-welcome video, .kaw-welcome button { margin: 0; padding: 0; border: 0; font: inherit; vertical-align: baseline; }
+.kaw-welcome { -webkit-text-size-adjust: 100%; }
+.kaw-welcome { line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.kaw-welcome ol, .kaw-welcome ul { list-style: none; }
+.kaw-welcome a { color: inherit; text-decoration: none; }
+.kaw-welcome img, .kaw-welcome video, .kaw-welcome svg { display: block; max-width: 100%; }
+.kaw-welcome button { background: none; color: inherit; cursor: pointer; }
+.kaw-welcome blockquote { quotes: none; }
+.kaw-welcome table { border-collapse: collapse; border-spacing: 0; }
+
+/* ---- base.css ---- */
+/* ============================================
+   VARIABLES
+   ============================================ */
+.kaw-welcome {
+  /* color */
+  --color-primary: #111318;
+  --color-primary-dark: #2b2f38; /* hover */
+  --color-point: #6677fb;
+  --color-text: #0f1218;
+  --color-text-sub: #5b6270;
+  --color-text-inverse: #fff;
+  --color-text-inverse-sub: #a3a9b6;
+  --color-border: #e3e6eb;
+  --color-border-dark: #262b36;
+  --color-bg: #f5f6f8;
+  --color-bg-cool: #e8ecf2;
+  --color-bg-white: #fff;
+  --color-bg-dark: #0b0d12;
+  --color-bg-dark-sub: #151922;
+
+  /* font */
+  --font-base: 'Inter', 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* layout */
+  --header-h: 80px;
+  --container-w: 1440px;
+  --radius-s: 8px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --space-section: 140px;
+}
+
+@media (max-width: 1024px) {
+  .kaw-welcome { --space-section: 110px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome {
+    --header-h: 64px;
+    --space-section: 80px;
+  }
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+.kaw-welcome { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
+.kaw-welcome { font-family: var(--font-base); font-size: 16px; color: var(--color-text); background: var(--color-bg-white); letter-spacing: -0.01em; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kaw-welcome { scroll-behavior: auto; }
+}
+
+/* ============================================
+   UTILITY
+   ============================================ */
+.kaw-welcome .inner { max-width: var(--container-w); margin: 0 auto; padding: 0 40px; }
+.kaw-welcome .blind { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+.kaw-welcome .ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kaw-welcome .ellipsis-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+@media (max-width: 768px) {
+  .kaw-welcome .inner { padding: 0 20px; }
+}
+
+/* 스크롤 등장 효과 (JS가 is-ready를 붙인 경우에만 숨김) */
+.kaw-welcome .reveal.is-ready { opacity: 0; transform: translateY(32px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.kaw-welcome .reveal.is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kaw-welcome .reveal.is-ready { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---- layout.css ---- */
+/* ============================================
+   HEADER
+   ============================================ */
+.kaw-welcome #header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-h); background: var(--color-bg-white); color: var(--color-text); transition: box-shadow 0.3s ease; }
+.kaw-welcome #header.is-fixed { box-shadow: 0 1px 0 var(--color-border); }
+.kaw-welcome #header .inner { display: flex; align-items: center; height: 100%; }
+.kaw-welcome #header .logo a { display: flex; align-items: center; }
+.kaw-welcome #header .logo img { height: 48px; }
+.kaw-welcome #header .header-util { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+.kaw-welcome #header .gnb { display: flex; gap: 28px; margin-right: 12px; }
+.kaw-welcome #header .gnb a { font-size: 15px; font-weight: 500; color: var(--color-text); transition: color 0.2s; }
+.kaw-welcome #header .gnb a:hover { color: var(--color-primary); }
+.kaw-welcome #header .btn-menu { display: none; position: relative; width: 40px; height: 40px; }
+.kaw-welcome #header .btn-menu span { position: absolute; left: 10px; width: 20px; height: 2px; background: currentColor; transition: transform 0.3s, opacity 0.3s; }
+.kaw-welcome #header .btn-menu span:nth-child(1) { top: 13px; }
+.kaw-welcome #header .btn-menu span:nth-child(2) { top: 19px; }
+.kaw-welcome #header .btn-menu span:nth-child(3) { top: 25px; }
+
+@media (max-width: 1024px) {
+  .kaw-welcome #header .gnb { display: none; position: fixed; top: var(--header-h); left: 0; right: 0; bottom: 0; flex-direction: column; gap: 0; margin: 0; padding: 24px 20px; background: var(--color-bg-white); }
+  .kaw-welcome #header .gnb a { display: block; padding: 18px 0; font-size: 24px; font-weight: 600; border-bottom: 1px solid var(--color-border); }
+  .kaw-welcome #header .btn-menu { display: block; }
+  .kaw-welcome #header.is-open .gnb { display: flex; }
+  .kaw-welcome #header.is-open .btn-menu span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .kaw-welcome #header.is-open .btn-menu span:nth-child(2) { opacity: 0; }
+  .kaw-welcome #header.is-open .btn-menu span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome #header .logo img { height: 40px; }
+  .kaw-welcome #header .header-util .btn-primary { display: none; }
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.kaw-welcome #footer { padding: 56px 0; background: var(--color-bg-dark); color: var(--color-text-inverse-sub); font-size: 14px; }
+.kaw-welcome #footer .inner { display: flex; justify-content: space-between; gap: 40px; }
+.kaw-welcome #footer .footer-company { display: block; margin-bottom: 12px; font-size: 16px; font-weight: 700; color: var(--color-text-inverse); }
+.kaw-welcome #footer .footer-info p + p { margin-top: 6px; }
+.kaw-welcome #footer .footer-link { text-align: right; }
+.kaw-welcome #footer .footer-link li + li { margin-top: 8px; }
+.kaw-welcome #footer .footer-link a { color: var(--color-text-inverse); text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 768px) {
+  .kaw-welcome #footer { padding: 48px 0; font-size: 13px; }
+  .kaw-welcome #footer .inner { flex-direction: column; gap: 28px; }
+  .kaw-welcome #footer .footer-link { text-align: left; }
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
+.kaw-welcome #container { overflow: hidden; }
+
+/* ---- common.css ---- */
+/* ============================================
+   BUTTON
+   ============================================ */
+.kaw-welcome .btn-primary,
+.kaw-welcome .btn-white,
+.kaw-welcome .btn-line { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 52px; padding: 0 28px; border-radius: 999px; font-size: 16px; font-weight: 600; white-space: nowrap; transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s; }
+.kaw-welcome .btn-primary { background: var(--color-primary); color: var(--color-text-inverse); }
+.kaw-welcome .btn-primary:hover { background: var(--color-primary-dark); }
+.kaw-welcome .btn-white { background: var(--color-bg-white); color: var(--color-text); }
+.kaw-welcome .btn-white:hover { background: #e9ecf1; }
+.kaw-welcome .btn-line { border: 1px solid rgba(255, 255, 255, 0.4); color: var(--color-text-inverse); }
+.kaw-welcome .btn-line:hover { border-color: var(--color-text-inverse); background: rgba(255, 255, 255, 0.08); }
+.kaw-welcome .btn-s { height: 42px; padding: 0 20px; font-size: 14px; }
+.kaw-welcome .btn-l { height: 60px; padding: 0 36px; font-size: 18px; }
+.kaw-welcome .btn-primary:focus-visible,
+.kaw-welcome .btn-white:focus-visible,
+.kaw-welcome .btn-line:focus-visible { outline: 3px solid var(--color-point); outline-offset: 3px; }
+
+@media (max-width: 480px) {
+  .kaw-welcome .btn-l { height: 56px; padding: 0 28px; font-size: 16px; }
+}
+
+/* ============================================
+   SECTION TITLE
+   ============================================ */
+.kaw-welcome .sec-head { max-width: 760px; margin-bottom: 72px; }
+.kaw-welcome .sec-head.is-center { margin-left: auto; margin-right: auto; text-align: center; }
+.kaw-welcome .sec-eyebrow { display: inline-block; margin-bottom: 20px; font-size: 14px; font-weight: 600; color: var(--color-primary); letter-spacing: 0.08em; text-transform: uppercase; }
+.kaw-welcome .sec-title { font-size: 56px; font-weight: 700; line-height: 1.1; letter-spacing: -0.035em; }
+.kaw-welcome .sec-desc { margin-top: 24px; font-size: 20px; line-height: 1.6; color: var(--color-text-sub); }
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-head { margin-bottom: 56px; }
+  .kaw-welcome .sec-title { font-size: 44px; }
+  .kaw-welcome .sec-desc { font-size: 18px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-head { margin-bottom: 40px; }
+  .kaw-welcome .sec-title { font-size: 34px; }
+  .kaw-welcome .sec-desc { margin-top: 16px; font-size: 16px; }
+}
+
+/* ============================================
+   TABLE
+   ============================================ */
+.kaw-welcome .pub-index { padding-top: 80px; padding-bottom: 80px; }
+.kaw-welcome .tbl-list { width: 100%; margin-top: 40px; border-top: 2px solid var(--color-text); font-size: 15px; }
+.kaw-welcome .tbl-list th,
+.kaw-welcome .tbl-list td { padding: 16px 12px; border-bottom: 1px solid var(--color-border); text-align: left; }
+.kaw-welcome .tbl-list th { font-weight: 600; background: var(--color-bg); }
+.kaw-welcome .tbl-list a { color: var(--color-primary); text-decoration: underline; }
+
+@media (max-width: 768px) {
+  .kaw-welcome .tbl-list { font-size: 13px; }
+  .kaw-welcome .tbl-list th,
+  .kaw-welcome .tbl-list td { padding: 12px 8px; }
+}
+
+/* ---- welcome.css ---- */
+/* ============================================
+   V2 VARIABLES (base.css 값 덮어쓰기)
+   B안 구성 + A안 폰트·느낌 + KAW 브랜드 컬러
+   ============================================ */
+.kaw-welcome {
+  /* brand color */
+  --color-ice: #e1f2ff;
+  --color-ice-deep: #cce9fe;
+  --color-sky: #85c9fe;
+  --color-vivid: #0090fb;
+  --color-navy: #0c3ca7;
+  --color-ice-soft: #f3f9ff;
+  --color-black: #000;
+
+  /* color */
+  --color-primary: var(--color-vivid);
+  --color-primary-dark: var(--color-navy); /* hover */
+  --color-point: var(--color-vivid);
+  --color-text: #0f1215;
+  --color-text-sub: #454748;
+  --color-text-light: #75777a;
+  --color-text-mute: #9da0a3;
+  --color-text-inverse-sub: #a9b6cc;
+  --color-border: #e2e2e3;
+  --color-track: #eff0f0;
+  --color-bg-alt: #eff0f0;
+  --color-bg: #f3f5f7;
+  --color-bg-soft: #f9fafb;
+  --color-bg-cool: #e8eef6;
+  --color-bg-dark: #081530;
+
+  /* zero risk 차트 (v1 컬러) */
+  --color-chart-1: #111318;
+  --color-chart-2: #3a3f4a;
+  --color-chart-3: #5b6270;
+  --color-chart-4: #9aa1ad;
+  --color-chart-line: #b4b9c4;
+  --color-stripe: #e3e8ef;
+
+  /* footer (A안 기준) */
+  --color-footer-line: #202020;
+
+  /* font : 본문·라벨·메모 모두 Inter (모노 라벨 사용 안 함) */
+  --font-base: 'Inter', 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
+  --font-mono: var(--font-base);
+  --font-hand: var(--font-base);
+
+  /* etc */
+  --shadow-card: 0 1px 2px rgba(12, 60, 167, 0.04), 0 8px 24px rgba(12, 60, 167, 0.06);
+  --ease-out: cubic-bezier(0.17, 0.25, 0.3, 1);
+}
+
+/* Lenis 부드러운 스크롤 (라이브러리 권장 스타일, 기본 smooth 와 충돌 방지용 !important) */
+html.lenis,
+html.lenis body { height: auto; }
+.kaw-welcome .lenis.lenis-smooth { scroll-behavior: auto !important; }
+.kaw-welcome .lenis.lenis-stopped { overflow: hidden; }
+
+/* 섹션 안 sticky 동작용 (clip 미지원 브라우저는 layout.css의 hidden 유지) */
+.kaw-welcome #container { overflow: clip; }
+
+/* 본문 : A안(main-v2) 기준 */
+.kaw-welcome { line-height: 1.55; letter-spacing: normal; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+
+/* ============================================
+   V2 TYPOGRAPHY
+   ============================================ */
+.kaw-welcome .sec-eyebrow { margin-bottom: 20px; font-size: 15px; font-weight: 500; letter-spacing: -0.01em; text-transform: none; color: var(--color-vivid); }
+.kaw-welcome .sec-title { font-size: 60px; font-weight: 500; line-height: 1.05; letter-spacing: -0.04em; }
+.kaw-welcome .tit-dim { color: var(--color-text-mute); }
+.kaw-welcome .sec-desc { font-size: 18px; }
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-title { font-size: 48px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-title { font-size: 38px; }
+  .kaw-welcome .sec-desc { font-size: 16px; }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome .sec-title { font-size: 32px; }
+}
+
+/* ============================================
+   V2 BUTTON
+   ============================================ */
+.kaw-welcome .btn-primary,
+.kaw-welcome .btn-white,
+.kaw-welcome .btn-line { height: 48px; padding: 0 22px; border-radius: 8px; font-size: 15px; font-weight: 500; }
+.kaw-welcome .btn-s { height: 42px; padding: 0 18px; font-size: 14px; }
+.kaw-welcome .btn-primary .ico-arrow,
+.kaw-welcome .btn-white .ico-arrow { transition: transform 0.3s var(--ease-out); }
+.kaw-welcome .btn-primary:hover .ico-arrow,
+.kaw-welcome .btn-white:hover .ico-arrow { transform: translateX(3px); }
+
+/* ============================================
+   1. HERO
+   ============================================ */
+/* 플로팅 헤더(top 16 + 높이 60) 아래로 20px 띄움 */
+.kaw-welcome .sec-visual { padding-top: 96px; }
+.kaw-welcome .sec-visual .visual-box { position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; aspect-ratio: 2 / 1; padding: 40px; border-radius: var(--radius-l); background: #0b0d12; color: var(--color-text-inverse); text-align: center; }
+.kaw-welcome .sec-visual .visual-media { position: absolute; inset: 0; }
+.kaw-welcome .sec-visual .visual-media::after { content: ''; position: absolute; inset: 0; background: rgba(11, 13, 18, 0.45); }
+.kaw-welcome .sec-visual .visual-video { width: 100%; height: 100%; object-fit: cover; }
+.kaw-welcome .sec-visual .visual-cont { position: relative; z-index: 1; max-width: 760px; }
+.kaw-welcome .sec-visual .visual-eyebrow { margin-bottom: 12px; font-size: 15px; font-weight: 500; color: rgba(255, 255, 255, 0.85); }
+.kaw-welcome .sec-visual .visual-title { font-size: 68px; font-weight: 500; line-height: 1.02; letter-spacing: -0.045em; }
+.kaw-welcome .sec-visual .visual-title span { display: inline-block; margin-top: 40px; font-size: 28px; letter-spacing: -0.03em; color: rgba(255, 255, 255, 0.7); }
+.kaw-welcome .sec-visual .visual-desc { max-width: 500px; margin: 12px auto 0; font-size: 17px; line-height: 1.55; color: rgba(255, 255, 255, 0.88); }
+.kaw-welcome .sec-visual .visual-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 40px; }
+/* 하단 안내 문구 : 박스 하단, 영상 토글 버튼과 같은 높이 */
+.kaw-welcome .sec-visual .visual-note { position: absolute; right: 96px; bottom: 34px; left: 96px; z-index: 1; font-size: 14px; color: rgba(255, 255, 255, 0.7); }
+.kaw-welcome .sec-visual .btn-video-toggle { position: absolute; right: 24px; bottom: 24px; z-index: 1; width: 44px; height: 44px; border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 50%; }
+.kaw-welcome .sec-visual .btn-video-toggle::before,
+.kaw-welcome .sec-visual .btn-video-toggle::after { content: ''; position: absolute; top: 15px; width: 3px; height: 14px; background: var(--color-text-inverse); }
+.kaw-welcome .sec-visual .btn-video-toggle::before { left: 16px; }
+.kaw-welcome .sec-visual .btn-video-toggle::after { left: 23px; }
+.kaw-welcome .sec-visual .btn-video-toggle.is-paused::before { left: 17px; width: 0; height: 0; background: none; border-style: solid; border-width: 7px 0 7px 12px; border-color: transparent transparent transparent var(--color-text-inverse); }
+.kaw-welcome .sec-visual .btn-video-toggle.is-paused::after { display: none; }
+
+@media (max-width: 1280px) {
+  .kaw-welcome .sec-visual .visual-title { font-size: 60px; }
+  .kaw-welcome .sec-visual .visual-title span { margin-top: 32px; font-size: 26px; }
+}
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-visual .visual-box { aspect-ratio: auto; min-height: 560px; padding: 72px 40px 104px; }
+  .kaw-welcome .sec-visual .visual-title { font-size: 52px; }
+  .kaw-welcome .sec-visual .visual-title span { margin-top: 28px; font-size: 23px; }
+  .kaw-welcome .sec-visual .visual-desc { font-size: 16px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-visual .visual-box { min-height: 560px; padding: 64px 24px 88px; border-radius: var(--radius-m); }
+  .kaw-welcome .sec-visual .visual-eyebrow { margin-bottom: 10px; font-size: 13px; }
+  .kaw-welcome .sec-visual .visual-title { font-size: 40px; }
+  .kaw-welcome .sec-visual .visual-title span { margin-top: 20px; font-size: 20px; }
+  .kaw-welcome .sec-visual .visual-desc { margin-top: 10px; font-size: 15px; }
+  .kaw-welcome .sec-visual .visual-btns { margin-top: 32px; }
+  .kaw-welcome .sec-visual .visual-note { right: 76px; bottom: 22px; left: 24px; font-size: 13px; text-align: left; }
+  .kaw-welcome .sec-visual .btn-video-toggle { right: 16px; bottom: 16px; }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome .sec-visual { padding-top: 84px; }
+  .kaw-welcome .sec-visual .visual-title { font-size: 34px; }
+  .kaw-welcome .sec-visual .visual-btns a { width: 100%; }
+}
+
+/* ============================================
+   2. START WITH BBALLY (대화창 자리 · 메인 강조)
+   ============================================ */
+.kaw-welcome .sec-bbally { position: relative; overflow: hidden; isolation: isolate; padding: var(--space-section) 0; background: var(--color-bg-white); }
+/* 배경 : 대화창 높이에서 좌우 가장자리로 번지는 블루 글로우 */
+.kaw-welcome .sec-bbally::before,
+.kaw-welcome .sec-bbally::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.kaw-welcome .sec-bbally::before { background: radial-gradient(ellipse 34% 26% at 0% 50%, rgba(133, 201, 254, 0.85) 0%, rgba(133, 201, 254, 0.35) 45%, rgba(133, 201, 254, 0) 100%), radial-gradient(ellipse 34% 26% at 100% 50%, rgba(133, 201, 254, 0.85) 0%, rgba(133, 201, 254, 0.35) 45%, rgba(133, 201, 254, 0) 100%), linear-gradient(180deg, var(--color-bg-white) 0%, var(--color-ice-soft) 30%, var(--color-ice) 50%, var(--color-ice-soft) 70%, var(--color-bg-white) 100%); }
+/* 배경 : 글로우 위 미세 노이즈 (가장자리만) */
+.kaw-welcome .sec-bbally::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity: 0.5; -webkit-mask-image: radial-gradient(ellipse 34% 26% at 0% 50%, #000, transparent), radial-gradient(ellipse 34% 26% at 100% 50%, #000, transparent); mask-image: radial-gradient(ellipse 34% 26% at 0% 50%, #000, transparent), radial-gradient(ellipse 34% 26% at 100% 50%, #000, transparent); }
+
+.kaw-welcome .sec-bbally .bbally-head { max-width: 760px; margin: 0 auto; text-align: center; }
+.kaw-welcome .sec-bbally .sec-title { font-size: 72px; }
+.kaw-welcome .sec-bbally .sec-title .tit-dim { white-space: nowrap; }
+.kaw-welcome .sec-bbally .sec-eyebrow { margin-bottom: 4px; }
+
+.kaw-welcome .sec-bbally .bbally-chat { max-width: 880px; margin: 56px auto 0; padding: 10px; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 28px; background: rgba(255, 255, 255, 0.45); box-shadow: 0 40px 100px rgba(0, 144, 251, 0.2), 0 2px 6px rgba(12, 60, 167, 0.06); }
+.kaw-welcome .sec-bbally .chat-window { overflow: hidden; border: 1px solid rgba(12, 60, 167, 0.08); border-radius: 20px; background: var(--color-bg); }
+/* BBally 대화 시작 화면 (sub/bbally.html 과 동일 구성) : 네 모서리 브랜드 컬러 글로우 */
+.kaw-welcome .sec-bbally .chat-screen { padding: 40px 40px 32px; background: radial-gradient(ellipse 40% 34% at 0% 0%, rgba(133, 201, 254, 0.35), rgba(133, 201, 254, 0)), radial-gradient(ellipse 40% 34% at 100% 0%, rgba(12, 60, 167, 0.1), rgba(12, 60, 167, 0)), radial-gradient(ellipse 44% 38% at 0% 100%, rgba(0, 144, 251, 0.22), rgba(0, 144, 251, 0)), radial-gradient(ellipse 44% 38% at 100% 100%, rgba(204, 243, 238, 0.8), rgba(204, 243, 238, 0)); }
+
+/* BBally 메시지 */
+.kaw-welcome .sec-bbally .chat-row { display: flex; align-items: flex-start; gap: 12px; }
+.kaw-welcome .sec-bbally .chat-avatar { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: var(--color-text); font-size: 15px; font-weight: 600; color: var(--color-text-inverse); }
+.kaw-welcome .sec-bbally .chat-name { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600; }
+.kaw-welcome .sec-bbally .chat-bubble { max-width: 560px; padding: 14px 18px; border: 1px solid var(--color-border); border-radius: 4px 16px 16px 16px; background: var(--color-bg-white); font-size: 15px; line-height: 1.55; color: var(--color-text-sub); }
+.kaw-welcome .sec-bbally .chat-bubble p + p { margin-top: 8px; }
+
+/* 입력창 (클릭 시 BBally 페이지로 이동) */
+.kaw-welcome .sec-bbally .chat-compose { display: block; margin-top: 24px; padding: 20px 20px 14px; border: 1px solid rgba(15, 18, 21, 0.06); border-radius: 22px; background: var(--color-bg-white); box-shadow: 0 12px 40px rgba(15, 18, 21, 0.08), 0 2px 6px rgba(15, 18, 21, 0.04); transition: border-color 0.2s, box-shadow 0.2s; }
+.kaw-welcome .sec-bbally .chat-compose:hover { border-color: var(--color-sky); box-shadow: 0 0 0 4px var(--color-ice), 0 12px 40px rgba(15, 18, 21, 0.08); }
+.kaw-welcome .sec-bbally .chat-compose:focus-visible { outline: 3px solid var(--color-vivid); outline-offset: 3px; }
+.kaw-welcome .sec-bbally .compose-txt { display: block; min-height: 56px; padding: 0 4px; font-size: 16px; line-height: 1.55; color: var(--color-text-mute); }
+.kaw-welcome .sec-bbally .compose-txt::after { content: ''; display: inline-block; width: 1.5px; height: 1.1em; margin-left: 3px; background: var(--color-vivid); vertical-align: -0.2em; animation: caretBlink 1s steps(1) infinite; }
+.kaw-welcome .sec-bbally .compose-bar { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.kaw-welcome .sec-bbally .compose-ico,
+.kaw-welcome .sec-bbally .compose-chip { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-bg-white); font-size: 14px; color: var(--color-text-sub); }
+.kaw-welcome .sec-bbally .compose-ico { width: 34px; }
+.kaw-welcome .sec-bbally .compose-chip { padding: 0 12px; }
+.kaw-welcome .sec-bbally .compose-ico svg,
+.kaw-welcome .sec-bbally .compose-chip svg { width: 16px; height: 16px; }
+.kaw-welcome .sec-bbally .compose-divider { width: 1px; height: 20px; margin: 0 4px; background: var(--color-border); }
+.kaw-welcome .sec-bbally .compose-send { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; margin-left: auto; border-radius: 50%; background: var(--color-text); color: var(--color-text-inverse); transition: background-color 0.2s; }
+.kaw-welcome .sec-bbally .chat-compose:hover .compose-send { background: var(--color-vivid); }
+.kaw-welcome .sec-bbally .compose-send svg { width: 18px; height: 18px; }
+
+@keyframes caretBlink {
+  50% { opacity: 0; }
+}
+
+/* 하단 3단계 */
+.kaw-welcome .sec-bbally .bbally-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1040px; margin: 80px auto 0; counter-reset: bbally; }
+.kaw-welcome .sec-bbally .bbally-steps li { padding-top: 20px; border-top: 1px solid rgba(12, 60, 167, 0.18); counter-increment: bbally; }
+.kaw-welcome .sec-bbally .bbally-steps li::before { content: counter(bbally); display: block; margin-bottom: 14px; font-size: 15px; font-weight: 500; color: var(--color-vivid); }
+.kaw-welcome .sec-bbally .steps-tit { display: block; font-size: 19px; font-weight: 500; line-height: 1.35; letter-spacing: -0.02em; }
+.kaw-welcome .sec-bbally .steps-txt { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--color-text-sub); }
+.kaw-welcome .sec-bbally .bbally-note { margin-top: 48px; font-size: 15px; text-align: center; color: var(--color-text-sub); }
+
+@media (prefers-reduced-motion: reduce) {
+  .kaw-welcome .sec-bbally .compose-txt::after { animation: none; }
+}
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-bbally .sec-title { font-size: 56px; }
+  .kaw-welcome .sec-bbally .chat-screen { padding: 32px 28px 28px; }
+  .kaw-welcome .sec-bbally .bbally-steps { grid-template-columns: 1fr; gap: 28px; max-width: 560px; margin-top: 56px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-bbally::before { background: radial-gradient(ellipse 55% 20% at 0% 50%, rgba(133, 201, 254, 0.8) 0%, rgba(133, 201, 254, 0) 100%), radial-gradient(ellipse 55% 20% at 100% 50%, rgba(133, 201, 254, 0.8) 0%, rgba(133, 201, 254, 0) 100%), linear-gradient(180deg, var(--color-bg-white) 0%, var(--color-ice-soft) 30%, var(--color-ice) 50%, var(--color-ice-soft) 70%, var(--color-bg-white) 100%); }
+  .kaw-welcome .sec-bbally .sec-title { font-size: 42px; }
+  .kaw-welcome .sec-bbally .bbally-chat { margin-top: 40px; padding: 6px; border-radius: 22px; }
+  .kaw-welcome .sec-bbally .chat-window { border-radius: 16px; }
+  .kaw-welcome .sec-bbally .chat-screen { padding: 24px 16px 16px; }
+  .kaw-welcome .sec-bbally .chat-bubble { font-size: 14px; }
+  .kaw-welcome .sec-bbally .compose-txt { font-size: 15px; }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome .sec-bbally .sec-title { font-size: 34px; }
+  .kaw-welcome .sec-bbally .chat-avatar { width: 30px; height: 30px; font-size: 13px; }
+  .kaw-welcome .sec-bbally .chat-compose { padding: 16px 14px 12px; border-radius: 18px; }
+  .kaw-welcome .sec-bbally .compose-chip { padding: 0 10px; font-size: 13px; }
+}
+
+/* ============================================
+   3. WHY ONE PIECE WORKS
+   ============================================ */
+.kaw-welcome .sec-why { position: relative; overflow: hidden; isolation: isolate; padding: var(--space-section) 0; }
+.kaw-welcome .sec-why .why-wrap { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 80px; }
+.kaw-welcome .sec-why .why-txt { margin-top: 24px; font-size: 17px; line-height: 1.65; color: var(--color-text-sub); }
+.kaw-welcome .sec-why .why-txt + .why-txt { margin-top: 16px; }
+.kaw-welcome .sec-why .why-compare { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.kaw-welcome .sec-why .compare-box { display: flex; flex-direction: column; justify-content: space-between; gap: 32px; min-height: 400px; padding: 20px; border: 1px solid var(--color-border); border-radius: var(--radius-m); background: var(--color-bg-white); }
+.kaw-welcome .sec-why .compare-box.is-kaw { background: linear-gradient(180deg, var(--color-bg-white) 25%, var(--color-ice) 55%, var(--color-sky) 82%, var(--color-vivid) 100%); background-origin: border-box; }
+.kaw-welcome .sec-why .compare-label { font-size: 15px; font-weight: 500; }
+.kaw-welcome .sec-why .compare-desc { margin-top: 8px; font-size: 14px; line-height: 1.5; color: var(--color-text-sub); }
+.kaw-welcome .sec-why .flow-list { padding: 14px; border-radius: 10px; background: var(--color-bg-white); box-shadow: var(--shadow-card); }
+.kaw-welcome .sec-why .flow-list li { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; }
+.kaw-welcome .sec-why .flow-list li + li { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-track); }
+.kaw-welcome .sec-why .flow-ico { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; background: var(--color-track); color: var(--color-text-light); }
+.kaw-welcome .sec-why .flow-ico svg { width: 16px; height: 16px; fill: currentColor; }
+.kaw-welcome .sec-why .is-kaw .flow-ico { background: var(--color-ice); color: var(--color-vivid); }
+.kaw-welcome .sec-why .is-kaw .is-active { color: var(--color-vivid); }
+.kaw-welcome .is-kaw .is-active .flow-ico { background: var(--color-vivid); font-size: 13px; font-weight: 600; color: var(--color-text-inverse); }
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-why .why-wrap { grid-template-columns: 1fr; gap: 48px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-why .why-txt { font-size: 16px; }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome .sec-why .why-compare { grid-template-columns: 1fr; }
+  .kaw-welcome .sec-why .compare-box { min-height: 0; }
+}
+
+/* ============================================
+   4. A FAMILY KNITWEAR FACTORY (TRUST)
+   ============================================ */
+.kaw-welcome .sec-trust { padding: var(--space-section) 0; }
+.kaw-welcome .sec-trust .trust-head { margin-bottom: 64px; text-align: center; }
+.kaw-welcome .sec-trust .trust-title { font-size: 52px; font-weight: 500; line-height: 1.3; letter-spacing: -0.04em; }
+.kaw-welcome .sec-trust .trust-title-sub { color: var(--color-text-mute); }
+.kaw-welcome .sec-trust .trust-stitch { position: relative; display: inline-block; font-style: normal; }
+.kaw-welcome .sec-trust .trust-stitch::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0.08em; height: 0.06em; background: repeating-linear-gradient(90deg, var(--color-vivid) 0 0.26em, transparent 0.26em 0.4em); }
+.kaw-welcome .sec-trust .trust-tag { position: relative; display: inline-block; padding: 0 0.3em 0.04em 0.7em; font-style: normal; color: var(--color-text-inverse); isolation: isolate; }
+.kaw-welcome .sec-trust .trust-tag::before { content: ''; position: absolute; inset: 0.2em 0 0.06em 0; z-index: -1; border-radius: 0 0.18em 0.18em 0; background: var(--color-vivid); clip-path: polygon(0.32em 0, 100% 0, 100% 100%, 0.32em 100%, 0 50%); }
+.kaw-welcome .sec-trust .trust-tag::after { content: ''; position: absolute; left: 0.26em; top: 50%; width: 0.14em; height: 0.14em; border-radius: 50%; background: var(--color-bg-white); transform: translateY(-50%); }
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-trust .trust-title { font-size: 40px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-trust .trust-head { margin-bottom: 40px; }
+  .kaw-welcome .sec-trust .trust-title { font-size: 28px; }
+  .kaw-welcome .sec-trust .trust-title br { display: none; }
+}
+
+/* 벤토 카드 */
+.kaw-welcome .sec-trust .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr auto; grid-template-areas: "photo gray point" "photo gray dark"; gap: 16px; }
+.kaw-welcome .sec-trust .trust-card { position: relative; display: flex; flex-direction: column; overflow: hidden; padding: 28px; border-radius: var(--radius-l); }
+.kaw-welcome .sec-trust .card-label { font-size: 15px; font-weight: 500; }
+.kaw-welcome .sec-trust .card-num { display: block; margin-top: 12px; font-size: 56px; font-weight: 300; line-height: 1; letter-spacing: -0.05em; white-space: nowrap; }
+.kaw-welcome .sec-trust .card-desc { max-width: 300px; font-size: 14px; line-height: 1.5; }
+
+/* 카드 1 : 공장 사진 */
+.kaw-welcome .sec-trust .trust-card.is-photo { grid-area: photo; justify-content: space-between; min-height: 460px; padding: 20px; background: var(--color-bg-cool); }
+.kaw-welcome .sec-trust .trust-card.is-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8, 21, 48, 0.5) 0%, rgba(8, 21, 48, 0) 35%); }
+.kaw-welcome .sec-trust .is-photo .card-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.kaw-welcome .sec-trust .is-photo .card-top { position: relative; z-index: 1; }
+.kaw-welcome .sec-trust .is-photo .card-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; color: var(--color-text-inverse); }
+.kaw-welcome .sec-trust .is-photo .card-panel { position: relative; z-index: 1; padding: 24px; border-radius: var(--radius-m); background: var(--color-bg-white); }
+.kaw-welcome .sec-trust .is-photo .card-num { margin: 0 0 12px; font-size: 60px; }
+.kaw-welcome .sec-trust .is-photo .card-desc { color: var(--color-text-sub); }
+
+/* 카드 2 : 최소 주문 */
+.kaw-welcome .sec-trust .trust-card.is-gray { grid-area: gray; background: var(--color-bg); }
+.kaw-welcome .sec-trust .is-gray .card-label { color: var(--color-text-sub); }
+.kaw-welcome .sec-trust .card-bottom { margin-top: auto; padding-top: 32px; }
+.kaw-welcome .sec-trust .card-items { display: flex; margin-bottom: 16px; }
+.kaw-welcome .sec-trust .card-items li { display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border: 3px solid var(--color-bg); border-radius: 50%; background: linear-gradient(180deg, #3b64c4, var(--color-navy)); }
+.kaw-welcome .sec-trust .card-items li:nth-child(odd) { background: var(--color-ice-deep); }
+.kaw-welcome .sec-trust .card-items li + li { margin-left: -10px; }
+.kaw-welcome .sec-trust .card-items img { display: block; width: 32px; height: 32px; }
+.kaw-welcome .sec-trust .card-quote { max-width: 320px; font-size: 15px; line-height: 1.5; }
+
+/* 카드 3 : 샘플 기간 */
+.kaw-welcome .sec-trust .trust-card.is-point { grid-area: point; isolation: isolate; background: var(--color-vivid); color: var(--color-text-inverse); }
+.kaw-welcome .sec-trust .trust-card.is-point::after { content: ''; position: absolute; right: -60px; top: -40px; z-index: -1; width: 260px; height: 260px; border-radius: 50%; background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0 12px, transparent 12px 20px); -webkit-mask-image: linear-gradient(90deg, transparent 10%, #000 80%); mask-image: linear-gradient(90deg, transparent 10%, #000 80%); }
+.kaw-welcome .sec-trust .is-point .card-desc { margin-top: auto; padding-top: 32px; }
+
+/* 카드 4 : 파트너 브랜드 */
+.kaw-welcome .sec-trust .trust-card.is-dark { grid-area: dark; flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 28px; background: var(--color-navy); color: var(--color-text-inverse); }
+.kaw-welcome .sec-trust .is-dark .card-label { color: var(--color-ice); }
+.kaw-welcome .sec-trust .is-dark .card-num { margin-top: 0; font-size: 48px; }
+.kaw-welcome .sec-trust .num-plus { margin-left: 4px; font-size: 0.6em; vertical-align: 0.35em; font-style: normal; font-weight: 400; color: var(--color-sky); }
+
+@media (max-width: 1280px) {
+  .kaw-welcome .sec-trust .card-num { font-size: 48px; }
+  .kaw-welcome .sec-trust .is-photo .card-num { font-size: 52px; }
+}
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-trust .trust-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; grid-template-areas: "photo gray" "point dark"; }
+  .kaw-welcome .sec-trust .trust-card.is-gray { min-height: 420px; }
+  .kaw-welcome .sec-trust .trust-card.is-dark { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-trust .trust-grid { grid-template-columns: 1fr; grid-template-areas: "photo" "gray" "point" "dark"; gap: 12px; }
+  .kaw-welcome .sec-trust .trust-card { padding: 24px; border-radius: var(--radius-m); }
+  .kaw-welcome .sec-trust .trust-card.is-photo { min-height: 400px; padding: 14px; }
+  .kaw-welcome .sec-trust .trust-card.is-gray { min-height: 300px; }
+  .kaw-welcome .sec-trust .trust-card.is-dark { flex-direction: row; align-items: center; }
+  .kaw-welcome .sec-trust .card-num { font-size: 44px; }
+  .kaw-welcome .sec-trust .is-photo .card-num { font-size: 48px; }
+  .kaw-welcome .sec-trust .is-dark .card-num { font-size: 40px; }
+}
+
+/* ============================================
+   5. TRY US WITH ZERO RISK
+   ============================================ */
+.kaw-welcome .sec-risk { position: relative; overflow: hidden; isolation: isolate; padding: var(--space-section) 0; }
+/* 배경 패턴 : 오른쪽 줄무늬 구체 (v1 동일) */
+.kaw-welcome .sec-risk::before { content: ''; position: absolute; right: -100px; top: 20px; z-index: -1; width: 380px; height: 380px; border-radius: 50%; background: repeating-linear-gradient(180deg, var(--color-stripe) 0 20px, transparent 20px 34px); -webkit-mask-image: linear-gradient(90deg, #000 10%, transparent 75%); mask-image: linear-gradient(90deg, #000 10%, transparent 75%); pointer-events: none; }
+.kaw-welcome .sec-risk .sec-head { max-width: 860px; }
+
+/* 단계 헤더 */
+.kaw-welcome .sec-risk .risk-phase { display: grid; grid-template-columns: repeat(6, 1fr); margin-bottom: 8px; }
+.kaw-welcome .sec-risk .risk-phase li { padding: 12px 0; font-size: 16px; font-weight: 500; text-align: center; color: var(--color-text); }
+.kaw-welcome .sec-risk .phase-sample { grid-column: 1 / 3; }
+.kaw-welcome .sec-risk .phase-check { grid-column: 3 / 5; }
+.kaw-welcome .sec-risk .phase-scale { grid-column: 5 / 7; }
+
+/* 차트 */
+.kaw-welcome .sec-risk .risk-bars { display: grid; grid-template-columns: repeat(6, 1fr); row-gap: 14px; padding: 28px 0; border-bottom: 1px solid var(--color-border); background-image: linear-gradient(to right, var(--color-border) 1px, transparent 1px); background-size: calc(100% / 6) 100%; }
+.kaw-welcome .sec-risk .risk-bar { display: flex; flex-direction: column; gap: 4px; padding: 16px 20px; border-radius: 14px; }
+.kaw-welcome .sec-risk .risk-bar strong { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; }
+.kaw-welcome .sec-risk .risk-bar span { font-size: 13px; line-height: 1.5; opacity: 0.85; }
+.kaw-welcome .sec-risk .bar-markup { grid-column: 1 / 3; background: var(--color-chart-1); color: var(--color-text-inverse); }
+.kaw-welcome .sec-risk .bar-approve { grid-column: 2 / 4; background: var(--color-chart-2); color: var(--color-text-inverse); }
+.kaw-welcome .sec-risk .bar-test { grid-column: 3 / 5; background: linear-gradient(90deg, var(--color-chart-3), var(--color-chart-4)); color: var(--color-text-inverse); }
+.kaw-welcome .sec-risk .bar-remake { grid-column: 4 / 6; }
+.kaw-welcome .sec-risk .bar-refund { grid-column: 5 / 7; }
+.kaw-welcome .sec-risk .risk-bar.is-safety { border: 1.5px dashed var(--color-chart-line); background: var(--color-bg-white); }
+.kaw-welcome .sec-risk .bar-tag { align-self: flex-start; margin-bottom: 4px; padding: 2px 10px; border-radius: 999px; background: var(--color-bg); font-size: 12px; font-weight: 500; font-style: normal; color: var(--color-text-sub); }
+.kaw-welcome .sec-risk .bar-scale { grid-column: 5 / 7; background: var(--color-navy); color: var(--color-text-inverse); }
+.kaw-welcome .sec-risk .bar-credit { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.3); }
+.kaw-welcome .sec-risk .credit-title { font-size: 13px; font-weight: 500; }
+.kaw-welcome .sec-risk .credit-list { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 6px; font-size: 13px; }
+.kaw-welcome .sec-risk .credit-list b { font-size: 22px; font-weight: 500; letter-spacing: -0.03em; }
+
+/* 스크롤 진입 시 막대 순차 등장 */
+.kaw-welcome .sec-risk .risk-chart.is-ready .risk-bar { opacity: 0; transform: translateX(-32px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.kaw-welcome .sec-risk .risk-chart.is-visible .risk-bar { opacity: 1; transform: none; }
+.kaw-welcome .sec-risk .risk-chart.is-visible .risk-bar:nth-child(1) { transition-delay: 0.2s; }
+.kaw-welcome .sec-risk .risk-chart.is-visible .risk-bar:nth-child(2) { transition-delay: 0.35s; }
+.kaw-welcome .sec-risk .risk-chart.is-visible .risk-bar:nth-child(3) { transition-delay: 0.5s; }
+.kaw-welcome .sec-risk .risk-chart.is-visible .risk-bar:nth-child(4) { transition-delay: 0.65s; }
+.kaw-welcome .sec-risk .risk-chart.is-visible .risk-bar:nth-child(5) { transition-delay: 0.8s; }
+.kaw-welcome .sec-risk .risk-chart.is-visible .risk-bar:nth-child(6) { transition-delay: 0.95s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kaw-welcome .sec-risk .risk-chart.is-ready .risk-bar { opacity: 1; transform: none; transition: none; }
+}
+
+/* 하단 */
+.kaw-welcome .sec-risk .risk-foot { display: flex; align-items: center; gap: 24px; margin-top: 40px; }
+.kaw-welcome .sec-risk .risk-notice { max-width: 520px; font-size: 13px; line-height: 1.6; color: var(--color-text-sub); }
+
+@media (max-width: 1280px) {
+  .kaw-welcome .sec-risk .risk-bar { padding: 14px 16px; }
+  .kaw-welcome .sec-risk .risk-bar strong { font-size: 15px; }
+}
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-risk .risk-bar span { font-size: 12px; }
+  .kaw-welcome .sec-risk .credit-list b { font-size: 18px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-risk::before { right: -160px; top: 10px; width: 280px; height: 280px; }
+  .kaw-welcome .sec-risk .risk-phase { display: none; }
+  .kaw-welcome .sec-risk .risk-bars { grid-template-columns: 1fr; row-gap: 10px; padding: 0; border-bottom: 0; background: none; }
+  .kaw-welcome .sec-risk .risk-bar { grid-column: 1 / -1; padding: 18px 20px; }
+  .kaw-welcome .sec-risk .risk-bar strong { font-size: 16px; }
+  .kaw-welcome .sec-risk .risk-bar span { font-size: 13px; }
+  .kaw-welcome .sec-risk .risk-foot { flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 32px; }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome .sec-risk .risk-foot .btn-primary { width: 100%; }
+}
+
+/* ============================================
+   6. FROM IDEA TO BULK
+   ============================================ */
+.kaw-welcome .sec-process { padding: var(--space-section) 0; }
+.kaw-welcome .sec-process .process-wrap { display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start; }
+.kaw-welcome .sec-process .process-head { position: -webkit-sticky; position: sticky; top: calc(var(--header-h) + 40px); }
+.kaw-welcome .sec-process .process-note { max-width: 360px; margin-top: 24px; font-size: 17px; line-height: 1.6; color: var(--color-text-sub); }
+/* 단계 카드 : 오른쪽 이미지가 카드 밖으로 걸치도록 목록 오른쪽 여백 확보 */
+.kaw-welcome .sec-process .process-list { position: relative; isolation: isolate; display: flex; flex-direction: column; gap: 16px; margin-right: 140px; }
+/* 카드 사이 세로 연결선 (번호 원 중심) */
+.kaw-welcome .sec-process .process-list::before { content: ''; position: absolute; top: 44px; bottom: 44px; left: 41px; z-index: -1; width: 2px; background: var(--color-border); }
+.kaw-welcome .sec-process .process-item { position: relative; display: flex; align-items: center; gap: 20px; min-height: 88px; padding: 0 14px; border-radius: 24px; background: var(--color-bg-soft); transition: background-color 0.3s; }
+.kaw-welcome .sec-process .process-num { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 56px; height: 56px; border: 1.5px solid var(--color-border); border-radius: 50%; background: var(--color-bg-white); font-size: 20px; font-weight: 400; color: var(--color-text-sub); transition: border-color 0.3s, background-color 0.3s, color 0.3s; }
+.kaw-welcome .sec-process .process-title { font-size: 28px; font-weight: 400; letter-spacing: -0.03em; }
+/* 호버 이미지 */
+.kaw-welcome .sec-process .process-thumb { position: absolute; top: 18px; right: -140px; z-index: 2; width: 280px; aspect-ratio: 5 / 3; border-radius: 4px; object-fit: cover; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(8px) scale(0.97); transition: opacity 0.3s, transform 0.3s, visibility 0.3s; }
+/* 활성 단계 (기본 : 4. Sample / 호버 시 ui.js 에서 is-active 이동) */
+.kaw-welcome .sec-process .process-item.is-active { z-index: 1; background: var(--color-bg); }
+.kaw-welcome .sec-process .is-active .process-num { border-color: var(--color-vivid); background: var(--color-vivid); color: var(--color-text-inverse); }
+.kaw-welcome .sec-process .is-active .process-thumb { opacity: 1; visibility: visible; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kaw-welcome .sec-process .process-item,
+  .kaw-welcome .sec-process .process-num,
+  .kaw-welcome .sec-process .process-thumb { transition: none; }
+}
+
+@media (max-width: 1280px) {
+  .kaw-welcome .sec-process .process-wrap { gap: 56px; }
+  .kaw-welcome .sec-process .process-list { margin-right: 110px; }
+  .kaw-welcome .sec-process .process-title { font-size: 24px; }
+  .kaw-welcome .sec-process .process-thumb { right: -110px; width: 230px; }
+}
+
+/* 태블릿 이하 : 호버가 없으므로 이미지 숨김, 목록 전체 폭 사용 */
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-process .process-wrap { grid-template-columns: 1fr; gap: 48px; }
+  .kaw-welcome .sec-process .process-head { position: static; }
+  .kaw-welcome .sec-process .process-list { margin-right: 0; }
+  .kaw-welcome .sec-process .process-thumb { display: none; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-process .process-note { margin-top: 20px; font-size: 16px; }
+  .kaw-welcome .sec-process .process-list { gap: 10px; }
+  .kaw-welcome .sec-process .process-list::before { top: 36px; bottom: 36px; left: 33px; }
+  .kaw-welcome .sec-process .process-item { gap: 14px; min-height: 72px; padding: 0 10px; border-radius: 18px; }
+  .kaw-welcome .sec-process .process-num { width: 48px; height: 48px; font-size: 17px; }
+  .kaw-welcome .sec-process .process-title { font-size: 20px; }
+}
+
+/* ============================================
+   7. THE PEOPLE & THE FACTORY
+   ============================================ */
+.kaw-welcome .sec-people { padding: var(--space-section) 0; background: var(--color-bg); }
+.kaw-welcome .sec-people .people-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 60px; margin-bottom: 56px; }
+.kaw-welcome .sec-people .people-desc { max-width: 520px; font-size: 17px; line-height: 1.65; color: var(--color-text-sub); }
+.kaw-welcome .sec-people .people-gallery { display: grid; grid-template-columns: 5fr 7fr; gap: 16px; }
+.kaw-welcome .sec-people .people-founder { display: flex; flex-direction: column; }
+.kaw-welcome .sec-people .people-founder img { flex: 1; width: 100%; min-height: 0; border-radius: var(--radius-l); object-fit: cover; }
+.kaw-welcome .sec-people .factory-list { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.kaw-welcome .sec-people .factory-list li { overflow: hidden; border-radius: var(--radius-l); }
+.kaw-welcome .sec-people .factory-list img { width: 100%; aspect-ratio: 10 / 7; object-fit: cover; }
+.kaw-welcome .sec-people figcaption { margin-top: 14px; font-size: 14px; color: var(--color-text-sub); }
+.kaw-welcome .sec-people figcaption strong { font-weight: 600; color: var(--color-text); }
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-people .people-head { flex-direction: column; align-items: flex-start; gap: 24px; margin-bottom: 48px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-people .people-desc { font-size: 16px; }
+  .kaw-welcome .sec-people .people-gallery { grid-template-columns: 1fr; gap: 32px; }
+  .kaw-welcome .sec-people .people-founder img { flex: none; aspect-ratio: 4 / 5; border-radius: var(--radius-m); }
+  .kaw-welcome .sec-people .factory-list { gap: 8px; }
+  .kaw-welcome .sec-people .factory-list li { border-radius: var(--radius-m); }
+}
+
+/* ============================================
+   8. WHY KOREA (도트 지구본)
+   ============================================ */
+.kaw-welcome .sec-korea { overflow: hidden; padding: var(--space-section) 0; }
+.kaw-welcome .sec-korea .korea-head { max-width: 960px;margin: 0 auto; text-align: center; }
+
+.kaw-welcome .sec-korea .korea-stage { position: relative; isolation: isolate; margin-top: 48px; }
+/* 배경 도형 : 지구본 뒤 은은한 원 */
+.kaw-welcome .sec-korea .korea-stage::before { content: ''; position: absolute; left: 50%; top: -80px; z-index: -1; width: 960px; height: 960px; border-radius: 50%; background: radial-gradient(closest-side, var(--color-ice), rgba(225, 242, 255, 0)); transform: translateX(-50%); pointer-events: none; }
+.kaw-welcome .sec-korea .globe-crop { overflow: hidden; max-width: 600px; margin: 0 auto; aspect-ratio: 600 / 480; }
+.kaw-welcome .sec-korea .globe { position: relative; aspect-ratio: 1 / 1; }
+.kaw-welcome .sec-korea .globe-dots { width: 100%; height: 100%; }
+.kaw-welcome .sec-korea .globe-arc { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; }
+.kaw-welcome .sec-korea .globe-arc path { fill: none; stroke: var(--color-vivid); stroke-width: 1.5; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+
+.kaw-welcome .sec-korea .globe-pin { position: absolute; width: 0; height: 0; }
+.kaw-welcome .sec-korea .pt-korea { left: 32.67%; top: 66.88%; }
+.kaw-welcome .sec-korea .pt-europe { left: 32.81%; top: 9.28%; }
+.kaw-welcome .sec-korea .pt-seasia { left: 12.55%; top: 68.6%; }
+.kaw-welcome .sec-korea .pt-canada { left: 76.78%; top: 23.99%; }
+.kaw-welcome .sec-korea .pt-usa { left: 85.3%; top: 23.67%; }
+.kaw-welcome .sec-korea .pin-ico { position: absolute; top: -22px; left: -22px; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1.5px solid var(--color-vivid); border-radius: 50%; background: var(--color-bg-white); color: var(--color-vivid); }
+.kaw-welcome .sec-korea .pin-ico svg { width: 18px; height: 18px; }
+.kaw-welcome .sec-korea .pt-korea .pin-ico { top: -28px; left: -28px; width: 56px; height: 56px; border: 0; background: var(--color-vivid); color: var(--color-text-inverse); box-shadow: 0 0 0 6px var(--color-ice), 0 6px 0 var(--color-navy); }
+.kaw-welcome .sec-korea .pt-korea svg { width: 22px; height: 22px; }
+.kaw-welcome .sec-korea .pin-label { position: absolute; top: 28px; left: 0; padding: 2px 8px; border-radius: 4px; background: var(--color-bg-white); font-size: 13px; font-weight: 500; font-style: normal; white-space: nowrap; transform: translateX(-50%); }
+.kaw-welcome .sec-korea .pt-korea .pin-label { top: 40px; font-size: 15px; color: var(--color-vivid); }
+/* Canada · USA : 핀이 가까워 라벨이 겹치지 않도록 좌우로 살짝 벌림 */
+.kaw-welcome .sec-korea .pt-canada .pin-label { transform: translateX(calc(-50% - 14px)); }
+.kaw-welcome .sec-korea .pt-usa .pin-label { transform: translateX(calc(-50% + 6px)); }
+
+/* 콜아웃 (점선 박스 + 코너 브래킷) */
+.kaw-welcome .sec-korea .korea-callout { position: absolute; top: 220px; left: calc(50% + 330px); width: 250px; padding: 18px 16px; border: 1px dashed var(--color-sky); background: rgba(255, 255, 255, 0.7); font-size: 15px; line-height: 1.4; color: var(--color-text-sub); }
+.kaw-welcome .sec-korea .korea-callout::before,
+.kaw-welcome .sec-korea .korea-callout::after { content: ''; position: absolute; top: -2px; bottom: -2px; width: 10px; border: 2px solid var(--color-vivid); }
+.kaw-welcome .sec-korea .korea-callout::before { left: -2px; border-right: 0; }
+.kaw-welcome .sec-korea .korea-callout::after { right: -2px; border-left: 0; }
+
+/* 하단 비교 */
+.kaw-welcome .sec-korea .korea-features { position: relative; display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); background: var(--color-bg-white); }
+.kaw-welcome .sec-korea .korea-features li { padding: 36px 32px 40px; }
+.kaw-welcome .sec-korea .korea-features li + li { border-left: 1px solid var(--color-border); }
+.kaw-welcome .sec-korea .feature-ico { width: 28px; height: 28px; }
+.kaw-welcome .sec-korea .is-korea .feature-ico { color: var(--color-vivid); }
+.kaw-welcome .sec-korea .feature-tit { margin-top: 20px; font-size: 20px; font-weight: 400; letter-spacing: -0.01em; }
+.kaw-welcome .sec-korea .chain-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 16px; }
+.kaw-welcome .sec-korea .chain-chip { padding: 6px 14px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-bg-white); font-size: 14px; font-weight: 500; }
+.kaw-welcome .sec-korea .is-korea .chain-chip { border-color: var(--color-vivid); background: var(--color-vivid); color: var(--color-text-inverse); }
+.kaw-welcome .sec-korea .chain-gap { font-size: 13px; color: var(--color-text-light); }
+.kaw-welcome .sec-korea .chain-arrow { font-size: 14px; color: var(--color-vivid); }
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-korea .korea-callout { position: relative; top: auto; left: auto; width: auto; max-width: 320px; margin: 32px auto; text-align: center; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-korea .korea-stage::before { width: 600px; height: 600px; }
+  .kaw-welcome .sec-korea .korea-features { grid-template-columns: 1fr; }
+  .kaw-welcome .sec-korea .korea-features li { padding: 28px 20px; }
+  .kaw-welcome .sec-korea .korea-features li + li { border-left: 0; border-top: 1px solid var(--color-border); }
+  .kaw-welcome .sec-korea .pin-ico { top: -17px; left: -17px; width: 34px; height: 34px; }
+  .kaw-welcome .sec-korea .pin-ico svg { width: 14px; height: 14px; }
+  .kaw-welcome .sec-korea .pt-korea .pin-ico { top: -22px; left: -22px; width: 44px; height: 44px; }
+  .kaw-welcome .sec-korea .pin-label { top: 22px; font-size: 11px; }
+  .kaw-welcome .sec-korea .pt-korea .pin-label { top: 32px; font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome .sec-korea .pin-ico { top: -13px; left: -13px; width: 26px; height: 26px; border-width: 1px; }
+  .kaw-welcome .sec-korea .pin-ico svg { width: 12px; height: 12px; }
+  .kaw-welcome .sec-korea .pin-label { top: 16px; padding: 1px 6px; }
+  .kaw-welcome .sec-korea .pt-canada .pin-label { transform: translateX(calc(-50% - 12px)); }
+  .kaw-welcome .sec-korea .pt-usa .pin-label { transform: translateX(calc(-50% + 9px)); }
+  /* Korea : 지구본 하단 크롭에 라벨이 잘리지 않도록 축소 */
+  .kaw-welcome .sec-korea .pt-korea .pin-ico { top: -18px; left: -18px; width: 36px; height: 36px; box-shadow: 0 0 0 4px var(--color-ice), 0 4px 0 var(--color-navy); }
+  .kaw-welcome .sec-korea .pt-korea svg { width: 16px; height: 16px; }
+  .kaw-welcome .sec-korea .pt-korea .pin-label { top: 22px; font-size: 12px; }
+}
+
+/* ============================================
+   9. OUR PROMISE TO SMALL BRANDS
+   ============================================ */
+.kaw-welcome .sec-promise { position: relative; overflow: hidden; overflow: clip; padding: var(--space-section) 0; background: var(--color-bg-alt); }
+.kaw-welcome .sec-promise .inner { position: relative; z-index: 2; }
+.kaw-welcome .sec-promise .promise-wrap { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 80px; }
+.kaw-welcome .sec-promise .promise-head { position: -webkit-sticky; position: sticky; top: calc(var(--header-h) + 40px); }
+.kaw-welcome .sec-promise .promise-eyebrow { margin-bottom: 20px; font-size: 14px; font-weight: 500; line-height: 22px; color: var(--color-vivid); }
+.kaw-welcome .sec-promise .promise-lead { margin-top: 20px; font-size: 18px; color: var(--color-text-sub); }
+.kaw-welcome .sec-promise .promise-action { display: flex; align-items: flex-start; gap: 16px; margin-top: 32px; }
+.kaw-welcome .sec-promise .promise-note { display: flex; flex-direction: column; align-items: flex-start; margin-top: 18px; font-family: var(--font-hand); font-size: 22px; line-height: 1; transform: rotate(-4deg); color: var(--color-vivid); }
+.kaw-welcome .sec-promise .promise-note-arrow { width: 40px; height: 34px; margin: -22px 0 6px; fill: none; stroke: var(--color-vivid); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+
+/* 카드 스택 (A안 동일 : 회색 트레이 + 흰 카드) */
+.kaw-welcome .sec-promise .promise-list { padding: 16px; border: 1px solid var(--color-border); border-radius: var(--radius-l); background: var(--color-border); }
+.kaw-welcome .sec-promise .promise-card { padding: 24px; border-radius: var(--radius-m); background: var(--color-bg-white); box-shadow: var(--shadow-card); }
+.kaw-welcome .sec-promise .promise-card + .promise-card { margin-top: 16px; }
+.kaw-welcome .sec-promise .promise-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-bottom: 20px; border-bottom: 1px dashed var(--color-border); }
+.kaw-welcome .sec-promise .promise-card-tit { font-size: 22px; font-weight: 400; line-height: 1.25; letter-spacing: -0.02em; }
+.kaw-welcome .sec-promise .promise-card-ico { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-bg-alt); }
+.kaw-welcome .sec-promise .promise-card-ico img { display: block; width: 24px; height: 24px; }
+.kaw-welcome .sec-promise .promise-card-txt { margin-top: 20px; font-size: 15px; line-height: 1.55; color: var(--color-text-sub); }
+.kaw-welcome .sec-promise .promise-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; }
+.kaw-welcome .sec-promise .promise-tags li { padding: 6px 14px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-bg-alt); font-size: 12px; font-weight: 500; color: var(--color-text-sub); }
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-promise .promise-wrap { grid-template-columns: 1fr; gap: 48px; }
+  .kaw-welcome .sec-promise .promise-head { position: static; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-promise .promise-list { padding: 10px; }
+  .kaw-welcome .sec-promise .promise-card { padding: 20px; }
+  .kaw-welcome .sec-promise .promise-card-tit { font-size: 19px; }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome .sec-promise .promise-action { flex-direction: column; gap: 4px; }
+}
+
+/* ============================================
+   10. FINAL CTA (하단에서 피어오르는 블루 그라데이션)
+   ============================================ */
+.kaw-welcome .sec-cta { position: relative; overflow: hidden; padding: 200px 0; background: linear-gradient(180deg, var(--color-bg-white) 0%, var(--color-ice-soft) 24%, var(--color-ice) 46%, #b9e0ff 66%, var(--color-sky) 100%); text-align: center; }
+.kaw-welcome .sec-cta .inner { position: relative; z-index: 2; }
+
+/* 세로 점선 그리드 (A안 동일 : 콘텐츠 폭 4칸 · Promise 공통) */
+.kaw-welcome .sec-promise::before,
+.kaw-welcome .sec-cta::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; z-index: 1; width: min(1201px, calc(100% - 47px)); background-image: linear-gradient(var(--color-border) 50%, transparent 50%), linear-gradient(var(--color-border) 50%, transparent 50%), linear-gradient(var(--color-border) 50%, transparent 50%), linear-gradient(var(--color-border) 50%, transparent 50%), linear-gradient(var(--color-border) 50%, transparent 50%); background-position: 0 0, 25% 0, 50% 0, 75% 0, 100% 0; background-size: 1px 8px; background-repeat: repeat-y; transform: translateX(-50%); pointer-events: none; }
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-promise::before,
+  .kaw-welcome .sec-cta::before { background-position: 0 0, 50% 0, 100% 0, 0 0, 100% 0; }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome .sec-promise::before,
+  .kaw-welcome .sec-cta::before { width: calc(100% - 39px); }
+}
+
+/* 빛 레이어 (장식) */
+.kaw-welcome .sec-cta .cta-glow { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.kaw-welcome .sec-cta .cta-glow::before { content: ''; position: absolute; left: -15%; right: -15%; bottom: -30%; height: 110%; background: radial-gradient(58% 75% at 50% 100%, var(--color-vivid) 0%, var(--color-sky) 34%, rgba(133, 201, 254, 0.35) 56%, transparent 78%); filter: blur(40px); transform-origin: 50% 100%; animation: ctaBreathe 8s ease-in-out infinite alternate; }
+.kaw-welcome .sec-cta .cta-glow span { position: absolute; bottom: -30%; width: 52%; height: 70%; border-radius: 50%; background: radial-gradient(closest-side, var(--color-sky) 0%, rgba(133, 201, 254, 0.35) 55%, transparent 100%); filter: blur(36px); opacity: 0; animation: ctaRise 13s cubic-bezier(0.33, 0, 0.25, 1) infinite; }
+.kaw-welcome .sec-cta .cta-glow span:nth-child(1) { left: 6%; }
+.kaw-welcome .sec-cta .cta-glow span:nth-child(2) { left: 26%; background: radial-gradient(closest-side, var(--color-vivid) 0%, rgba(133, 201, 254, 0.35) 60%, transparent 100%); animation-delay: -4.3s; }
+.kaw-welcome .sec-cta .cta-glow span:nth-child(3) { left: 44%; animation-delay: -8.6s; }
+
+@keyframes ctaBreathe {
+  0% { transform: scale(1, 0.94); opacity: 0.85; }
+  100% { transform: scale(1.05, 1.08); opacity: 1; }
+}
+
+@keyframes ctaRise {
+  0% { transform: translateY(15%) scale(0.75); opacity: 0; }
+  25% { opacity: 0.85; }
+  70% { opacity: 0.45; }
+  100% { transform: translateY(-60%) scale(1.3); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kaw-welcome .sec-cta .cta-glow::before,
+  .kaw-welcome .sec-cta .cta-glow span { animation: none; }
+}
+
+.kaw-welcome .sec-cta .cta-title { font-size: 72px; font-weight: 500; line-height: 1.04; letter-spacing: -0.045em; }
+.kaw-welcome .sec-cta .cta-desc { margin-top: 18px; font-size: 18px; color: var(--color-text-sub); }
+.kaw-welcome .sec-cta .cta-btns { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 32px; }
+
+/* 버튼 : 진한 버튼 + 흰 이메일 버튼 (A안 동일, 폰트만 Geist) */
+.kaw-welcome .sec-cta .btn-dark,
+.kaw-welcome .sec-cta .btn-soft { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 8px; font-size: 15px; font-weight: 500; white-space: nowrap; transition: background-color 0.2s, color 0.2s; }
+.kaw-welcome .sec-cta .btn-dark { background: var(--color-text); color: var(--color-text-inverse); }
+.kaw-welcome .sec-cta .btn-dark:hover { background: var(--color-navy); }
+.kaw-welcome .sec-cta .btn-dark .ico-arrow { transition: transform 0.3s var(--ease-out); }
+.kaw-welcome .sec-cta .btn-dark:hover .ico-arrow { transform: translateX(3px); }
+.kaw-welcome .sec-cta .btn-soft { background: var(--color-bg-white); box-shadow: 0 1px 2px rgba(15, 18, 21, 0.06), 0 6px 16px rgba(12, 60, 167, 0.12); color: var(--color-text); }
+.kaw-welcome .sec-cta .btn-soft:hover { background: var(--color-ice-soft); }
+
+@media (max-width: 1024px) {
+  .kaw-welcome .sec-cta { padding: 160px 0; }
+  .kaw-welcome .sec-cta .cta-title { font-size: 60px; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome .sec-cta { padding: 120px 0; }
+  .kaw-welcome .sec-cta .cta-title { font-size: 44px; }
+  .kaw-welcome .sec-cta .cta-desc { font-size: 16px; }
+}
+
+@media (max-width: 480px) {
+  .kaw-welcome .sec-cta .cta-title { font-size: 36px; }
+  .kaw-welcome .sec-cta .cta-btns { flex-direction: column; }
+  .kaw-welcome .sec-cta .btn-dark,
+  .kaw-welcome .sec-cta .btn-soft { height: 44px; padding: 0 16px; font-size: 14px; }
+}
+
+/* ============================================
+   HEADER (스크롤 시 숨김 · common.js initHeaderAutoHide)
+   ============================================ */
+.kaw-welcome #header { transition: transform 0.3s var(--ease-out), box-shadow 0.3s ease; }
+.kaw-welcome #header.is-hidden { transform: translateY(-100%); }
+
+/* ============================================
+   FOOTER (A안 다크 · layout.css 덮어쓰기)
+   ============================================ */
+.kaw-welcome #footer { position: relative; overflow: hidden; padding: 72px 0 0; background: var(--color-black); font-size: 14px; color: var(--color-text-mute); }
+.kaw-welcome #footer .inner { display: block; }
+.kaw-welcome #footer .footer-inner { display: flex; justify-content: space-between; gap: 48px; }
+.kaw-welcome #footer .footer-logo { display: inline-flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 500; color: var(--color-text-inverse); }
+.kaw-welcome #footer .footer-logo-mark { display: flex; align-items: center; justify-content: center; width: 46px; height: 30px; border-radius: 6px; background: var(--color-vivid); font-size: 13px; font-weight: 700; color: var(--color-text-inverse); }
+.kaw-welcome #footer .footer-company { display: block; margin: 16px 0 0; font-size: 14px; font-weight: 400; color: var(--color-text-mute); }
+.kaw-welcome #footer .footer-cols { display: grid; grid-template-columns: repeat(3, minmax(140px, auto)); gap: 48px; }
+.kaw-welcome #footer .footer-col-tit { font-size: 13px; font-weight: 500; color: var(--color-text-light); }
+.kaw-welcome #footer .footer-col ul { margin-top: 16px; }
+.kaw-welcome #footer .footer-col li + li { margin-top: 10px; }
+.kaw-welcome #footer .footer-col a { color: var(--color-text-inverse); transition: color 0.2s; }
+.kaw-welcome #footer .footer-col a:hover { color: var(--color-sky); }
+.kaw-welcome #footer .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 96px; padding-top: 20px; padding-bottom: 32px; border-top: 1px solid var(--color-footer-line); font-size: 13px; color: var(--color-text-light); }
+
+@media (max-width: 1024px) {
+  .kaw-welcome #footer .footer-inner { flex-direction: column; }
+  .kaw-welcome #footer .footer-cols { grid-template-columns: repeat(3, auto); justify-content: start; }
+}
+
+@media (max-width: 768px) {
+  .kaw-welcome #footer { padding-top: 56px; }
+  .kaw-welcome #footer .footer-cols { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .kaw-welcome #footer .footer-bottom { flex-direction: column; margin-top: 64px; }
+}
